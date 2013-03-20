@@ -70,19 +70,6 @@
 # @{
 #
 
-##
- # Accept a y/n confirmation message or end
- #
-function confirm() {
-  read -n1 -p "$1 (y/n)" a;
-  echo
-  if [ "$a" != 'y' ]
-  then
-    echo 'CANCELLED!'
-    exit
-  fi
-}
-
 ###
  # Increment the version number
  #
@@ -181,13 +168,31 @@ then
   git merge --no-ff $get_branch_return -m "Merge branch '$get_branch_return'"
 
   # Try to merge into master
-  confirm 'Continue to master?'
+  read -n1 -p "Continue to master? (y/n) " a;
+  echo
+  if [ "$a" != 'y' ]
+  then
+    echo 'CANCELLED!'
+    git co $get_branch_return
+    exit
+  fi
   git co master
   git merge --no-ff $get_branch_return -m "Merge branch '$get_branch_return'"
 
   # Delete the temp branch
-  confirm "Delete $get_branch_return?"
-  git br -d $get_branch_return
+  read -n1 -p "Delete $get_branch_return? (y/n) " a;
+  echo
+  if [ "$a" != 'y' ]
+  then
+    echo 'CANCELLED!'
+    git co $get_branch_return
+    exit
+  fi
+
+  if [ "$get_branch_return" != 'master' ] && [ "$get_branch_return" != 'develop' ]
+  then
+    git br -d $get_branch_return
+  fi
 
   # Tag the new release
   get_version
