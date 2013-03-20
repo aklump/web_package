@@ -70,6 +70,11 @@
 # @{
 #
 
+##
+ # The name of the file that holds your version string
+ #
+filename='web_package.info';
+
 ###
  # Increment the version number
  #
@@ -106,10 +111,38 @@ function increment_version () {
        part[2]=0
        ;;
      *)
-       part[2]=$((${part[2]} + 1));;
+       part[2]=$((${part[2]} + 1))
+       ;;
   esac
   version="${part[0]}.${part[1]}.${part[2]}"
+  trim_version $version
+  version=$trim_version_return
 }
+
+# Global variable
+trim_version_return='';
+
+##
+ # Trim the version string
+ #
+ # @param string $1
+ #   version
+ #
+ # @return NULL
+ #   Sets the value of global $trim_version_return
+ #
+function trim_version() {
+  declare -a part=( ${1//\./ } )
+  #if [ "${#part[@]}" -gt 1 ]
+  if [ "${#part[@]}" -gt 2 ]
+  #if [ "${#part[@]}" -gt 3 ]
+  then
+    trim_version_return=${1%'.0'}
+  else
+    trim_version_return=$1
+  fi
+}
+
 
 # Global variable
 get_branch_return='';
@@ -135,6 +168,9 @@ get_version_return='';
  #
 function get_version() {
   get_version_return=$(grep "version" $filename | cut -f2 -d "=");
+  trim_version $get_version_return
+  get_version_return=$trim_version_return
+  #get_version_return=$(echo $get_version_return | sed 's/[0.]*$//g')
 }
 
 
@@ -142,16 +178,21 @@ function get_version() {
 merge_return='';
 
 ##
- # The name of the file that holds your version string
- #
-filename='web_package.info';
-
-##
  # Show Info if requested
  #
-if [ "$1" == 'info' ] || [ "$1" == '-i' ]
+if [ "$1" == 'info' ] || [ "$1" == 'i' ]
 then
   cat *.info;
+  exit;
+fi
+
+##
+ # Show Version if requested
+ #
+if [ "$1" == 'version' ] || [ "$1" == 'v' ]
+then
+  get_version
+  echo $get_version_return;
   exit;
 fi
 
@@ -237,12 +278,12 @@ fi
 ##
  # Prompt if invalid input
  #
-if [ ! "$severity" ]
+if [ "$severity" != 'major' ] && [ "$severity" != 'minor' ] && [ "$severity" != 'micro' ]
 then
   echo
   echo 'Web Package Version Bump'
   echo '--------------------'
-  echo "Arg 1 is one of: major, minor, micro, hotfix*, release*, or info (-i)"
+  echo "Arg 1 is one of: major, minor, micro, hotfix*, release*, version(v) or info(i)"
   echo "Arg 2 is one of: hotfix*, release*"
   echo
   echo "*Workflow with Git:"
@@ -274,7 +315,7 @@ fi
 
 get_version
 version=$get_version_return
-previous=$version;
+previous=$(grep "version" $filename | cut -f2 -d "=");
 
 # Increment the version based on $branch
 increment_version $severity
