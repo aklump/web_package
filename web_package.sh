@@ -203,6 +203,12 @@ if [ "$1" = 'done' ]
 then
   get_branch
 
+  if [ "$get_branch_return" = 'master' ] || [ "$get_branch_return" = 'develop' ]
+  then
+    echo "You cannot finish the $get_branch_return branch. Aborted!"
+    exit;
+  fi
+
   # Try to merge into develop
   echo "Merging into develop..."
   git co develop
@@ -238,6 +244,15 @@ then
   # Tag the new release
   get_version
   git tag $get_version_return
+
+  # Ask to push the tag to origin?
+  read -n1 -p "git push origin $get_version_return? (y/n) " a;
+  echo
+  if [ "$a" = 'y' ]
+  then
+    git push origin $get_version_return
+  fi
+
   exit;
 fi
 
