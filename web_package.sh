@@ -73,7 +73,7 @@ wp_develop="develop"
 ##
  # The name of the git remote
  #
-wp_git_remote=origin
+wp_remote=origin
 
 ##
  # Whether to create tags or not
@@ -86,6 +86,12 @@ wp_create_tags=yes
  # Allowed values: ask, auto, no
  #
 wp_push_tags=ask
+
+##
+ # Should the develop branch be pushed to remote on bump done?
+ # Allowed values: ask, auto, no
+ #
+wp_push_develop=no
 
 ##
  # The name of the file that holds your version string
@@ -159,9 +165,10 @@ function do_init() {
     touch .web_package/config
     echo "master = \"$wp_master\"" >> .web_package/config
     echo "develop = \"$wp_develop\"" >> .web_package/config
-    echo "git_remote = $wp_git_remote" >> .web_package/config
+    echo "remote = $wp_remote" >> .web_package/config
     echo "create_tags = $wp_create_tags" >> .web_package/config
     echo "push_tags = $wp_push_tags" >> .web_package/config
+    echo "push_develop = $wp_push_develop" >> .web_package/config
   fi
 
   # Create the info file
@@ -474,7 +481,7 @@ function do_done() {
     if [ "$wp_push_tags" == 'ask' ]
     then
       echo
-      read -n1 -p "git push $wp_git_remote $tagname? (y/n) " a;
+      read -n1 -p "git push $wp_remote $tagname? (y/n) " a;
       echo
     fi
     # Push the tag if auto or prompt was yes
@@ -482,10 +489,27 @@ function do_done() {
     then
       if [ "$wp_push_tags" == 'auto' ]
       then
-        echo "AUTO: git push $wp_git_remote $tagname"
+        echo "AUTO: git push $wp_remote $tagname"
       fi
-      git push $wp_git_remote $tagname
+      git push $wp_remote $tagname
     fi
+  fi
+
+  # Ask to push the develop branch to origin?
+  if [ "$develop" ] && [ "$wp_push_develop" == 'ask' ]
+  then
+    echo
+    read -n1 -p "git push $wp_remote $develop? (y/n) " a;
+    echo
+  fi
+  # Push the tag if auto or prompt was yes
+  if [ "$a" == 'y' ] || [ "$wp_push_develop" == 'auto' ]
+  then
+    if [ "$wp_push_develop" == 'auto' ]
+    then
+      echo "AUTO: git push $wp_remote $develop"
+    fi
+    git push $wp_remote $develop
   fi
 
   # return to the original branch if not yet there
@@ -494,7 +518,6 @@ function do_done() {
   then
     git co $original_branch
   fi
-
   exit;
 }
 
