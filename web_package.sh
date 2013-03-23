@@ -489,6 +489,7 @@ function do_done() {
     then
       if [ "$wp_push_tags" == 'auto' ]
       then
+        echo
         echo "AUTO: git push $wp_remote $tagname"
       fi
       git push $wp_remote $tagname
@@ -507,6 +508,7 @@ function do_done() {
   then
     if [ "$wp_push_develop" == 'auto' ]
     then
+      echo
       echo "AUTO: git push $wp_remote $develop"
     fi
     git push $wp_remote $develop
