@@ -570,14 +570,14 @@ fi
 if [ "$1" == 'hotfix' ]
 then
   severity='micro'
-  release_type='hotfix'
+  release_type=$1
 elif [ "$1" == 'release' ]
 then
   severity='minor'
-  release_type='release'
+  release_type=$1
 else
   severity=$1
-  release_type=''
+  release_type=$2
 fi
 
 # Test to see if we can do this operation from this branch
@@ -640,7 +640,7 @@ sed -i.bak "s/version *= *${previous}/version = $version/1" $wp_info
 rm $wp_info.bak
 
 # Git Integration...
-if [ "$release_type" ]
+if [ "$release_type" == 'hotfix' ] || [ "$release_type" == 'release' ]
 then
   # Store this branch so we can return to it when done
   get_branch
