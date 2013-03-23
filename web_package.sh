@@ -96,10 +96,10 @@ wp_push_develop=no
 ##
  # The name of the file that holds your version string
  #
-wp_info='web_package.info';
+wp_info_file='web_package.info';
 if [ ! -f "$wP_info" ] && [ $(ls *.info 2>/dev/null) ]
 then
-  wp_info=$(ls *.info);
+  wp_info_file=$(ls *.info);
 fi
 
 ##
@@ -172,13 +172,13 @@ function do_init() {
   fi
 
   # Create the info file
-  if [ ! -f "$wp_info" ]
+  if [ ! -f "$wp_info_file" ]
   then
     read -e -p "Enter package name: " name
     read -e -p "Enter package description: " description
-    echo "name = $name" > $wp_info
-    echo "description = $description" >> $wp_info
-    echo 'version = 0.0.0' >> $wp_info
+    echo "name = $name" > $wp_info_file
+    echo "description = $description" >> $wp_info_file
+    echo 'version = 0.0.0' >> $wp_info_file
   fi
 
   get_name
@@ -355,7 +355,7 @@ get_version_with_prefix_return='';
  #   Sets the value of global $get_version_return
  #
 function get_version_with_prefix() {
-  get_version_with_prefix_return=$(grep "version" $wp_info | cut -f2 -d "=" | sed -e 's/^ *//g' -e 's/ *$//g');
+  get_version_with_prefix_return=$(grep "version" $wp_info_file | cut -f2 -d "=" | sed -e 's/^ *//g' -e 's/ *$//g');
 }
 
 # Global variable
@@ -368,7 +368,7 @@ get_name_return='';
  #   Sets the value of global $get_version_return
  #
 function get_name() {
-  get_name_return=$(grep "name" $wp_info | cut -f2 -d "=" | sed -e 's/^ *//g' -e 's/ *$//g');
+  get_name_return=$(grep "name" $wp_info_file | cut -f2 -d "=" | sed -e 's/^ *//g' -e 's/ *$//g');
 }
 
 # Global variable
@@ -524,9 +524,39 @@ function do_done() {
 ##
  # Show Info if requested
  #
+if [ "$1" == 'config' ]
+then
+  cat .web_package/config
+  exit
+fi
+
+##
+ # Show Version if requested
+ #
+if [ "$1" == 'init' ]
+then
+  do_init
+fi
+
+
+
+
+
+##
+ # Anything below here must have a .info file
+ #
+
+if [ ! -f "$wp_info_file" ]
+then
+  end "$wp_info_file not found. Have you created your Web Package yet?"
+fi
+
+##
+ # Show Info if requested
+ #
 if [ "$1" == 'info' ] || [ "$1" == 'i' ]
 then
-  cat $wp_info
+  cat $wp_info_file
   exit
 fi
 
@@ -546,14 +576,6 @@ if [ "$1" == 'name' ] || [ "$1" == 'n' ]
 then
   get_name
   end 'Name: '$get_name_return;
-fi
-
-##
- # Show Version if requested
- #
-if [ "$1" == 'init' ]
-then
-  do_init
 fi
 
 ##
@@ -615,7 +637,7 @@ then
   echo "Arg 1 is one of: major, minor, micro, hotfix*, release*"
   echo "Arg 2 is one of: hotfix*, release*"
   echo
-  echo "Arg 1 can also be: init, name(n), version(v), info(i)"
+  echo "Arg 1 can also be: init, config, name(n), version(v), info(i)"
   echo
   echo "*Workflow with Git:"
   echo "1. bump hotfix || bump release"
@@ -629,15 +651,15 @@ fi
  #
 get_version
 version=$get_version_return
-previous=$(grep "version" $wp_info | cut -f2 -d "=");
+previous=$(grep "version" $wp_info_file | cut -f2 -d "=");
 
 # Increment the version based on $severity level
 increment_version $severity
 echo "Version bumped: $previous ---> $version";
 
 # Update the file with the new version string
-sed -i.bak "s/version *= *${previous}/version = $version/1" $wp_info
-rm $wp_info.bak
+sed -i.bak "s/version *= *${previous}/version = $version/1" $wp_info_file
+rm $wp_info_file.bak
 
 # Git Integration...
 if [ "$release_type" == 'hotfix' ] || [ "$release_type" == 'release' ]
@@ -674,6 +696,6 @@ then
   # Create the new release, add the release data, and commit
   get_version_with_prefix
   git co -b "$release_type-$get_version_with_prefix_return"
-  git add $wp_info
+  git add $wp_info_file
   git ci -m "Version bumped from $previous to $version"
 fi

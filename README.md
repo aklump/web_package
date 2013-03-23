@@ -20,6 +20,9 @@ name, description and version number. Integrates with .git and uses gitflow meth
 4. At this time there is no support for alphanumeric versions (beyond the prefix) such as `1.0-rc1`, `1.0-alpha2`, etc.
 
 
+##About the .info File
+Web Package looks for a file with the .info extension and will use that for storing the meta data about your project.  If none is found, then `web_package.info` will be created.  You may configure the actual filename in the config file e.g. `info_file = some_other_file.info` if these first two options do not work for you.
+
 ##Beginning A New Project
 1. In this example you see how we being a new project called example, initialize the git repository and start with a version number of 0.1
 1. Had you wanted to start with version 1.0, then you would have used `bump major`; and if you had wanted to start with version 0.0.1 you would have used `bump micro`.
@@ -182,6 +185,9 @@ If tags should be pushed to `git_remote`.  Set to `auto` and you will not be pro
 If develop branches should be pushed to `git_remote`.  Set to `auto` and you will not be prompted first.
 
 *Due to the nature of master branches, I have purposly omitted that shortcut feature.  Instead you will need to manually push your master branches.*
+
+###info_file: `(string)`
+(Optional) If you have more than one .info file and you need to force Web Package to use the correct one then add this option. The name of the file containing the version info.
 
 ##Smaller Projects (No Development Branch)
 For some projects or workflows it does not make sense to maintain both a master and a development branch, say for a MediaWiki extension.  In such a case, you might want to set the configuration like this for maximum benefit from Web Package.
