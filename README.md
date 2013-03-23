@@ -6,9 +6,19 @@ name, description and version number. Integrates with .git and uses gitflow meth
 ##Installation
 1. Create a symlink to `web_package.sh`, I suggest `bump` and add it to `~/bin` you can then call this script by typing `bump` on the command line as in the examples below.
 1. Make sure that `~/bin` is in your PATH variable
+2. Consider adding `.web_package` to your global `.git_ignore` file. **Make sure you are using the leading '.'; you do not want to add `web_package` to the ignores.**to 
 1. Below you will see three basic examples for usage:
-1. For more info see: [http://nvie.com/posts/a-successful-git-branching-model](http://nvie.com/posts/a-successful-git-branching-model)
+1. For more info see: <http://nvie.com/posts/a-successful-git-branching-model>
 1. For a list of commands, type `bump`.
+
+
+##About Version Numbers
+1. The versioning schema of `major.minor.micro` is used.
+2. There is no limit the to value of each part; as an example something like this is theoretically possible `999.999.999`; further the next minor version after `1.9` is not `2.0`, but rather `1.10`.
+2. Version numbers may begin with a prefix, demarkated by a '-', an example of a valid version number with prefix is `7.x-1.0`
+3. Read more about version numbers here <http://en.wikipedia.org/wiki/Software_versioning>
+4. At this time there is no support for alphanumeric versions (beyond the prefix) such as `1.0-rc1`, `1.0-alpha2`, etc.
+
 
 ##Beginning A New Project
 1. In this example you see how we being a new project called example, initialize the git repository and start with a version number of 0.1
@@ -18,18 +28,21 @@ name, description and version number. Integrates with .git and uses gitflow meth
 $ mkdir example
 $ cd example
 $ git init
-Initialized empty Git repository in ~/Repos/git/example/.git/
-$ bump minor
-web_package.info not found.  Create Y/N?
+Initialized empty Git repository in /Library/WebServer/Documents/globalonenessproject/site-dev/public_html/sites/all/modules/contrib/example/.git/
+$ bump init
 Enter package name: Example Package
-Enter package description: An example package showing how to do this
-web_package.info file was created.
-Version bumped:  0.0.0 ---> 0.1.0
+Enter package description: An example package showing how to do this.
+
+A new web_package "Example Package" has been created.
+
+$ bump minor
+Version bumped:  0.0.0 ---> 0.1
 $ git add .
 $ git commit -m 'initial commit'
-[master (root-commit) 715de1e] initial commit
+[master (root-commit) e604ade] initial commit
  1 file changed, 3 insertions(+)
  create mode 100644 web_package.info
+$
 </pre>
 
 ##Developing A Project
@@ -62,7 +75,7 @@ Switched to branch 'develop'
 Merge made by the 'recursive' strategy.
  web_package.info |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
-Continue to master? (y/n)y
+Continue to master? (y/n) y
 Switched to branch 'master'
 Merge made by the 'recursive' strategy.
  web_package.info |    2 +-
@@ -70,7 +83,7 @@ Merge made by the 'recursive' strategy.
  create mode 100644 do
  create mode 100644 mi
  create mode 100644 re
-Delete release-0.2.0? (y/n)y
+Delete release-0.2.0? (y/n) y
 Deleted branch release-0.2.0 (was 83abd01).
 </pre>
 
@@ -138,6 +151,80 @@ description = An example package showing how to do this
 version = 0.2.1
 </pre>
 
+##Configuration
+The configuration file is created during `bump init` and is located at `.web_package/config`.  Default contents look like this:
+
+    master = "master"
+    develop = "develop"
+    git_remote = origin
+    create_tags = yes
+    push_tags = ask
+    
+The entire `.web_package` directory should not be included in source control.  **To modify the configurations simply edit `.web_package/config` directly.**  Make sure to have spaces surrounding your equal signs as `create_tags=yes` is not the same as `create_tags = yes`.
+
+###master: `(string)`
+The name of the branch you consider master.  If you have more than one branch you consider a master then list them all, separated by spaces, e.g. `"master1 master2"` For more insight into this feature, see the [Drupal Modules/Themes section](#drupal) below.
+
+###develop: `(string)`
+The name of the branch you consider develop.  If you have more than one branch you consider a develop branch then list them all, separated by spaces, e.g. `"develop1 develop2"`.  **In the case of multiples: Make sure that you list them in the exact order as the master list, as the correlation of master to develop is imperative.**
+
+###git_remote: `(string)`
+The name of the git remote to be used with `git push [git_remote] release-1.0`
+
+###create_tags: `yes` or `no`
+If tags should be created during `bump done`
+
+###push_tags: `ask` or `auto`
+If tags should be pushed to `git_remote`.  Set to `auto` and you will not be prompted first.
+
+###[Drupal Modules/Themes](id:drupal)
+When I use this with my Drupal modules, the workflow is a bit different.  For starters, there is no master branch.  Actually the master and development branches are one in the same, but we have one branch for each major version of Drupal.  Like this `git br -l`
+
+    * 7.x-1.x
+      6.x-1.x
+      5.x-1.x
+      
+Here's how to modify the config file for a Drupal project.  Change the appropriate lines in `.web_config/config` to look like this, assuming that you are maintaining your module for Drupal versions 6-8…
+
+    master = "8.x-1.x 7.x-1.x 6.x-1.x"
+    develop = "8.x-1.x 7.x-1.x 6.x-1.x"
+
+In summary what you are saying is this: **I have three master branches, which are one in the same with my develop branches.**  This has the benefit of letting you `bump hotfix` and `bump release` off of the same branch.  Your workflow would then resemble this:
+
+<pre>
+$ mkdir drupal_module
+$ cd drupal_module
+$ git init
+Initialized empty Git repository in /Volumes/Data/Users/aklump/Repos/git/drupal_module/.git/
+$ bump init
+Enter package name: Drupal Module
+Enter package description: Drupal module example
+
+A new web_package "Drupal Module" has been created. Please set the initial version now.
+
+$ bump major
+Version bumped:  0.0.0 ---> 1.0
+$ bump i
+name = Drupal Module
+description = Drupal module example
+version = 1.0
+$ git add .
+$ git cim 'initial commit'
+[master (root-commit) 7194384] initial import
+ 1 file changed, 3 insertions(+)
+ create mode 100644 web_package.info
+$ git br -m 6.x-1.x
+$ git co -b 7.x-1.x
+$ git co -b 8.x-1.x
+Switched to a new branch '6.x-1.x'
+$ git br -l
+  6.x-1.x
+  7.x-1.x
+* 8.x-1.x  
+</pre>
+
+At this point the workflow is pretty much the same, although as noted you will be able to choose `bump hotfix` or `bump release` from each major Drupal version branch.  You get to decide which is best.
+
 ##Questions
 ###When should I use 'bump hotfix'?
 When you need to make an immediate change to the production state of the project, you will use `bump hotfix`.  A hotfix is unique in that the release number gets bumped _before_ the work is done.
@@ -147,6 +234,8 @@ When you have finished work on the development branch and you want to release it
 
 ###When should I use 'bump major', 'bump minor', or 'bump micro'?
 These three commands are unique in that they do not interact with git in any way, they simply modify `web_package.info`.  The choice of which of the three to use is based on the severity of the changes and your versioning mandates.  However, _why_ you would use one of these three can be answered thus: __Any time that you will need to step away from the development branch for an extended period of time, but cannot release the package.__  This way you can be certain that no implementation of your web_package thinks it has the most recent version.  I would argue it's best practice to `bump_micro` at the end of each work session, if you have multiple projects underway.
+
+Another time to `bump micro` is after you push to a staging server, that way you know your staging server is behind your local.  This may or may not make sense for your situation.
 
 
 --------------------------------------------------------
