@@ -190,8 +190,8 @@ The configuration file is created during `bump init` and is located at `.web_pac
     git_remote = origin
     create_tags = yes
     push_tags = ask
-    push_master = no
-    push_develop = no
+    push_master = ask
+    push_develop = ask
     
 The entire `.web_package` directory should not be included in source control.  **To modify the configurations simply edit `.web_package/config` directly.**  Make sure to have spaces surrounding your equal signs as `create_tags=yes` is not the same as `create_tags = yes`.
 
