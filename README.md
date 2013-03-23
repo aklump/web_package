@@ -159,6 +159,7 @@ The configuration file is created during `bump init` and is located at `.web_pac
     git_remote = origin
     create_tags = yes
     push_tags = ask
+    push_develop = no
     
 The entire `.web_package` directory should not be included in source control.  **To modify the configurations simply edit `.web_package/config` directly.**  Make sure to have spaces surrounding your equal signs as `create_tags=yes` is not the same as `create_tags = yes`.
 
@@ -168,14 +169,19 @@ The name of the branch you consider master.  If you have more than one branch yo
 ###develop: `(string)`
 The name of the branch you consider develop.  If you have more than one branch you consider a develop branch then list them all, separated by spaces, e.g. `"develop1 develop2"`.  **In the case of multiples: Make sure that you list them in the exact order as the master list, as the correlation of master to develop is imperative.**
 
-###git_remote: `(string)`
+###remote: `(string)`
 The name of the git remote to be used with `git push [git_remote] release-1.0`
 
 ###create_tags: `yes` or `no`
 If tags should be created during `bump done`
 
-###push_tags: `ask` or `auto`
+###push_tags: `no`, `ask` or `auto`
 If tags should be pushed to `git_remote`.  Set to `auto` and you will not be prompted first.
+
+###push_develop: `no`, `ask` or `auto`
+If develop branches should be pushed to `git_remote`.  Set to `auto` and you will not be prompted first.
+
+*Due to the nature of master branches, I have purposly omitted that shortcut feature.  Instead you will need to manually push your master branches.*
 
 ###[Drupal Modules/Themes](id:drupal)
 When I use this with my Drupal modules, the workflow is a bit different.  For starters, there is no master branch.  Actually the master and development branches are one in the same, but we have one branch for each major version of Drupal.  Like this `git br -l`
