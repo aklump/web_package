@@ -162,6 +162,7 @@ The configuration file is created during `bump init` and is located at `.web_pac
     git_remote = origin
     create_tags = yes
     push_tags = ask
+    push_master = no
     push_develop = no
     
 The entire `.web_package` directory should not be included in source control.  **To modify the configurations simply edit `.web_package/config` directly.**  Make sure to have spaces surrounding your equal signs as `create_tags=yes` is not the same as `create_tags = yes`.
@@ -181,10 +182,11 @@ If tags should be created during `bump done`
 ###push_tags: `no`, `ask` or `auto`
 If tags should be pushed to `git_remote`.  Set to `auto` and you will not be prompted first.
 
+###push_master: `no`, `ask` or `auto`
+If master branches should be pushed to `git_remote`.  Set to `auto` and you will not be prompted first.
+
 ###push_develop: `no`, `ask` or `auto`
 If develop branches should be pushed to `git_remote`.  Set to `auto` and you will not be prompted first.
-
-*Due to the nature of master branches, I have purposly omitted that shortcut feature.  Instead you will need to manually push your master branches.*
 
 ###info_file: `(string)`
 (Optional) If you have more than one .info file and you need to force Web Package to use the correct one then add this option. The name of the file containing the version info.

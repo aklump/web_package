@@ -94,6 +94,12 @@ wp_push_tags=ask
 wp_push_develop=no
 
 ##
+ # Should the master branch be pushed to remote on bump done?
+ # Allowed values: ask, auto, no
+ #
+wp_push_master=no
+
+##
  # The name of the file that holds your version string
  #
 wp_info_file='web_package.info';
@@ -168,6 +174,7 @@ function do_init() {
     echo "remote = $wp_remote" >> .web_package/config
     echo "create_tags = $wp_create_tags" >> .web_package/config
     echo "push_tags = $wp_push_tags" >> .web_package/config
+    echo "push_master = $wp_push_master" >> .web_package/config
     echo "push_develop = $wp_push_develop" >> .web_package/config
   fi
 
@@ -512,6 +519,24 @@ function do_done() {
       echo "AUTO: git push $wp_remote $develop"
     fi
     git push $wp_remote $develop
+  fi
+
+  # Ask to push the master branch to origin?
+  if [ "$master" ] && [ "$wp_push_master" == 'ask' ]
+  then
+    echo
+    read -n1 -p "git push $wp_remote $master? (y/n) " a;
+    echo
+  fi
+  # Push the tag if auto or prompt was yes
+  if [ "$a" == 'y' ] || [ "$wp_push_master" == 'auto' ]
+  then
+    if [ "$wp_push_master" == 'auto' ]
+    then
+      echo
+      echo "AUTO: git push $wp_remote $master"
+    fi
+    git push $wp_remote $master
   fi
 
   # return to the original branch if not yet there
