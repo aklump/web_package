@@ -183,7 +183,26 @@ If develop branches should be pushed to `git_remote`.  Set to `auto` and you wil
 
 *Due to the nature of master branches, I have purposly omitted that shortcut feature.  Instead you will need to manually push your master branches.*
 
-###[Drupal Modules/Themes](id:drupal)
+##Smaller Projects (No Development Branch)
+For some projects or workflows it does not make sense to maintain both a master and a development branch, say for a MediaWiki extension.  In such a case, you might want to set the configuration like this for maximum benefit from Web Package.
+
+    master = "master"
+    develop = "master"
+    git_remote = origin
+    create_tags = yes
+    push_tags = auto
+    push_develop = auto
+    
+The benefits of doing this include:
+
+1. You may `bump release` or `bump hotfix` off of the same branch.
+2. You don't have to maintain the extra work of a develop branch.
+2. You may have your tags and branch auto pushed to origin for rapid deployment.
+
+**This is not advisable for websites, but only for small code packages that you might be hosting, say on GitHub.com**
+
+
+##[Drupal Modules/Themes](id:drupal)
 When I use this with my Drupal modules, the workflow is a bit different.  For starters, there is no master branch.  Actually the master and development branches are one in the same, but we have one branch for each major version of Drupal.  Like this `git br -l`
 
     * 7.x-1.x
