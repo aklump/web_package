@@ -545,7 +545,7 @@ function do_done() {
   then
     git co $original_branch
   fi
-  exit;
+  end "Welcome back to $original_branch!"
 }
 
 ##
