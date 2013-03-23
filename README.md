@@ -3,6 +3,34 @@
 A shell script to help the management of files as a package. Supports
 name, description and version number. Integrates with .git and uses gitflow methodology to automatically merge and tag.
 
+##Why Use Web Project?
+If you're used to typing this:
+    
+    $ git add .
+    $ git cim 'some changes'
+    $ git co -b release-1.1
+    $ cat version.info
+    version = 1.0
+    $ echo version.info > "version = 1.1"
+    $ git add version.info
+    $ git cim 'Bumped version to 1.1'
+    $ git co develop
+    $ git merge --no-ff release-1.1
+    $ git co master
+    $ git merge --no-ff release-1.1
+    $ git br -d release-1.1
+    $ git co develop
+
+
+How would you rather type this, instead from now on...
+    
+    $ git add .
+    $ git cim 'some changes'
+    $ bump release
+    $ bump done
+
+If so, Web Project is for you! Read on...
+    
 ##Installation
 1. Create a symlink to `web_package.sh`, I suggest `bump` and add it to `~/bin` you can then call this script by typing `bump` on the command line as in the examples below.
 1. Make sure that `~/bin` is in your PATH variable
