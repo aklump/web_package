@@ -189,27 +189,8 @@ If develop branches should be pushed to `git_remote`.  Set to `auto` and you wil
 ###info_file: `(string)`
 (Optional) If you have more than one .info file and you need to force Web Package to use the correct one then add this option. The name of the file containing the version info.
 
-##Smaller Projects (No Development Branch)
-For some projects or workflows it does not make sense to maintain both a master and a development branch, say for a MediaWiki extension.  In such a case, you might want to set the configuration like this for maximum benefit from Web Package.
-
-    master = "master"
-    develop = "master"
-    git_remote = origin
-    create_tags = yes
-    push_tags = auto
-    push_develop = auto
-    
-The benefits of doing this include:
-
-1. You may `bump release` or `bump hotfix` off of the same branch.
-2. You don't have to maintain the extra work of a develop branch.
-2. You may have your tags and branch auto pushed to origin for rapid deployment.
-
-**This is not advisable for websites, but only for small code packages that you might be hosting, say on GitHub.com**
-
-
 ##[Drupal Modules/Themes](id:drupal)
-When I use this with my Drupal modules, the workflow is a bit different.  For starters, there is no master branch.  Actually the master and development branches are one in the same, but we have one branch for each major version of Drupal.  Like this `git br -l`
+When I use this with my Drupal modules, the workflow is a bit different.  For starters, there is no master branch.  Actually the master and development branches are one in the same, but we have one branch for each major version of Drupal.  The tags become really important as the release packages are built from them.  Observe `git br -l`
 
     * 7.x-1.x
       6.x-1.x
@@ -219,6 +200,8 @@ Here's how to modify the config file for a Drupal project.  Change the appropria
 
     master = "8.x-1.x 7.x-1.x 6.x-1.x"
     develop = "8.x-1.x 7.x-1.x 6.x-1.x"
+    create_tags = yes
+    push_tags = ask    
 
 In summary what you are saying is this: **I have three master branches, which are one in the same with my develop branches.**  This has the benefit of letting you `bump hotfix` and `bump release` off of the same branch.  Your workflow would then resemble this:
 
