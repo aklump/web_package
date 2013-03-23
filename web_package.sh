@@ -485,6 +485,7 @@ function do_done() {
     echo "Git tag created: $tagname"
 
     # Ask to push the tag to origin?
+    a=''
     if [ "$wp_push_tags" == 'ask' ]
     then
       echo
@@ -504,6 +505,7 @@ function do_done() {
   fi
 
   # Ask to push the develop branch to origin?
+  a=''
   if [ "$develop" ] && [ "$wp_push_develop" == 'ask' ]
   then
     echo
@@ -522,6 +524,7 @@ function do_done() {
   fi
 
   # Ask to push the master branch to origin?
+  a=''
   if [ "$master" ] && [ "$wp_push_master" == 'ask' ]
   then
     echo
