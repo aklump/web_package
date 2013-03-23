@@ -6,9 +6,19 @@ name, description and version number. Integrates with .git and uses gitflow meth
 ##Installation
 1. Create a symlink to `web_package.sh`, I suggest `bump` and add it to `~/bin` you can then call this script by typing `bump` on the command line as in the examples below.
 1. Make sure that `~/bin` is in your PATH variable
+2. Consider adding `.web_package` to your global `.git_ignore` file. **Make sure you are using the leading '.'; you do not want to add `web_package` to the ignores.**to 
 1. Below you will see three basic examples for usage:
-1. For more info see: [http://nvie.com/posts/a-successful-git-branching-model](http://nvie.com/posts/a-successful-git-branching-model)
+1. For more info see: <http://nvie.com/posts/a-successful-git-branching-model>
 1. For a list of commands, type `bump`.
+
+
+##About Version Numbers
+1. The versioning schema of `major.minor.micro` is used.
+2. There is no limit the to value of each part; as an example something like this is theoretically possible `999.999.999`; further the next minor version after `1.9` is not `2.0`, but rather `1.10`.
+2. Version numbers may begin with a prefix, demarkated by a '-', an example of a valid version number with prefix is `7.x-1.0`
+3. Read more about version numbers here <http://en.wikipedia.org/wiki/Software_versioning>
+4. At this time there is no support for alphanumeric versions (beyond the prefix) such as `1.0-rc1`, `1.0-alpha2`, etc.
+
 
 ##Beginning A New Project
 1. In this example you see how we being a new project called example, initialize the git repository and start with a version number of 0.1
@@ -18,18 +28,21 @@ name, description and version number. Integrates with .git and uses gitflow meth
 $ mkdir example
 $ cd example
 $ git init
-Initialized empty Git repository in ~/Repos/git/example/.git/
-$ bump minor
-web_package.info not found.  Create Y/N?
+Initialized empty Git repository in /Library/WebServer/Documents/globalonenessproject/site-dev/public_html/sites/all/modules/contrib/example/.git/
+$ bump init
 Enter package name: Example Package
-Enter package description: An example package showing how to do this
-web_package.info file was created.
-Version bumped:  0.0.0 ---> 0.1.0
+Enter package description: An example package showing how to do this.
+
+A new web_package "Example Package" has been created.
+
+$ bump minor
+Version bumped:  0.0.0 ---> 0.1
 $ git add .
 $ git commit -m 'initial commit'
-[master (root-commit) 715de1e] initial commit
+[master (root-commit) e604ade] initial commit
  1 file changed, 3 insertions(+)
  create mode 100644 web_package.info
+$
 </pre>
 
 ##Developing A Project
@@ -62,7 +75,7 @@ Switched to branch 'develop'
 Merge made by the 'recursive' strategy.
  web_package.info |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
-Continue to master? (y/n)y
+Continue to master? (y/n) y
 Switched to branch 'master'
 Merge made by the 'recursive' strategy.
  web_package.info |    2 +-
@@ -70,7 +83,7 @@ Merge made by the 'recursive' strategy.
  create mode 100644 do
  create mode 100644 mi
  create mode 100644 re
-Delete release-0.2.0? (y/n)y
+Delete release-0.2.0? (y/n) y
 Deleted branch release-0.2.0 (was 83abd01).
 </pre>
 
@@ -147,6 +160,8 @@ When you have finished work on the development branch and you want to release it
 
 ###When should I use 'bump major', 'bump minor', or 'bump micro'?
 These three commands are unique in that they do not interact with git in any way, they simply modify `web_package.info`.  The choice of which of the three to use is based on the severity of the changes and your versioning mandates.  However, _why_ you would use one of these three can be answered thus: __Any time that you will need to step away from the development branch for an extended period of time, but cannot release the package.__  This way you can be certain that no implementation of your web_package thinks it has the most recent version.  I would argue it's best practice to `bump_micro` at the end of each work session, if you have multiple projects underway.
+
+Another time to `bump micro` is after you push to a staging server, that way you know your staging server is behind your local.  This may or may not make sense for your situation.
 
 
 --------------------------------------------------------
