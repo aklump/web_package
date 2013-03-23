@@ -91,13 +91,13 @@ wp_push_tags=ask
  # Should the develop branch be pushed to remote on bump done?
  # Allowed values: ask, auto, no
  #
-wp_push_develop=no
+wp_push_develop=ask
 
 ##
  # Should the master branch be pushed to remote on bump done?
  # Allowed values: ask, auto, no
  #
-wp_push_master=no
+wp_push_master=ask
 
 ##
  # The name of the file that holds your version string
