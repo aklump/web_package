@@ -477,7 +477,24 @@ function do_done() {
 
   # Tag the new release if we are supposed to for this severity
   storage severity
-  if [ "$wp_create_tags" == $storage_return ]
+  do_tag=false;
+  if [ $wp_create_tags == 'micro' ]
+  then
+    do_tag=true
+  fi
+  if [ $wp_create_tags == 'major' ] && [ $storage_return == 'major' ]
+  then
+    do_tag=true
+  fi
+  if [ $wp_create_tags == 'minor' ]
+  then
+    if [ $storage_return == 'major' ] || [ $storage_return == 'minor' ]
+    then
+      do_tag=true
+    fi
+  fi
+
+  if [ "$do_tag" == true ]
   then
     get_version_with_prefix
     tagname=$get_version_with_prefix_return
