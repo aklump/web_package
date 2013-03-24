@@ -77,9 +77,9 @@ wp_remote=origin
 
 ##
  # Whether to create tags or not
- # Values: yes or no
+ # Values: major, minor, micro or no
  #
-wp_create_tags=yes
+wp_create_tags=micro
 
 ##
  # Should tags be pushed to remote?
@@ -475,8 +475,9 @@ function do_done() {
     fi
   fi
 
-  # Tag the new release
-  if [ "$wp_create_tags" == 'yes' ]
+  # Tag the new release if we are supposed to for this severity
+  storage severity
+  if [ "$wp_create_tags" == $storage_return ]
   then
     get_version_with_prefix
     tagname=$get_version_with_prefix_return
@@ -697,6 +698,7 @@ then
   # Store this branch so we can return to it when done
   get_branch
   storage return $get_branch_return
+  storage severity $severity
 
   # Make note of the correct master/develop branches of this context
   is_master_branch

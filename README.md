@@ -204,8 +204,8 @@ The name of the branch you consider develop.  If you have more than one branch y
 ###remote: `(string)`
 The name of the git remote to be used with `git push [git_remote] release-1.0`
 
-###create_tags: `yes` or `no`
-If tags should be created during `bump done`
+###create_tags: `major`, `minor`, `micro ` or `no`
+When executing `bump done`, determine what severity level will create a git tag.  Set to `no` to never create a tag.
 
 ###push_tags: `no`, `ask` or `auto`
 If tags should be pushed to `git_remote`.  Set to `auto` and you will not be prompted first.
