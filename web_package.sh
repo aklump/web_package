@@ -79,7 +79,7 @@ wp_remote=origin
  # Whether to create tags or not
  # Values: major, minor, micro or no
  #
-wp_create_tags=micro
+wp_create_tags=minor
 
 ##
  # Should tags be pushed to remote?
