@@ -109,6 +109,16 @@ then
 fi
 
 ##
+ # The name of the project author
+ #
+wp_author=''
+
+##
+ # The inital version for new projects
+ #
+wp_init_version="0.0.1"
+
+##
  # BEGIN FUNCTIONS
  #
 
@@ -133,8 +143,21 @@ function end() {
  # Value does not need wrapping quotes if no spaces
  #
 function load_config() {
-  dir=.web_package
-  if [ -d "$dir" ]
+  # Load user config
+  parse_config $HOME/.web_package/config
+
+  # Load project config
+  parse_config .web_package/config
+}
+
+##
+ # Parse a config file
+ #
+ # @param string $1
+ #   The filepath of the config file
+ #
+function parse_config() {
+  if [ -f $1 ]
   then
     while read line; do
       if [[ "$line" =~ ^[^#[]+ ]]; then
@@ -145,7 +168,7 @@ function load_config() {
           eval wp_$name=$value
         fi
       fi
-    done < $dir/config
+    done < $1
   fi
 }
 
@@ -185,11 +208,18 @@ function do_init() {
     read -e -p "Enter package description: " description
     echo "name = $name" > $wp_info_file
     echo "description = $description" >> $wp_info_file
-    echo 'version = 0.0.0' >> $wp_info_file
+    echo "version = $wp_init_version" >> $wp_info_file
+    # It may be that users don't want the author tag at all, so unless they
+    # provide we will not write it to the .info file
+    if [ "$wp_author" ]
+    then
+      echo "author = $wp_author" >> $wp_info_file
+    fi
+
   fi
 
   get_name
-  end "A new web_package \"$get_name_return\" has been created. Please set the initial version now."
+  end "A new web_package \"$get_name_return\" (version: $wp_init_version) has been created."
 }
 
 ###
@@ -382,7 +412,7 @@ function get_name() {
 storage_return='';
 
 ##
- # Getter/Setter for return branch
+ # Getter/Setter for persistent stored vars
  #
  # The return branch is the branch from which the release type began, it is used
  # to return to after bump done as well as to know the dev/master pairing
@@ -574,7 +604,14 @@ function do_done() {
  #
 if [ "$1" == 'config' ]
 then
-  cat .web_package/config
+  echo "master = $wp_master"
+  echo "develop = $wp_develop"
+  echo "remote = $wp_remote"
+  echo "create_tags = $wp_create_tags"
+  echo "push_tags = $wp_push_tags"
+  echo "push_develop = $wp_push_develop"
+  echo "push_master = $wp_push_master"
+  echo "info_file = $wp_info_file"
   exit
 fi
 
