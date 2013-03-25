@@ -1,7 +1,7 @@
 ##Summary
 
 A shell script to help the management of files as a package. Supports
-name, description and version number. Integrates with .git and uses gitflow methodology to automatically merge and tag.
+name, description, author and version number. Integrates with .git and uses gitflow methodology to automatically merge and tag.
 
 ##Why Use Web Project?
 If you're used to typing this:
@@ -218,6 +218,15 @@ If develop branches should be pushed to `git_remote`.  Set to `auto` and you wil
 
 ###info_file: `(string)`
 (Optional) If you have more than one .info file and you need to force Web Package to use the correct one then add this option. The name of the file containing the version info.
+
+###author: `"(string)"`
+(Optional) This one needs to be wrapped in quotes if you have spaces like this example… "Aaron Klump \<sourcecode@intheloftstudios.com>".  This will get written to `web_package.info` file during the init process.
+
+###init_version: `"(string)"`
+(Optional)  This is used during `bump init` to set the default version of a package.
+
+##Global Configuration
+A global configuration file may be created at `~/.web_package/config`, the contents of which will be used as defaults for new projects or existing projects without said parameter.  This is most useful for the `author` and `info_file` parameters.  **Note: if a global config parameter is set, but the project does not override it, the global will apply for that project, even after `bump init`.
 
 ##[Drupal Modules/Themes](id:drupal)
 When I use this with my Drupal modules, the workflow is a bit different.  For starters, there is no master branch.  Actually the master and development branches are one in the same, but we have one branch for each major version of Drupal.  The tags become really important as the release packages are built from them.  Observe `git br -l`
