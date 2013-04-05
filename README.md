@@ -73,37 +73,22 @@ If so, Web Project is for you! Read on...
 ### Example 2:
 The key difference to notice is that when you `bump minor` in this schema, it simply drops the micro prefix and the micro values and does _not_ increment the minor value.  Also if you `bump major` it will carry over the micro_prefix for you automatically and set the micro value to 1.
 
-    micro: 7.x-1.0-rc7 --> 7.x-1.0-rc8
-    minor: 7.x-1.0-rc7 --> 7.x-1.0
-    major: 7.x-1.0-rc7 --> 7.x-2.0-rc1
+    micro: 8.x-2.0-alpha6 --> 8.x-2.0-alpha7
+    minor: 8.x-2.0-alpha6 --> 8.x-2.0
+    major: 8.x-2.0-alpha6 --> 8.x-3.0-alpha1
 
 
 ###Testing A Version Schema
-To test this script against your version schema, you may call `bump test`.  The arguments the follow are: the version string to test, the expected outcome of a micro bump, of a minor bump, and a major bump.  Here are some examples…
+To test this script against your version schema, you may call `bump test`.  The arguments the follow are: the version string to test, the expected outcome of a bump for: micro, minor, major, alpha, beta, rc.  Here is an example:
 
-    $ bump test 1.0 1.0.1 1.1 2.0
+    $ bump test 1.0 1.0.1 1.1 2.0 1.1-alpha1 1.1-beta1 1.1-rc1
     micro: 1.0 --> 1.0.1  [OK]
     minor: 1.0 --> 1.1  [OK]
     major: 1.0 --> 2.0  [OK]
-    
-        
-    End of test.
+    alpha: 1.0 --> 1.1-alpha1  [OK]
+    beta: 1.0 --> 1.1-beta1  [OK]
+    rc: 1.0 --> 1.1-rc1  [OK]
 
-    $ bump test 1.0 1.0.1 1.1 3.0
-    micro: 1.0 --> 1.0.1  [OK]
-    minor: 1.0 --> 1.1  [OK]
-    major: 1.0 --> 2.0  != 3.0 [FAIL]
-    
-        
-    End of test.
-    
-    $ bump test 5.x-2.3-alpha17 5.x-2.3-alpha18 5.x-2.3 5.x-3.0
-    micro: 5.x-2.3-alpha17 --> 5.x-2.3-alpha18  [OK]
-    minor: 5.x-2.3-alpha17 --> 5.x-2.3  [OK]
-    major: 5.x-2.3-alpha17 --> 5.x-3.0  [OK]
-    
-    
-    End of test.
 
 ##About the .info File
 Web Package looks for a file with the .info extension and will use that for storing the meta data about your project.  If none is found, then `web_package.info` will be created.  You may configure the actual filename in the config file e.g. `info_file = some_other_file.info` if these first two options do not work for you.
@@ -238,6 +223,14 @@ name = Example Package
 description = An example package showing how to do this
 version = 0.2.1
 </pre>
+
+## Alpha, Beta and RC
+There are three commands that will move your package through the stages, but only in the logical order.
+
+1. `bump alpha` call this when your version doesn't already contain alpha, beta or rc as the micro prefix.  Example, calling `bump alpha` on a version of `1.0` will bump your version to `1.1-alpha1`.
+2. Calling `bump beta` on when your project is already in alpha will move it to beta stage, e.g. `bump beta` when your version is `1.1-alpha5` moves it to `1.1-beta1`.
+3. Calling `bump rc` on a `1.1-beta3` bumps it to `1.1-rc1`
+4. You can go directly to beta or to rc, but not the other direction, e.g. if your version is `2.3` you can `bump rc` and it becomes `2.4-rc1`.
 
 ##Configuration
 The configuration file is created during `bump init` and is located at `.web_package/config`.  Default contents look like this:
