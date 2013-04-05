@@ -222,6 +222,102 @@ function do_init() {
   end "A new web_package \"$get_name_return\" (version: $wp_init_version) has been created."
 }
 
+
+##
+ # Test all version bumping
+ #
+ # @return NULL
+ #
+function do_test() {
+
+  if [ "$1" ]
+  then
+    test_version "$1" "$2" "$3" "$4"
+    return
+  fi
+
+  _p='my.pre_fix1-'
+  _s='my.suf_fix-'
+
+  _p='7.x-'
+  _s='-alpha'
+
+  # standard versions
+  echo MAJOR.MINOR.MICRO:
+  test_version 0.0.1 0.0.2 0.1 1.0
+  test_version 0.1 0.1.1 0.2 1.0
+  test_version 1 1.0.1 1.1 2.0
+  test_version 9.9.9 9.9.10 9.10 10.0
+  test_version 99.99.99 99.99.100 99.100 100.0
+
+  # Drupal
+  echo DRUPAL STYLE:
+  test_version 7.x-1.0-alpha1 7.x-1.0-alpha2 7.x-1.0 7.x-2.0
+  test_version 7.x-1.0 7.x-1.0.1 7.x-1.1 7.x-2.0
+
+  #@todo These need work
+  #prefix only
+  #test_version "${_p}0.0.1" "${_p}0.0.2" "${_p}0.1" "${_p}1.0"
+  #test_version "${_p}0.1" "${_p}0.1.1" "${_p}0.2" "${_p}2.0"
+  #test_version "${_p}1" "${_p}1.0.1" "${_p}1.1" "${_p}2.0"
+  #
+  ##suffix only (used only for micro)
+  #test_version "1.0${_s}1" "1.0${_s}2" "1.0" "2.0"
+  #
+  #test_version "${_p}0.0.1{$_s}"
+  #test_version "${_p}0.1{$_s}"
+  #test_version "${_p}1${_s}"
+
+}
+
+##
+ # A test for a single version number
+ #
+ # @param string $1
+ #   The version to test
+ # @param string $2
+ #   The expected micro result
+ # @param string $3
+ #   The expected minor result
+ # @param string $4
+ #   The expected major result
+ #
+ # @return NULL
+ #
+function test_version() {
+  success="`tput setaf 2` [OK]`tput op`"
+
+  increment_version $1 micro
+  result=$success
+  if [ "$increment_version_return" != "$2" ]
+  then
+    result="`tput setaf 1` != $2 [FAIL]`tput op`"
+  fi
+
+  echo "micro: $1 --> $increment_version_return $result"
+
+  increment_version $1 minor
+  result=$success
+  if [ "$increment_version_return" != "$3" ]
+  then
+    result="`tput setaf 1` != $3 [FAIL]`tput op`"
+  fi
+  echo "minor: $1 --> $increment_version_return $result"
+
+  increment_version $1 major
+  result=$success
+  if [ "$increment_version_return" != "$4" ]
+  then
+    result="`tput setaf 1` != $4 [FAIL]`tput op`"
+  fi
+  echo "major: $1 --> $increment_version_return $result"
+  echo
+}
+
+
+#global variable
+increment_version_return=''
+
 ###
  # Increment the version number
  #
@@ -236,15 +332,138 @@ function do_init() {
 function increment_version () {
 
   # Remove any prefix demarked by '-'
-  pattern="(.*)\-(.*)"
+  #pattern="(.*)?\-(.*)"
+  #regex="([^\-]+\-)?(\d+)(?:\.(\d+))?(?:([^0-9]+)+(\d+)?)?"
+  #regex='([^-]+-)([0-9]+)(.)([0-9]+)([^0-9]+)([0-9]+)'
+  #if [[ $version =~ $regex ]]
+  #then
+  #  prefix="${BASH_REMATCH[1]}"
+  #  major="${BASH_REMATCH[2]}"
+  #  major_suffix="${BASH_REMATCH[3]}"
+  #  minor="${BASH_REMATCH[4]}"
+  #  micro_prefix="${BASH_REMATCH[5]}"
+  #  micro="${BASH_REMATCH[6]}"
+  #fi
+  #
+  #echo ${BASH_REMATCH[1]};
+  #end
 
-  [[ $version =~ $pattern ]]
+  increment_version_return='';
+
+  # 7.x-1.0.1 || # 7.x-1.0-rc1
+  regex1='([^-]+-)?([0-9]+)(.)([0-9]+)([^0-9]+)([0-9]+)'
+  regex2='([^-]+-)?([0-9]+)(.)([0-9]+)'
+  regex3='([^-]+-)?([0-9]+)'
+
+  #echo "version: $1"
+  #  if [[ $1 =~ $regex2 ]]; then
+  #      echo "$version matches"
+  #      i=1
+  #      n=${#BASH_REMATCH[*]}
+  #      while [[ $i -lt $n ]]
+  #      do
+  #          echo "  capture[$i]: ${BASH_REMATCH[$i]}"
+  #          let i++
+  #      done
+  #  else
+  #      echo "$version does not match"
+  #  fi
+
+
+  if [[ "$1" =~ $regex1 ]]
+  then
+    schema=1
+    prefix="${BASH_REMATCH[1]}"
+    major="${BASH_REMATCH[2]}"
+    major_suffix="${BASH_REMATCH[3]}"
+    minor="${BASH_REMATCH[4]}"
+    micro_prefix="${BASH_REMATCH[5]}"
+    micro="${BASH_REMATCH[6]}"
+
+  # 7.x-1.0
+  elif [[ "$1" =~ $regex2 ]]
+  then
+    schema=2
+    prefix="${BASH_REMATCH[1]}"
+    major="${BASH_REMATCH[2]}"
+    major_suffix="${BASH_REMATCH[3]}"
+    minor="${BASH_REMATCH[4]}"
+    micro_prefix='.'
+    micro=0
+
+  # 7.x-1
+  elif [[ "$1" =~ $regex3 ]]
+  then
+    schema=3
+    prefix="${BASH_REMATCH[1]}"
+    major="${BASH_REMATCH[2]}"
+    major_suffix='.'
+    minor=0
+    micro_prefix='.'
+    micro=0
+  else
+    end "'$1' uses an unknown schema and cannot be incremented."
+  fi
+
+  case "$2" in
+     major)
+        major=$(($major + 1))
+        major_suffix='.'
+        minor=0
+        micro_prefix=''
+        micro=''
+        ;;
+     minor)
+        # When micro_prefix = '-rc1' we just drop the minor suffix and micro, we
+        # don't increment the minor unless the schema lf major.minor.micro is
+        # used.
+        if [ "$micro_prefix" == '.' ] || [ "$micro_prefix" = '' ]
+        then
+          minor=$(($minor + 1))
+        fi
+        micro_prefix=''
+        micro=''
+        ;;
+     *)
+       micro=$(($micro + 1))
+        ;;
+  esac
+
+  increment_version_return="${prefix}${major}${major_suffix}${minor}${micro_prefix}${micro}"
+  return
+
+
+
+
+
+
+
+
+
+
+  end
+
+  [[ $version =~ $regex ]]
+
+  echo 1:${BASH_REMATCH[1]}
+  echo 2:${BASH_REMATCH[2]}
+  echo 3:${BASH_REMATCH[3]}
+  echo 4:${BASH_REMATCH[4]}
+  echo 5:${BASH_REMATCH[5]}
+  end
+
+
+
+
+
 
   prefix="${BASH_REMATCH[1]}"
   if [ "$prefix" ]
   then
     version="${BASH_REMATCH[2]}"
   fi
+
+  end $version
 
   declare -a part=( ${version//\./ } )
   if [ ! "${part[0]}" ]
@@ -655,6 +874,15 @@ then
 fi
 
 ##
+ # Show test output
+ #
+if [ $1 == 'test' ]
+then
+  do_test $2 $3 $4 $5
+  end 'End of test.'
+fi
+
+##
  # Show Name if requested
  #
 if [ "$1" == 'name' ] || [ "$1" == 'n' ]
@@ -722,7 +950,7 @@ then
   echo "Arg 1 is one of: major, minor, micro, hotfix*, release*"
   echo "Arg 2 is one of: hotfix*, release*"
   echo
-  echo "Arg 1 can also be: init, config, name(n), version(v), info(i)"
+  echo "Arg 1 can also be: init, config, name(n), version(v), info(i), test"
   echo
   echo "*Workflow with Git:"
   echo "1. bump hotfix || bump release"
@@ -739,7 +967,9 @@ version=$get_version_return
 previous=$(grep "version" $wp_info_file | cut -f2 -d "=");
 
 # Increment the version based on $severity level
-increment_version $severity
+increment_version $version $severity
+version=$increment_version_return
+
 echo "Version bumped: $previous ---> $version";
 
 # Update the file with the new version string

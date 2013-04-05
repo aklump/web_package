@@ -1,7 +1,6 @@
 ##Summary
 
-A shell script to help the management of files as a package. Supports
-name, description, author and version number. Integrates with .git and uses gitflow methodology to automatically merge and tag.
+A shell script to help the management of files as a package through easy version number manipulation. Supports name, description, author and version number. Integrates with .git and uses gitflow methodology to automatically merge and tag.
 
 ##Why Use Web Project?
 If you're used to typing this:
@@ -41,12 +40,83 @@ If so, Web Project is for you! Read on...
 
 
 ##About Version Numbers
-1. The versioning schema of `major.minor.micro` is used.
-2. There is no limit the to value of each part; as an example something like this is theoretically possible `999.999.999`; further the next minor version after `1.9` is not `2.0`, but rather `1.10`.
-2. Version numbers may begin with a prefix, demarkated by a '-', an example of a valid version number with prefix is `7.x-1.0`
+1. Two versioning schemas may be used `(prefix-)major.minor.micro` and `(prefix-)major.minor(micro_prefix)micro`.
+2. There is no limit the to value of each part; as an example something like this is theoretically possible `999.999.999`.  Important to note: the next minor version after `1.9` is not `2.0`, but rather `1.10`.
+3. `(prefix-)` is a string of any chars ending in a hyphen, e.g. `7.x-` or `my.pre_fix1-`.
+4. `(micro_prefix)` is a string of one or more non numbers, e.g. `alpha` or `my.suf_fix-`.
 3. Read more about version numbers here <http://en.wikipedia.org/wiki/Software_versioning>
-4. At this time there is no support for alphanumeric versions (beyond the prefix) such as `1.0-rc1`, `1.0-alpha2`, etc.
+4. Read more about Drupal version numbers here <http://drupal.org/node/1015226>
+5. You can test the validity of your version number using `bump test [your version string]` e.g. `bump test 7.x-1.0-rc1`
 
+### Valid Examples
+* `1.0`
+* `1.0.1`
+* `7.x-1.0`
+* `7.x-1.0.1`
+* `1.0-rc1`
+* `1.0-alpha1`
+* `7.x-1.0-rc1`
+    
+### Invalid Examples
+* `1` (missing minor digit, use `1.0` instead.)
+* `1-rc1` (missing minor digit, use `1.0-rc1` instead.)
+* `1.0-alpha` (missing micro digit, use `1.0-alpha1` instead.)
+* `1.0-dev` (missing micro digit, don't use `-dev` or add a micro digit.)
+
+## About Version Incrementing
+### Example 1: `(prefix-)major.minor.micro`
+    $ bump v
+
+    Version: 7.x-0.0.1
+        
+    $ bump micro
+    Version bumped from 7.x-0.0.1 to 7.x-0.0.2
+    $ bump minor
+    Version bumped from 7.x-0.0.1 to 7.x-0.1
+    $ bump major
+    Version bumped from 7.x-0.0.1 to 7.x-1.0
+
+### Example 2: `(prefix-)major.minor(micro_prefix)micro`
+The key difference to notice is that when you `bump minor` in this schema, it simply drops the `(micro_prefix)micro` and doesn _not_ increment the minor value.
+
+    $ bump v
+
+    Version: 7.x-1.0-rc1
+    
+    $ bump micro
+    Version bumped from 7.x-1.0-rc1 to 7.x-1.0-rc2
+    $ bump minor
+    Version bumped from 7.x-1.0-rc1 to 7.x-1.0
+    $ bump major
+    Version bumped from 7.x-1.0-rc1 to 7.x-2.0
+
+
+###Testing A Version Schema
+To test this script against your version schema, you may call `bump test`.  The arguments the follow are: the version string to test, the expected outcome of a micro bump, of a minor bump, and a major bump.  Here are some examples…
+
+    $ bump test 1.0 1.0.1 1.1 2.0
+    micro: 1.0 --> 1.0.1  [OK]
+    minor: 1.0 --> 1.1  [OK]
+    major: 1.0 --> 2.0  [OK]
+    
+        
+    End of test.
+
+    $ bump test 1.0 1.0.1 1.1 3.0
+    micro: 1.0 --> 1.0.1  [OK]
+    minor: 1.0 --> 1.1  [OK]
+    major: 1.0 --> 2.0  != 3.0 [FAIL]
+    
+        
+    End of test.
+    
+    $ bump test 5.x-2.3-alpha17 5.x-2.3-alpha18 5.x-2.3 5.x-3.0
+    micro: 5.x-2.3-alpha17 --> 5.x-2.3-alpha18  [OK]
+    minor: 5.x-2.3-alpha17 --> 5.x-2.3  [OK]
+    major: 5.x-2.3-alpha17 --> 5.x-3.0  [OK]
+    
+    
+    End of test.
 
 ##About the .info File
 Web Package looks for a file with the .info extension and will use that for storing the meta data about your project.  If none is found, then `web_package.info` will be created.  You may configure the actual filename in the config file e.g. `info_file = some_other_file.info` if these first two options do not work for you.
@@ -290,17 +360,10 @@ These three commands are unique in that they do not interact with git in any way
 
 Another time to `bump micro` is after you push to a staging server, that way you know your staging server is behind your local.  This may or may not make sense for your situation.
 
-
---------------------------------------------------------
-#Contact
-In the Loft Studios
-
-Aaron Klump - Web Developer
-
-PO Box 29294 Bellingham, WA 98228-1294
-
-aim: theloft101
-
-skype: intheloftstudios
-
-[http://www.InTheLoftStudios.com](http://www.InTheLoftStudios.com)
+##Contact
+**In the Loft Studios**  
+Aaron Klump - Developer  
+PO Box 29294 Bellingham, WA 98228-1294  
+aim: theloft101  
+skype: intheloftstudios  
+<http://www.InTheLoftStudios.com>
