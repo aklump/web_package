@@ -1,7 +1,6 @@
 ##Summary
 
-A shell script to help the management of files as a package. Supports
-name, description, author and version number. Integrates with .git and uses gitflow methodology to automatically merge and tag.
+A shell script to help the management of files as a package through easy version number manipulation. Supports name, description, author and version number. Integrates with .git and uses gitflow methodology to automatically merge and tag.
 
 ##Why Use Web Project?
 If you're used to typing this:
@@ -41,11 +40,54 @@ If so, Web Project is for you! Read on...
 
 
 ##About Version Numbers
-1. The versioning schema of `major.minor.micro` is used.
-2. There is no limit the to value of each part; as an example something like this is theoretically possible `999.999.999`; further the next minor version after `1.9` is not `2.0`, but rather `1.10`.
-2. Version numbers may begin with a prefix, demarkated by a '-', an example of a valid version number with prefix is `7.x-1.0`
+1. Two versioning schemas may be used `(prefix-)major.minor.micro` and `(prefix-)major.minor(micro_prefix)micro`.
+2. There is no limit the to value of each part; as an example something like this is theoretically possible `999.999.999`.  Important to note: the next minor version after `1.9` is not `2.0`, but rather `1.10`.
+3. `(prefix-)` is a string of any chars ending in a hyphen, e.g. `7.x-`.
+4. `(micro_prefix)` is a string of one or more non numbers, e.g. `-alpha`.
 3. Read more about version numbers here <http://en.wikipedia.org/wiki/Software_versioning>
-4. At this time there is no support for alphanumeric versions (beyond the prefix) such as `1.0-rc1`, `1.0-alpha2`, etc.
+4. Read more about Drupal version numbers here <http://drupal.org/node/1015226>
+5. To see many version examples type `bump test`.
+
+### Valid Examples
+* `1.0`
+* `1.0.1`
+* `7.x-1.0`
+* `7.x-1.0.1`
+* `1.0-rc1`
+* `1.0-alpha1`
+* `7.x-1.0-rc1`
+    
+### Invalid Examples
+* `1` (missing minor digit, use `1.0` instead.)
+* `1-rc1` (missing minor digit, use `1.0-rc1` instead.)
+* `1.0-alpha` (missing micro digit, use `1.0-alpha1` instead.)
+* `1.0-dev` (missing micro digit, don't use `-dev` or add a micro digit.)
+
+## About Version Incrementing
+### Example 1:
+
+    micro: 0.0.1 --> 0.0.2
+    minor: 0.0.1 --> 0.1
+    major: 0.0.1 --> 1.0
+
+### Example 2:
+The key difference to notice is that when you `bump minor` in this schema, it simply drops the micro prefix and the micro values and does _not_ increment the minor value.  Also if you `bump major` it will carry over the micro_prefix for you automatically and set the micro value to 1.
+
+    micro: 8.x-2.0-alpha6 --> 8.x-2.0-alpha7
+    minor: 8.x-2.0-alpha6 --> 8.x-2.0
+    major: 8.x-2.0-alpha6 --> 8.x-3.0-alpha1
+
+
+###Testing A Version Schema
+To test this script against your version schema, you may call `bump test`.  The arguments the follow are: the version string to test, the expected outcome of a bump for: micro, minor, major, alpha, beta, rc.  Here is an example:
+
+    $ bump test 1.0 1.0.1 1.1 2.0 1.1-alpha1 1.1-beta1 1.1-rc1
+    micro: 1.0 --> 1.0.1  [OK]
+    minor: 1.0 --> 1.1  [OK]
+    major: 1.0 --> 2.0  [OK]
+    alpha: 1.0 --> 1.1-alpha1  [OK]
+    beta: 1.0 --> 1.1-beta1  [OK]
+    rc: 1.0 --> 1.1-rc1  [OK]
 
 
 ##About the .info File
@@ -182,6 +224,14 @@ description = An example package showing how to do this
 version = 0.2.1
 </pre>
 
+## Alpha, Beta and RC
+There are three commands that will move your package through the stages, but only in the logical order.
+
+1. `bump alpha` call this when your version doesn't already contain alpha, beta or rc as the micro prefix.  Example, calling `bump alpha` on a version of `1.0` will bump your version to `1.1-alpha1`.
+2. Calling `bump beta` on when your project is already in alpha will move it to beta stage, e.g. `bump beta` when your version is `1.1-alpha5` moves it to `1.1-beta1`.
+3. Calling `bump rc` on a `1.1-beta3` bumps it to `1.1-rc1`
+4. You can go directly to beta or to rc, but not the other direction, e.g. if your version is `2.3` you can `bump rc` and it becomes `2.4-rc1`.
+
 ##Configuration
 The configuration file is created during `bump init` and is located at `.web_package/config`.  Default contents look like this:
 
@@ -224,6 +274,9 @@ If develop branches should be pushed to `git_remote`.  Set to `auto` and you wil
 
 ###init_version: `"(string)"`
 (Optional)  This is used during `bump init` to set the default version of a package.
+
+###micro_prefix: `"(string)"`
+(Optional)  This is used as the default micro_prefix.
 
 ##Global Configuration
 A global configuration file may be created at `~/.web_package/config`, the contents of which will be used as defaults for new projects or existing projects without said parameter.  This is most useful for the `author` and `info_file` parameters.  **Note: if a global config parameter is set, but the project does not override it, the global will apply for that project, even after `bump init`.
@@ -290,17 +343,10 @@ These three commands are unique in that they do not interact with git in any way
 
 Another time to `bump micro` is after you push to a staging server, that way you know your staging server is behind your local.  This may or may not make sense for your situation.
 
-
---------------------------------------------------------
-#Contact
-In the Loft Studios
-
-Aaron Klump - Web Developer
-
-PO Box 29294 Bellingham, WA 98228-1294
-
-aim: theloft101
-
-skype: intheloftstudios
-
-[http://www.InTheLoftStudios.com](http://www.InTheLoftStudios.com)
+##Contact
+**In the Loft Studios**  
+Aaron Klump - Developer  
+PO Box 29294 Bellingham, WA 98228-1294  
+aim: theloft101  
+skype: intheloftstudios  
+<http://www.InTheLoftStudios.com>

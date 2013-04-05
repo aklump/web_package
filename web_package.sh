@@ -119,6 +119,11 @@ wp_author=''
 wp_init_version="0.0.1"
 
 ##
+ # The default micro prefix
+ #
+wp_micro_prefix='.'
+
+##
  # BEGIN FUNCTIONS
  #
 
@@ -199,6 +204,7 @@ function do_init() {
     echo "push_tags = $wp_push_tags" >> .web_package/config
     echo "push_master = $wp_push_master" >> .web_package/config
     echo "push_develop = $wp_push_develop" >> .web_package/config
+    echo "micro_prefix = $wp_micro_prefix" >> .web_package/config
   fi
 
   # Create the info file
@@ -222,6 +228,185 @@ function do_init() {
   end "A new web_package \"$get_name_return\" (version: $wp_init_version) has been created."
 }
 
+
+##
+ # Test all version bumping
+ #
+ # @return NULL
+ #
+function do_test() {
+
+  if [ "$1" ]
+  then
+    test_version "$1" "$2" "$3" "$4" "$5" "$6" "$7"
+    return
+  fi
+
+  staged=$wp_micro_prefix;
+
+  # standard versions
+  echo 'MAJOR.MINOR.MICRO:'
+  wp_micro_prefix='.'
+  test_version 0.0.1 0.0.2 0.1 1.0 '0.1-alpha1' '0.1-beta1' '0.1-rc1'
+  test_version "0.1" "0.1.1" "0.2" "1.0" "0.2-alpha1" "0.2-beta1" "0.2-rc1"
+  test_version 1.0 1.0.1 1.1 2.0 '1.1-alpha1' '1.1-beta1' '1.1-rc1'
+  test_version 1 1.0.1 1.1 2.0 '1.1-alpha1' '1.1-beta1' '1.1-rc1'
+  test_version 9.9.9 9.9.10 9.10 10.0 "9.10-alpha9" "9.10-beta9" "9.10-rc9"
+  test_version 99.99.99 99.99.100 99.100 100.0 "99.100-alpha99" "99.100-beta99" "99.100-rc99"
+
+  echo 'MAJOR.MINOR(MINOR_PREFIX)MICRO:'
+  wp_micro_prefix='-alpha'
+  test_version "0.3${wp_micro_prefix}4" "0.3${wp_micro_prefix}5" "0.3" "1.0${wp_micro_prefix}1" "0.3${wp_micro_prefix}4" "0.4-beta1" "0.4-rc1"
+
+  #todo Finish writing these alpha, beta, rc tests
+  test_version 0.1 "0.2${wp_micro_prefix}1" "0.2" "1.0"
+  test_version 1.0 "1.1${wp_micro_prefix}1" "1.1" "2.0"
+  test_version 1 "1.1${wp_micro_prefix}1" "1.1" "2.0"
+  #test_version 9.9.9 9.9.10 9.10 10.0
+  #test_version 99.99.99 99.99.100 99.100 100.0
+
+  # Drupal
+  echo 'DRUPAL STYLE:'
+  wp_micro_prefix='-alpha'
+  test_version 7.x-1.0-alpha1 7.x-1.0-alpha2 7.x-1.0 7.x-2.0-alpha1
+  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0
+
+  echo 'DRUPAL STYLE:'
+  wp_micro_prefix='-beta'
+  test_version 7.x-1.0-alpha1 7.x-1.0-alpha2 7.x-1.0 7.x-2.0-alpha1
+  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0
+
+  echo 'DRUPAL STYLE:'
+  wp_micro_prefix='-rc'
+  test_version 7.x-1.0-alpha1 7.x-1.0-alpha2 7.x-1.0 7.x-2.0-alpha1
+  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0
+
+  # source: http://drupal.org/node/1015226
+  test_version 7.0 7.1${wp_micro_prefix}1 7.1 8.0
+  test_version 8.0-beta1 8.0-beta2 8.0 9.0-beta1
+  test_version 7.x-2.3 7.x-2.4${wp_micro_prefix}1 7.x-2.4 7.x-3.0
+  test_version 8.x-2.0-alpha6 8.x-2.0-alpha7 8.x-2.0 8.x-3.0-alpha1
+
+  #@todo These need work
+  #_p='my.pre_fix1-'
+  #_mp='mi.cro_prefix-'
+  #
+  #echo ODD PREFIX:
+  #test_version ${_p}0.0.1 ${_p}0.0.2 ${_p}0.1 ${_p}1.0
+  #test_version ${_p}0.1 ${_p}0.1.1 ${_p}0.2 ${_p}2.0
+  #test_version ${_p}1 ${_p}1.0.1 ${_p}1.1 ${_p}2.0
+  #
+  #echo ODD MICRO_PREFIX:
+  #test_version 1.0${_mp}1 1.0${_mp}2 1.0 2.0
+  #
+  #echo ODD PREFIX AND MICRO_PREFIX
+  #test_version ${_p}0.0.1${_mp}
+  #test_version ${_p}0.1${_mp}
+  #test_version ${_p}1${_mp}
+
+  wp_micro_prefix=$staged
+
+}
+
+##
+ # A test for a single version number
+ #
+ # @param string $1
+ #   The version to test
+ # @param string $2
+ #   The expected micro result
+ # @param string $3
+ #   The expected minor result
+ # @param string $4
+ #   The expected major result
+ #
+ # @return NULL
+ #
+function test_version() {
+  success="`tput setaf 2` [OK]`tput op`"
+
+  increment_version $1 micro
+  result=''
+  if [ "$3" ]
+  then
+    result=$success
+  fi
+  if [ "$2" ] && [ "$increment_version_return" != "$2" ]
+  then
+    result="`tput setaf 1` != $2 [FAIL]`tput op`"
+  fi
+
+  echo "micro: $1 --> $increment_version_return $result"
+
+  increment_version $1 minor
+  result=''
+  if [ "$3" ]
+  then
+    result=$success
+  fi
+  if [ "$3" ] && [ "$increment_version_return" != "$3" ]
+  then
+    result="`tput setaf 1` != $3 [FAIL]`tput op`"
+  fi
+  echo "minor: $1 --> $increment_version_return $result"
+
+  increment_version $1 major
+  result=''
+  if [ "$4" ]
+  then
+    result=$success
+  fi
+  if [ "$4" ] && [ "$increment_version_return" != "$4" ]
+  then
+    result="`tput setaf 1` != $4 [FAIL]`tput op`"
+  fi
+  echo "major: $1 --> $increment_version_return $result"
+
+  increment_version $1 alpha
+  result=''
+  if [ "$5" ]
+  then
+    result=$success
+  fi
+  if [ "$5" ] && [ "$increment_version_return" != "$5" ]
+  then
+    result="`tput setaf 1` != $5 [FAIL]`tput op`"
+  fi
+  echo "alpha: $1 --> $increment_version_return $result"
+
+  increment_version $1 beta
+  result=''
+  if [ "$6" ]
+  then
+    result=$success
+  fi
+  if [ "$6" ] && [ "$increment_version_return" != "$6" ]
+  then
+    result="`tput setaf 1` != $6 [FAIL]`tput op`"
+  fi
+  echo "beta: $1 --> $increment_version_return $result"
+
+  increment_version $1 rc
+  result=''
+  if [ "$7" ]
+  then
+    result=$success
+  fi
+  if [ "$7" ] && [ "$increment_version_return" != "$7" ]
+  then
+    result="`tput setaf 1` != $7 [FAIL]`tput op`"
+  fi
+  printf "%-10s\n" "rc: $1 --> $increment_version_return $result"
+  echo
+
+  #final
+  echo
+}
+
+
+#global variable
+increment_version_return=''
+
 ###
  # Increment the version number
  #
@@ -234,80 +419,107 @@ function do_init() {
  #   ...: increments the third
  ##
 function increment_version () {
+  increment_version_return='';
 
-  # Remove any prefix demarked by '-'
-  pattern="(.*)\-(.*)"
+  # 7.x-1.0.1 || # 7.x-1.0-rc1
+  regex1='([^-]+-)?([0-9]+)(.)([0-9]+)([^0-9]+)([0-9]+)'
+  regex2='([^-]+-)?([0-9]+)(.)([0-9]+)'
+  regex3='([^-]+-)?([0-9]+)'
 
-  [[ $version =~ $pattern ]]
-
-  prefix="${BASH_REMATCH[1]}"
-  if [ "$prefix" ]
+  if [[ "$1" =~ $regex1 ]]
   then
-    version="${BASH_REMATCH[2]}"
-  fi
+    schema=1
+    prefix="${BASH_REMATCH[1]}"
+    major="${BASH_REMATCH[2]}"
+    major_suffix="${BASH_REMATCH[3]}"
+    minor="${BASH_REMATCH[4]}"
+    micro_prefix="${BASH_REMATCH[5]}"
+    micro="${BASH_REMATCH[6]}"
 
-  declare -a part=( ${version//\./ } )
-  if [ ! "${part[0]}" ]
+  # 7.x-1.0
+  elif [[ "$1" =~ $regex2 ]]
   then
-    part[0]=0
-  fi
-  if [ ! "${part[1]}" ]
-  then
-    part[1]=0
-  fi
-  if [ ! "${part[2]}" ]
-  then
-    part[2]=0
-  fi
-  case $1 in
-     major)
-       part[0]=$((${part[0]} + 1))
-       part[1]=0
-       part[2]=0
-       ;;
-     minor)
-       part[1]=$((${part[1]} + 1))
-       part[2]=0
-       ;;
-     *)
-       part[2]=$((${part[2]} + 1))
-       ;;
-  esac
-  version="${part[0]}.${part[1]}.${part[2]}"
-  trim_version $version
-  version=$trim_version_return
+    schema=2
+    prefix="${BASH_REMATCH[1]}"
+    major="${BASH_REMATCH[2]}"
+    major_suffix="${BASH_REMATCH[3]}"
+    minor="${BASH_REMATCH[4]}"
+    micro_prefix=''
+    micro=0
 
-  # Add prefix back to front
-  if [ "$prefix" ]
+  # 7.x-1
+  elif [[ "$1" =~ $regex3 ]]
   then
-    version=$prefix-$version
-  fi
-}
-
-# Global variable
-trim_version_return='';
-
-##
- # Trim the version string
- #
- # @param string $1
- #   version
- #
- # @return NULL
- #   Sets the value of global $trim_version_return
- #
-function trim_version() {
-  declare -a part=( ${1//\./ } )
-  #if [ "${#part[@]}" -gt 1 ]
-  if [ "${#part[@]}" -gt 2 ]
-  #if [ "${#part[@]}" -gt 3 ]
-  then
-    trim_version_return=${1%'.0'}
+    schema=3
+    prefix="${BASH_REMATCH[1]}"
+    major="${BASH_REMATCH[2]}"
+    major_suffix='.'
+    minor=0
+    micro_prefix=''
+    micro=0
   else
-    trim_version_return=$1
+    end "'$1' uses an unknown schema and cannot be incremented."
   fi
-}
 
+  case "$2" in
+    major)
+      if [ "$micro_prefix" == '.' ] || [ "$micro_prefix" = '' ]
+      then
+        major=$(($major + 1))
+        major_suffix='.'
+        minor=0
+        micro_prefix=''
+        micro=''
+      else
+        major=$(($major + 1))
+        major_suffix='.'
+        minor=0
+        micro=1
+      fi
+
+      ;;
+    minor)
+      # Only increment minor if the prefix is '.' or prefix is empty
+      if [ "$micro_prefix" == '.' ] || [ ! "$micro_prefix" ]
+      then
+        minor=$(($minor + 1))
+      fi
+      micro_prefix=''
+      micro=''
+      ;;
+    micro)
+      micro=$(($micro + 1))
+      if [ ! "$micro_prefix" ]
+      then
+        micro_prefix=$wp_micro_prefix
+        #if you bump micro and theres no prefix and the default is not . then
+        #you increment minor too
+        if [ $wp_micro_prefix != '.' ]
+        then
+          minor=$(($minor + 1))
+        fi
+      fi
+      ;;
+  esac
+
+
+
+  if [ "$2" == 'alpha' ] || [ "$2" == 'beta' ] || [ "$2" == 'rc' ]
+  then
+    if [[ "$micro_prefix" == '.' ]] || [ ! "$micro_prefix" ] || ([[ "$micro_prefix" =~ [alpha] ]] && [ $2 == 'beta' ]) || ([[ "$micro_prefix" =~ [beta] ]] && [ $2 == 'rc' ])
+    then
+      if [ "$micro_prefix" != '.' ] || [ ! "$micro_prefix" ]
+      then
+        micro=1
+      fi
+      minor=$(($minor + 1))
+      micro_prefix="-$2"
+    fi
+  fi
+
+  increment_version_return="${prefix}${major}${major_suffix}${minor}${micro_prefix}${micro}"
+  return;
+}
 
 # Global variable
 get_branch_return='';
@@ -379,8 +591,7 @@ get_version_return='';
  #
 function get_version() {
   get_version_with_prefix
-  trim_version $get_version_with_prefix_return
-  get_version_return=$trim_version_return
+  get_version_return=$get_version_with_prefix_return
 }
 
 get_version_with_prefix_return='';
@@ -612,6 +823,7 @@ then
   echo "push_develop = $wp_push_develop"
   echo "push_master = $wp_push_master"
   echo "info_file = $wp_info_file"
+  echo "micro_prefix = $wp_micro_prefix"
   exit
 fi
 
@@ -652,6 +864,15 @@ if [ "$1" == 'version' ] || [ "$1" == 'v' ]
 then
   get_version
   end 'Version: '$get_version_return;
+fi
+
+##
+ # Show test output
+ #
+if [ $1 == 'test' ]
+then
+  do_test $2 $3 $4 $5 $6 $7 $8
+  end 'End of test.'
 fi
 
 ##
@@ -714,15 +935,15 @@ fi
 ##
  # Prompt if invalid input
  #
-if [ "$severity" != 'major' ] && [ "$severity" != 'minor' ] && [ "$severity" != 'micro' ]
+if [ "$severity" != 'major' ] && [ "$severity" != 'minor' ] && [ "$severity" != 'micro' ] && [ "$severity" != 'alpha' ] && [ "$severity" != 'beta' ] && [ "$severity" != 'rc' ]
 then
   echo
   echo 'Web Package Version Bump'
   echo '--------------------'
-  echo "Arg 1 is one of: major, minor, micro, hotfix*, release*"
+  echo "Arg 1 is one of: major, minor, micro, hotfix*, release*, alpha, beta, rc"
   echo "Arg 2 is one of: hotfix*, release*"
   echo
-  echo "Arg 1 can also be: init, config, name(n), version(v), info(i)"
+  echo "Arg 1 can also be: init, config, name(n), version(v), info(i), test"
   echo
   echo "*Workflow with Git:"
   echo "1. bump hotfix || bump release"
@@ -739,8 +960,17 @@ version=$get_version_return
 previous=$(grep "version" $wp_info_file | cut -f2 -d "=");
 
 # Increment the version based on $severity level
-increment_version $severity
-echo "Version bumped: $previous ---> $version";
+increment_version $version $severity
+version=$increment_version_return
+
+if [ $previous == $version ]
+then
+  echo "Version unchanged: $previous ---> `tput setaf 1`$version`tput op`";
+else
+  echo "Version bumped: $previous ---> `tput setaf 2`$version`tput op`";
+fi
+
+
 
 # Update the file with the new version string
 sed -i.bak "s/version *= *${previous}/version = $version/1" $wp_info_file
