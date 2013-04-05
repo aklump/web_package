@@ -42,11 +42,11 @@ If so, Web Project is for you! Read on...
 ##About Version Numbers
 1. Two versioning schemas may be used `(prefix-)major.minor.micro` and `(prefix-)major.minor(micro_prefix)micro`.
 2. There is no limit the to value of each part; as an example something like this is theoretically possible `999.999.999`.  Important to note: the next minor version after `1.9` is not `2.0`, but rather `1.10`.
-3. `(prefix-)` is a string of any chars ending in a hyphen, e.g. `7.x-` or `my.pre_fix1-`.
-4. `(micro_prefix)` is a string of one or more non numbers, e.g. `alpha` or `my.suf_fix-`.
+3. `(prefix-)` is a string of any chars ending in a hyphen, e.g. `7.x-`.
+4. `(micro_prefix)` is a string of one or more non numbers, e.g. `-alpha`.
 3. Read more about version numbers here <http://en.wikipedia.org/wiki/Software_versioning>
 4. Read more about Drupal version numbers here <http://drupal.org/node/1015226>
-5. You can test the validity of your version number using `bump test [your version string]` e.g. `bump test 7.x-1.0-rc1`
+5. To see many version examples type `bump test`.
 
 ### Valid Examples
 * `1.0`
@@ -64,31 +64,18 @@ If so, Web Project is for you! Read on...
 * `1.0-dev` (missing micro digit, don't use `-dev` or add a micro digit.)
 
 ## About Version Incrementing
-### Example 1: `(prefix-)major.minor.micro`
-    $ bump v
+### Example 1:
 
-    Version: 7.x-0.0.1
-        
-    $ bump micro
-    Version bumped from 7.x-0.0.1 to 7.x-0.0.2
-    $ bump minor
-    Version bumped from 7.x-0.0.1 to 7.x-0.1
-    $ bump major
-    Version bumped from 7.x-0.0.1 to 7.x-1.0
+    micro: 0.0.1 --> 0.0.2
+    minor: 0.0.1 --> 0.1
+    major: 0.0.1 --> 1.0
 
-### Example 2: `(prefix-)major.minor(micro_prefix)micro`
-The key difference to notice is that when you `bump minor` in this schema, it simply drops the `(micro_prefix)micro` and doesn _not_ increment the minor value.
+### Example 2:
+The key difference to notice is that when you `bump minor` in this schema, it simply drops the micro prefix and the micro values and does _not_ increment the minor value.  Also if you `bump major` it will carry over the micro_prefix for you automatically and set the micro value to 1.
 
-    $ bump v
-
-    Version: 7.x-1.0-rc1
-    
-    $ bump micro
-    Version bumped from 7.x-1.0-rc1 to 7.x-1.0-rc2
-    $ bump minor
-    Version bumped from 7.x-1.0-rc1 to 7.x-1.0
-    $ bump major
-    Version bumped from 7.x-1.0-rc1 to 7.x-2.0
+    micro: 7.x-1.0-rc7 --> 7.x-1.0-rc8
+    minor: 7.x-1.0-rc7 --> 7.x-1.0
+    major: 7.x-1.0-rc7 --> 7.x-2.0-rc1
 
 
 ###Testing A Version Schema
@@ -294,6 +281,9 @@ If develop branches should be pushed to `git_remote`.  Set to `auto` and you wil
 
 ###init_version: `"(string)"`
 (Optional)  This is used during `bump init` to set the default version of a package.
+
+###micro_prefix: `"(string)"`
+(Optional)  This is used as the default micro_prefix.
 
 ##Global Configuration
 A global configuration file may be created at `~/.web_package/config`, the contents of which will be used as defaults for new projects or existing projects without said parameter.  This is most useful for the `author` and `info_file` parameters.  **Note: if a global config parameter is set, but the project does not override it, the global will apply for that project, even after `bump init`.
