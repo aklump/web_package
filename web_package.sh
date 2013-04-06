@@ -114,12 +114,13 @@ fi
 wp_author=''
 
 ##
- # The inital version for new projects
+ # The initial version for new projects
  #
-wp_init_version="0.0.1"
+wp_init_version="7.x-1.0-alpha1"
 
 ##
- # The default micro prefix
+ # The default micro prefix when bumping micro from a version that doesn't
+ # contain micro data, e.g. 1.0 ---> 1.0${wp_micro_prefix}1
  #
 wp_micro_prefix='.'
 
@@ -180,9 +181,6 @@ function parse_config() {
 # If .web_package/config then we can override defaults, but optional.
 load_config
 
-# Global variable
-do_init_return='';
-
 ##
  # Initialize a new web_package directory
  #
@@ -190,7 +188,6 @@ do_init_return='';
  #   description of param
  #
  # @return NULL
- #   Sets the value of global $do_init_return
  #
 function do_init() {
   if [ ! -d .web_package ]
@@ -225,7 +222,8 @@ function do_init() {
   fi
 
   get_name
-  end "A new web_package \"$get_name_return\" (version: $wp_init_version) has been created."
+  get_version
+  end "A new web_package \"$get_name_return\" (version: $get_version_return) has been created."
 }
 
 
@@ -235,7 +233,6 @@ function do_init() {
  # @return NULL
  #
 function do_test() {
-
   if [ "$1" ]
   then
     test_version "$1" "$2" "$3" "$4" "$5" "$6" "$7"
@@ -256,36 +253,41 @@ function do_test() {
 
   echo 'MAJOR.MINOR(MINOR_PREFIX)MICRO:'
   wp_micro_prefix='-alpha'
-  test_version "0.3${wp_micro_prefix}4" "0.3${wp_micro_prefix}5" "0.3" "1.0${wp_micro_prefix}1" "0.3${wp_micro_prefix}4" "0.4-beta1" "0.4-rc1"
+  test_version "0.3${wp_micro_prefix}4" "0.3${wp_micro_prefix}5" "0.3" "1.0${wp_micro_prefix}1" "0.3${wp_micro_prefix}4" "0.3-beta1" "0.3-rc1"
 
-  #todo Finish writing these alpha, beta, rc tests
-  test_version 0.1 "0.2${wp_micro_prefix}1" "0.2" "1.0"
-  test_version 1.0 "1.1${wp_micro_prefix}1" "1.1" "2.0"
-  test_version 1 "1.1${wp_micro_prefix}1" "1.1" "2.0"
+
+  test_version 0.1 "0.2${wp_micro_prefix}1" "0.2" "1.0" "0.2-alpha1" "0.2-beta1" "0.2-rc1"
+  test_version 1.0 "1.1${wp_micro_prefix}1" "1.1" "2.0" "1.1-alpha1" "1.1-beta1" "1.1-rc1"
+  test_version 1 "1.1${wp_micro_prefix}1" "1.1" "2.0" "1.1-alpha1" "1.1-beta1" "1.1-rc1"
   #test_version 9.9.9 9.9.10 9.10 10.0
   #test_version 99.99.99 99.99.100 99.100 100.0
 
   # Drupal
+
   echo 'DRUPAL STYLE:'
   wp_micro_prefix='-alpha'
-  test_version 7.x-1.0-alpha1 7.x-1.0-alpha2 7.x-1.0 7.x-2.0-alpha1
-  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0
+  test_version 7.x-1.0-alpha1 7.x-1.0-alpha2 7.x-1.0 7.x-2.0-alpha1 7.x-1.0-alpha1 7.x-1.0-beta1 7.x-1.0-rc1
+  test_version 7.x-1.0-alpha217 7.x-1.0-alpha218 7.x-1.0 7.x-2.0-alpha1 7.x-1.0-alpha217 7.x-1.0-beta1 7.x-1.0-rc1
+  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0 7.x-1.1-alpha1 7.x-1.1-beta1 7.x-1.1-rc1
 
   echo 'DRUPAL STYLE:'
   wp_micro_prefix='-beta'
-  test_version 7.x-1.0-alpha1 7.x-1.0-alpha2 7.x-1.0 7.x-2.0-alpha1
-  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0
+  test_version 7.x-1.0-alpha9 7.x-1.0-alpha10 7.x-1.0 7.x-2.0-alpha1 7.x-1.0-alpha9 7.x-1.0-beta1 7.x-1.0-rc1
+  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0 7.x-1.1-alpha1 7.x-1.1-beta1 7.x-1.1-rc1
 
   echo 'DRUPAL STYLE:'
   wp_micro_prefix='-rc'
-  test_version 7.x-1.0-alpha1 7.x-1.0-alpha2 7.x-1.0 7.x-2.0-alpha1
-  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0
+  test_version 7.x-1.0-alpha1 7.x-1.0-alpha2 7.x-1.0 7.x-2.0-alpha1 7.x-1.0-alpha1 7.x-1.0-beta1 7.x-1.0-rc1
+  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0 7.x-1.1-alpha1 7.x-1.1-beta1 7.x-1.1-rc1
 
   # source: http://drupal.org/node/1015226
-  test_version 7.0 7.1${wp_micro_prefix}1 7.1 8.0
-  test_version 8.0-beta1 8.0-beta2 8.0 9.0-beta1
-  test_version 7.x-2.3 7.x-2.4${wp_micro_prefix}1 7.x-2.4 7.x-3.0
-  test_version 8.x-2.0-alpha6 8.x-2.0-alpha7 8.x-2.0 8.x-3.0-alpha1
+  test_version 7.0 7.1${wp_micro_prefix}1 7.1 8.0 7.1-alpha1 7.1-beta1 7.1-rc1
+  test_version 8.0-beta1 8.0-beta2 8.0 9.0-beta1 8.0-beta1 8.0-beta1 8.0-rc1
+  test_version 7.x-2.3 7.x-2.4${wp_micro_prefix}1 7.x-2.4 7.x-3.0 7.x-2.4-alpha1 7.x-2.4-beta1 7.x-2.4-rc1
+  test_version 8.x-2.0-alpha6 8.x-2.0-alpha7 8.x-2.0 8.x-3.0-alpha1 8.x-2.0-alpha6 8.x-2.0-beta1 8.x-2.0-rc1
+
+  test_version 2.3-rc5 2.3-rc6 2.3 3.0-rc1 2.3-rc5 2.3-rc5 2.3-rc5
+  test_version 2.3-beta5 2.3-beta6 2.3 3.0-beta1 2.3-beta5 2.3-beta5 2.3-rc1
 
   #@todo These need work
   #_p='my.pre_fix1-'
@@ -319,93 +321,52 @@ function do_test() {
  #   The expected minor result
  # @param string $4
  #   The expected major result
+ # @param string $5
+ #   The expected alpha result
+ # @param string $6
+ #   The expected beta result
+ # @param string $7
+ #   The expected rc result
  #
  # @return NULL
  #
 function test_version() {
-  success="`tput setaf 2` [OK]`tput op`"
+  test_version_severity $1 micro $2
+  test_version_severity $1 alpha $5
+  test_version_severity $1 beta $6
+  test_version_severity $1 rc $7
+  test_version_severity $1 minor $3
+  test_version_severity $1 major $4
+  echo
+}
 
-  increment_version $1 micro
-  result=''
+##
+ # Test a single version by severity
+ #
+ # @param string $1
+ #   The version string
+ # @param string $2
+ #   The severity level
+ # @param string $3
+ #   The control/expected value
+ #
+ # @return NULL
+ #
+function test_version_severity() {
+  increment_version $1 $2
+  result="`tput setaf 4`[No Tests]`tput op`"
   if [ "$3" ]
   then
-    result=$success
-  fi
-  if [ "$2" ] && [ "$increment_version_return" != "$2" ]
-  then
-    result="`tput setaf 1` != $2 [FAIL]`tput op`"
-  fi
-
-  echo "micro: $1 --> $increment_version_return $result"
-
-  increment_version $1 minor
-  result=''
-  if [ "$3" ]
-  then
-    result=$success
+    result="`tput setaf 2` [OK]`tput op`"
   fi
   if [ "$3" ] && [ "$increment_version_return" != "$3" ]
   then
     result="`tput setaf 1` != $3 [FAIL]`tput op`"
   fi
-  echo "minor: $1 --> $increment_version_return $result"
-
-  increment_version $1 major
-  result=''
-  if [ "$4" ]
-  then
-    result=$success
-  fi
-  if [ "$4" ] && [ "$increment_version_return" != "$4" ]
-  then
-    result="`tput setaf 1` != $4 [FAIL]`tput op`"
-  fi
-  echo "major: $1 --> $increment_version_return $result"
-
-  increment_version $1 alpha
-  result=''
-  if [ "$5" ]
-  then
-    result=$success
-  fi
-  if [ "$5" ] && [ "$increment_version_return" != "$5" ]
-  then
-    result="`tput setaf 1` != $5 [FAIL]`tput op`"
-  fi
-  echo "alpha: $1 --> $increment_version_return $result"
-
-  increment_version $1 beta
-  result=''
-  if [ "$6" ]
-  then
-    result=$success
-  fi
-  if [ "$6" ] && [ "$increment_version_return" != "$6" ]
-  then
-    result="`tput setaf 1` != $6 [FAIL]`tput op`"
-  fi
-  echo "beta: $1 --> $increment_version_return $result"
-
-  increment_version $1 rc
-  result=''
-  if [ "$7" ]
-  then
-    result=$success
-  fi
-  if [ "$7" ] && [ "$increment_version_return" != "$7" ]
-  then
-    result="`tput setaf 1` != $7 [FAIL]`tput op`"
-  fi
-  printf "%-10s\n" "rc: $1 --> $increment_version_return $result"
-  echo
-
-  #final
-  echo
+  printf "%-10s\n" "$2: $1 --> $increment_version_return $result"
 }
 
 
-#global variable
-increment_version_return=''
 
 ###
  # Increment the version number
@@ -413,11 +374,13 @@ increment_version_return=''
  # This variable relies on a global: $version It should resemble this n.n.n, but
  # can also be n.n or just n, where n is any number
  #
- # @param string
- #   major: increments the first
- #   minor: increments the second
- #   ...: increments the third
+ # @param string $1
+ #   The version string to increment
+ # @param string $2
+ #   The severity of the increment: micro, minor, major, alpha, beta, rc
+ #
  ##
+increment_version_return=''
 function increment_version () {
   increment_version_return='';
 
@@ -502,17 +465,27 @@ function increment_version () {
       ;;
   esac
 
-
-
   if [ "$2" == 'alpha' ] || [ "$2" == 'beta' ] || [ "$2" == 'rc' ]
   then
-    if [[ "$micro_prefix" == '.' ]] || [ ! "$micro_prefix" ] || ([[ "$micro_prefix" =~ [alpha] ]] && [ $2 == 'beta' ]) || ([[ "$micro_prefix" =~ [beta] ]] && [ $2 == 'rc' ])
+
+    # Determine the current version state
+    strstr $micro_prefix alpha
+    is_alpha=$strstr_return
+    strstr $micro_prefix beta
+    is_beta=$strstr_return
+    strstr $micro_prefix rc
+    is_rc=$strstr_return
+
+    if [[ "$micro_prefix" == '.' ]] || [ ! "$micro_prefix" ] || ([ $is_alpha == true ] && ([ $2 == 'beta' ] || [ $2 == 'rc' ])) || ([ $is_beta == true ] && [ $2 == 'rc' ])
     then
       if [ "$micro_prefix" != '.' ] || [ ! "$micro_prefix" ]
       then
         micro=1
       fi
-      minor=$(($minor + 1))
+      if [ "$micro_prefix" == '.' ] || [ ! "$micro_prefix" ] || [ "$2" == 'alpha' ]
+      then
+        minor=$(($minor + 1))
+      fi
       micro_prefix="-$2"
     fi
   fi
@@ -521,8 +494,30 @@ function increment_version () {
   return;
 }
 
-# Global variable
-get_branch_return='';
+##
+ # Find first occurrence of a string
+ #
+ # @param string $1
+ #   Haystack
+ # @param string $2
+ #   Needle
+ #
+ # @return NULL
+ #   Sets the value of global $strstr_return
+ #
+ # @code
+ #   strstr "$h" "$n"
+ #   if [ $strstr_return == true ] ...
+ # @endcode
+ #
+strstr_return=false;
+function strstr() {
+  strstr_return=false;
+  if [ "$1" ] && `echo ${1} | grep "${2}" 1>/dev/null 2>&1`
+  then
+    strstr_return=true
+  fi
+}
 
 ##
  # Return the name of the current git branch
@@ -530,12 +525,10 @@ get_branch_return='';
  # @return NULL
  #   Sets the value of global $get_branch_return
  #
+get_branch_return='';
 function get_branch() {
   get_branch_return=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
 }
-
-# Global variable
-is_master_branch_return='';
 
 ##
  # Check if we're on a master branch
@@ -543,6 +536,7 @@ is_master_branch_return='';
  # @return NULL
  #   Sets the value of global $is_master_branch_return to true or false
  #
+is_master_branch_return=false;
 function is_master_branch() {
   is_master_branch_return=false
   get_branch
@@ -557,15 +551,13 @@ function is_master_branch() {
   done
 }
 
-# Global variable
-is_develop_branch_return='';
-
 ##
  # Check if we're on a master branch
  #
  # @return NULL
  #   Sets the value of global $is_develop_branch_return to true or false
  #
+is_develop_branch_return=false;
 function is_develop_branch() {
   is_develop_branch_return=false
   get_branch
@@ -580,47 +572,39 @@ function is_develop_branch() {
   done
 }
 
-# Global variable
-get_version_return='';
-
 ##
  # Return the current version
  #
  # @return NULL
  #   Sets the value of global $get_version_return
  #
+get_version_return='';
 function get_version() {
   get_version_with_prefix
   get_version_return=$get_version_with_prefix_return
 }
 
-get_version_with_prefix_return='';
-
 ##
  # Return the current version
  #
  # @return NULL
  #   Sets the value of global $get_version_return
  #
+get_version_with_prefix_return='';
 function get_version_with_prefix() {
   get_version_with_prefix_return=$(grep "version" $wp_info_file | cut -f2 -d "=" | sed -e 's/^ *//g' -e 's/ *$//g');
 }
 
-# Global variable
-get_name_return='';
-
 ##
  # Return the current version
  #
  # @return NULL
  #   Sets the value of global $get_version_return
  #
+get_name_return='';
 function get_name() {
   get_name_return=$(grep "name" $wp_info_file | cut -f2 -d "=" | sed -e 's/^ *//g' -e 's/ *$//g');
 }
-
-# Global variable
-storage_return='';
 
 ##
  # Getter/Setter for persistent stored vars
@@ -636,6 +620,7 @@ storage_return='';
  # @return NULL
  #   Sets the value of global $storage_return
  #
+storage_return='';
 function storage() {
   file=".web_package/$1.txt"
   if [ "$2" ]
@@ -645,18 +630,12 @@ function storage() {
   storage_return=`cat $file`
 }
 
-
-# Global variable
-do_done_return='';
-
 ##
  # Do the done op
  #
  # @return NULL
- #   Sets the value of global $do_done_return
  #
 function do_done() {
-
   # Make sure we don't try to run 'bump done' on a master or develop branch
   is_master_branch
   if [ $is_master_branch_return == true ]
