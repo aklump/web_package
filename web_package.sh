@@ -148,9 +148,38 @@ function end() {
  # Format: Name = "Value"
  # Value does not need wrapping quotes if no spaces
  #
+ # @param string $1
+ #  (Optional) Defaults to ''.  Config file suffix.
+ #
+ # @return NULL
+ #   Sets value of load_config_return with the master config path
+ #
+load_config_return=''
 function load_config() {
+  load_config_return=''
+
+  # FIRST CHOICE: Take the template name from argument 1
+  if [ $# -eq 1 ]
+  then
+    wp_template=$1
+  else
+    # SECOND CHOICE: Take the template name from the project config
+    parse_config .web_package/config
+  fi
+
+  # Decide if we have template
+  # todo get the template defaults based on local config template
+  load_config_return=$HOME/.web_package/config
+
+  # If we have an master template file use it as source instead
+  template_file=$HOME/.web_package/config_$wp_template
+  if [ -f "$template_file" ]
+  then
+    load_config_return=$template_file
+  fi
+
   # Load user config
-  parse_config $HOME/.web_package/config
+  parse_config $load_config_return
 
   # Load project config
   parse_config .web_package/config
@@ -185,7 +214,7 @@ load_config
  # Initialize a new web_package directory
  #
  # @param string $1
- #   description of param
+ #   (Optional) Defaults to ''.  Config file suffix.
  #
  # @return NULL
  #
@@ -194,6 +223,26 @@ function do_init() {
   then
     mkdir .web_package
     touch .web_package/config
+
+    # If we have a template then load it
+    template=false
+    if [ "$1" ]
+    then
+      load_config $1
+      strstr $load_config_return $1
+      if [ "$strstr_return" == true ]
+      then
+        echo "Template `tput setaf 2`$1`tput op` used."
+        template=$1
+      else
+        echo "Template `tput setaf 1`$1`tput op` not found."
+      fi
+    fi
+
+    if [ $template ]
+    then
+      echo "template = $template" >> .web_package/config
+    fi
     echo "master = \"$wp_master\"" >> .web_package/config
     echo "develop = \"$wp_develop\"" >> .web_package/config
     echo "remote = $wp_remote" >> .web_package/config
@@ -202,6 +251,9 @@ function do_init() {
     echo "push_master = $wp_push_master" >> .web_package/config
     echo "push_develop = $wp_push_develop" >> .web_package/config
     echo "micro_prefix = $wp_micro_prefix" >> .web_package/config
+
+    # Restore the defaults
+    load_config
   fi
 
   # Create the info file
@@ -811,7 +863,7 @@ fi
  #
 if [ "$1" == 'init' ]
 then
-  do_init
+  do_init $2
 fi
 
 
