@@ -103,7 +103,7 @@ wp_push_master=ask
  # The name of the file that holds your version string
  #
 wp_info_file='web_package.info';
-if [ ! -f "$wP_info" ] && [ $(ls *.info 2>/dev/null) ]
+if [ ! -f "$wp_info" ] && [ $(ls "*.info" 2>/dev/null) ]
 then
   wp_info_file=$(ls *.info);
 fi
@@ -261,8 +261,8 @@ function do_init() {
   then
     read -e -p "Enter package name: " name
     read -e -p "Enter package description: " description
-    echo "name = $name" > $wp_info_file
-    echo "description = $description" >> $wp_info_file
+    echo "name = \"$name\"" > $wp_info_file
+    echo "description = \"$description\"" >> $wp_info_file
     echo "version = $wp_init_version" >> $wp_info_file
     # It may be that users don't want the author tag at all, so unless they
     # provide we will not write it to the .info file
