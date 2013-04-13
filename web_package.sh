@@ -876,7 +876,7 @@ fi
 
 if [ ! -f "$wp_info_file" ]
 then
-  end "$wp_info_file not found. Have you created your Web Package yet?"
+  end "`tput setaf 1`$wp_info_file`tput op` not found. Have you created your Web Package yet?"
 fi
 
 ##
@@ -913,6 +913,18 @@ if [ "$1" == 'name' ] || [ "$1" == 'n' ]
 then
   get_name
   end 'Name: '$get_name_return;
+fi
+
+
+
+
+##
+ # Anything below here needs to have .web_package
+ #
+
+if [ ! -d ".web_package" ]
+then
+  end "`tput setaf 1`.web_package`tput op` directory not found. Try 'bump init'..."
 fi
 
 ##
@@ -959,7 +971,7 @@ fi
 if [ "$allow" == false ]
 then
   get_branch
-  echo "current branch: $get_branch_return is not defined as a \"$from_branch\" branch."
+  echo "current branch: `tput setaf 1`$get_branch_return`tput op` is not defined as a \"$from_branch\" branch."
   end "To execute a $release_type you must be on a \"$from_branch\" branch. Switch and try again."
 fi
 
