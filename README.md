@@ -2,7 +2,7 @@
 
 A shell script to help the management of files as a package through easy version number manipulation. Supports name, description, author and version number. Integrates with .git and uses gitflow methodology to automatically merge and tag.
 
-##Why Use Web Project?
+##Why Use Web Package?
 If you're used to typing this:
     
     $ git add .
@@ -28,7 +28,7 @@ How would you rather type this, instead from now on...
     $ bump release
     $ bump done
 
-If so, Web Project is for you! Read on...
+If so, Web Package is for you! Read on...
     
 ##Installation
 1. Create a symlink to `web_package.sh`, I suggest `bump` and add it to `~/bin` you can then call this script by typing `bump` on the command line as in the examples below.
@@ -383,7 +383,6 @@ When you have finished work on the development branch and you want to release it
 ###When should I use 'bump major', 'bump minor', or 'bump micro'?
 These three commands are unique in that they do not interact with git in any way, they simply modify `web_package.info`.  The choice of which of the three to use is based on the severity of the changes and your versioning mandates.  However, _why_ you would use one of these three can be answered thus: __Any time that you will need to step away from the development branch for an extended period of time, but cannot release the package.__  This way you can be certain that no implementation of your web_package thinks it has the most recent version.  I would argue it's best practice to `bump_micro` at the end of each work session, if you have multiple projects underway.
 
-Another time to `bump micro` is after you push to a staging server, that way you know your staging server is behind your local.  This may or may not make sense for your situation.
 
 ##Contact
 **In the Loft Studios**  
