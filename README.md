@@ -224,6 +224,17 @@ description = An example package showing how to do this
 version = 0.2.1
 </pre>
 
+## Merge conflict during `bump done`
+Follow these steps if you experience a merge conflict after typing `bump done`; they should get you through it.
+
+1. Open the file with the conflict
+2. Remove all conflicts
+3. Save the file and `git add [file]`
+4. Repeat until all conflicts are resolved
+5. Type `git commit`
+6. Now go back the hotfix or release branch: `git co hotfix…`
+7. Re-initiate `bump done`
+
 ## Alpha, Beta and RC
 There are three commands that will move your package through the stages, but only in the logical order.
 
