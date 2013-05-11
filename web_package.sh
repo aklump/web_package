@@ -103,10 +103,12 @@ wp_push_master=ask
  # The name of the file that holds your version string
  #
 wp_info_file='web_package.info';
-#@todo This does not work when there is more than one .info file
-if [ ! -f "$wp_info" ] && [ $(ls *.info 2>/dev/null) ]
-then
-  wp_info_file=$(ls *.info);
+if [ ! -f "$wp_info_file" ]; then
+  for file in $(ls *.info 2>/dev/null)
+  do
+    wp_info_file=$file
+    break;
+  done
 fi
 
 ##
