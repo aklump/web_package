@@ -260,7 +260,7 @@ function do_init() {
   fi
 
   # Create the info file
-  if [ ! -f "$wp_info_file" ]
+  if [ ! -s "$wp_info_file" ]
   then
     read -e -p "Enter package name: " name
     read -e -p "Enter package description: " description
