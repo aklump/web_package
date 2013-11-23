@@ -40,11 +40,11 @@ If so, Web Package is for you! Read on...
 
 
 ##About Version Numbers
-1. Two versioning schemas may be used `(prefix-)major.minor.micro` and `(prefix-)major.minor(micro_prefix)micro`.
+1. Two versioning schemas may be used `(prefix-)major.minor.patch` and `(prefix-)major.minor(patch_prefix)patch`.
 2. There is no limit the to value of each part; as an example something like this is theoretically possible `999.999.999`.  Important to note: the next minor version after `1.9` is not `2.0`, but rather `1.10`.
 3. `(prefix-)` is a string of any chars ending in a hyphen, e.g. `7.x-`.
-4. `(micro_prefix)` is a string of one or more non numbers, e.g. `-alpha`.
-3. Read more about version numbers here <http://en.wikipedia.org/wiki/Software_versioning>
+4. `(patch_prefix)` is a string of one or more non numbers, e.g. `-alpha`.
+3. Read more about version numbers here <http://semver.org/> && <http://en.wikipedia.org/wiki/Software_versioning>
 4. Read more about Drupal version numbers here <http://drupal.org/node/1015226>
 5. To see many version examples type `bump test`.
 
@@ -60,29 +60,29 @@ If so, Web Package is for you! Read on...
 ### Invalid Examples
 * `1` (missing minor digit, use `1.0` instead.)
 * `1-rc1` (missing minor digit, use `1.0-rc1` instead.)
-* `1.0-alpha` (missing micro digit, use `1.0-alpha1` instead.)
-* `1.0-dev` (missing micro digit, don't use `-dev` or add a micro digit.)
+* `1.0-alpha` (missing patch digit, use `1.0-alpha1` instead.)
+* `1.0-dev` (missing patch digit, don't use `-dev` or add a patch digit.)
 
 ## About Version Incrementing
 ### Example 1:
 
-    micro: 0.0.1 --> 0.0.2
+    patch: 0.0.1 --> 0.0.2
     minor: 0.0.1 --> 0.1
     major: 0.0.1 --> 1.0
 
 ### Example 2:
-The key difference to notice is that when you `bump minor` in this schema, it simply drops the micro prefix and the micro values and does _not_ increment the minor value.  Also if you `bump major` it will carry over the micro_prefix for you automatically and set the micro value to 1.
+The key difference to notice is that when you `bump minor` in this schema, it simply drops the patch prefix and the patch values and does _not_ increment the minor value.  Also if you `bump major` it will carry over the patch_prefix for you automatically and set the patch value to 1.
 
-    micro: 8.x-2.0-alpha6 --> 8.x-2.0-alpha7
+    patch: 8.x-2.0-alpha6 --> 8.x-2.0-alpha7
     minor: 8.x-2.0-alpha6 --> 8.x-2.0
     major: 8.x-2.0-alpha6 --> 8.x-3.0-alpha1
 
 
 ###Testing A Version Schema
-To test this script against your version schema, you may call `bump test`.  The arguments the follow are: the version string to test, the expected outcome of a bump for: micro, minor, major, alpha, beta, rc.  Here is an example:
+To test this script against your version schema, you may call `bump test`.  The arguments the follow are: the version string to test, the expected outcome of a bump for: patch, minor, major, alpha, beta, rc.  Here is an example:
 
     $ bump test 1.0 1.0.1 1.1 2.0 1.1-alpha1 1.1-beta1 1.1-rc1
-    micro: 1.0 --> 1.0.1  [OK]
+    patch: 1.0 --> 1.0.1  [OK]
     minor: 1.0 --> 1.1  [OK]
     major: 1.0 --> 2.0  [OK]
     alpha: 1.0 --> 1.1-alpha1  [OK]
@@ -91,11 +91,34 @@ To test this script against your version schema, you may call `bump test`.  The 
 
 
 ##About the .info File
-Web Package looks for a file with the .info extension and will use that for storing the meta data about your project.  If none is found, then `web_package.info` will be created.  You may configure the actual filename in the config file e.g. `info_file = some_other_file.info` if these first two options do not work for you.
+Web Package looks for a file with the .info extension and will use that for storing the meta data about your project.  If none is found, then `web_package.info` will be created.  You may configure the actual filename in the config file e.g. `info_file = some_other_file.info` if these first two options do not work for you. Here is a basic `.info` file.
+
+    name = "Apple"
+    description = "A red, green or yellow fruit."
+    homepage = http://www.intheloftstudios.com/packages/jquery/apple
+    version = 0.0.1
+    author = Aaron Klump <sourcecode@intheloftstudios.com>
+
+### Advanced Use: Callback scripts
+In some cases, say with a jQuery plugin, you may need to embed the version string _inside_ the `jquery.pluging_name.js` file.  In such a case the  `.info` file strategy doesn't meet your needs.  For such a scenario you may use a callback script.  Callback scripts are called anytime the version number changes.
+
+A callback script is named either `version.php` or `version.sh` and is placed in `.web_package`.  You may use either one, or both depending upon your scripting language preference.  Refer to the parameter chart below for script arguments:
+
+#### Callback arguments
+| info          | version.php | version.sh |
+|---------------|-------------|------------|
+| prev version  | $argv[1]    | $1         |
+| new version   | $argv[2]    | $2         |
+| package name  | $argv[3]    | $3         |
+| description   | $argv[4]    | $4         |
+| homepage      | $argv[5]    | $5         |
+| author        | $argv[6]    | $6         |
+
+If your script echos any output it will simply be displayed to the screen.
 
 ##Beginning A New Project
 1. In this example you see how we being a new project called example, initialize the git repository and start with a version number of 0.1
-1. Had you wanted to start with version 1.0, then you would have used `bump major`; and if you had wanted to start with version 0.0.1 you would have used `bump micro`.
+1. Had you wanted to start with version 1.0, then you would have used `bump major`; and if you had wanted to start with version 0.0.1 you would have used `bump patch`.
 
 <pre>
 $ mkdir example
@@ -120,7 +143,7 @@ $
 
 ##Developing A Project
 1. In this example you make your changes to the develop branch (see [gitflow](http://nvie.com/posts/a-successful-git-branching-model)) and then commit as normal. You could have also done things on feature branches and merged then back into develop.
-1. When all your work is done and you're ready for the release then type `bump release`; this is shorthand for `bump minor release`. If you only want a micro release then type `bump micro release`.  Consequently if you want a major release type `bump major release`. 
+1. When all your work is done and you're ready for the release then type `bump release`; this is shorthand for `bump minor release`. If you only want a patch release then type `bump patch release`.  Consequently if you want a major release type `bump major release`. 
 2. Immediately thereafter (unless you know what you're doing), type `bump done`
 
 <pre>
@@ -238,7 +261,7 @@ Follow these steps if you experience a merge conflict after typing `bump done`; 
 ## Alpha, Beta and RC
 There are three commands that will move your package through the stages, but only in the logical order.
 
-1. `bump alpha` call this when your version doesn't already contain alpha, beta or rc as the micro prefix.  Example, calling `bump alpha` on a version of `1.0` will bump your version to `1.1-alpha1`.
+1. `bump alpha` call this when your version doesn't already contain alpha, beta or rc as the patch prefix.  Example, calling `bump alpha` on a version of `1.0` will bump your version to `1.1-alpha1`.
 2. Calling `bump beta` on when your project is already in alpha will move it to beta stage, e.g. `bump beta` when your version is `1.1-alpha5` moves it to `1.1-beta1`.
 3. Calling `bump rc` on a `1.1-beta3` bumps it to `1.1-rc1`
 4. You can go directly to beta or to rc, but not the other direction, e.g. if your version is `2.3` you can `bump rc` and it becomes `2.4-rc1`.
@@ -265,7 +288,7 @@ The name of the branch you consider develop.  If you have more than one branch y
 ###remote: `(string)`
 The name of the git remote to be used with `git push [git_remote] release-1.0`
 
-###create_tags: `major`, `minor`, `micro ` or `no`
+###create_tags: `major`, `minor`, `patch ` or `no`
 When executing `bump done`, determine what severity level will create a git tag.  Set to `no` to never create a tag.
 
 ###push_tags: `no`, `ask` or `auto`
@@ -286,8 +309,15 @@ If develop branches should be pushed to `git_remote`.  Set to `auto` and you wil
 ###init_version: `"(string)"`
 (Optional)  This is used during `bump init` to set the default version of a package.
 
-###micro_prefix: `"(string)"`
-(Optional)  This is used as the default micro_prefix.
+###patch_prefix: `"(string)"`
+(Optional)  This is used as the default patch_prefix.
+
+###php: `"(string)"`
+(Optional)  The path to the php to use for PHP callback scripts.
+
+###bash: `"(string)"`
+(Optional)  The path to bash to use for shell callback scripts.
+
 
 ##Global Configuration
 A global configuration file may be created at `~/.web_package/config`, the contents of which will be used as defaults for new projects or existing projects without said parameter.  This is most useful for the `author` and `info_file` parameters.  **Note: if a global config parameter is set, but the project does not override it, the global will apply for that project, even after `bump init`.
@@ -298,12 +328,12 @@ Let's take the use case of a Drupal module, which has a different configuration 
     master = 8.x-1.x 7.x-1.x 6.x-1.x
     develop = 8.x-1.x 7.x-1.x 6.x-1.x
     remote = origin
-    create_tags = micro
+    create_tags = patch
     push_tags = ask
     push_develop = no
     push_master = ask
     info_file = web_package.info
-    micro_prefix = -rc
+    patch_prefix = -rc
 
 Wouldn't it be nice to not have to retype that for every new Drupal module?  Well you don't have to if you use a Global Template.
 
@@ -326,12 +356,12 @@ When creating a new project, use the command `bump init drupal` and your templat
     master = 8.x-1.x 7.x-1.x 6.x-1.x
     develop = 8.x-1.x 7.x-1.x 6.x-1.x
     remote = origin
-    create_tags = micro
+    create_tags = patch
     push_tags = ask
     push_develop = no
     push_master = ask
     info_file = web_package.info
-    micro_prefix = -rc
+    patch_prefix = -rc
     $
 
 ##[Drupal Modules/Themes](id:drupal)
@@ -391,8 +421,8 @@ When you need to make an immediate change to the production state of the project
 ###When should I use 'bump release'?
 When you have finished work on the development branch and you want to release it to the production-ready state of the project, you will use `bump release`.  A release is different from a hotfix, in that the version is bumped _after_ the work is done.
 
-###When should I use 'bump major', 'bump minor', or 'bump micro'?
-These three commands are unique in that they do not interact with git in any way, they simply modify `web_package.info`.  The choice of which of the three to use is based on the severity of the changes and your versioning mandates.  However, _why_ you would use one of these three can be answered thus: __Any time that you will need to step away from the development branch for an extended period of time, but cannot release the package.__  This way you can be certain that no implementation of your web_package thinks it has the most recent version.  I would argue it's best practice to `bump_micro` at the end of each work session, if you have multiple projects underway.
+###When should I use 'bump major', 'bump minor', or 'bump patch'?
+These three commands are unique in that they do not interact with git in any way, they simply modify `web_package.info`.  The choice of which of the three to use is based on the severity of the changes and your versioning mandates.  However, _why_ you would use one of these three can be answered thus: __Any time that you will need to step away from the development branch for an extended period of time, but cannot release the package.__  This way you can be certain that no implementation of your web_package thinks it has the most recent version.  I would argue it's best practice to `bump_patch` at the end of each work session, if you have multiple projects underway.
 
 
 ##Contact
