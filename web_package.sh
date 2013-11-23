@@ -77,7 +77,7 @@ wp_remote=origin
 
 ##
  # Whether to create tags or not
- # Values: major, minor, micro or no
+ # Values: major, minor, patch or no
  #
 wp_create_tags=minor
 
@@ -122,10 +122,10 @@ wp_author=''
 wp_init_version="7.x-1.0-alpha1"
 
 ##
- # The default micro prefix when bumping micro from a version that doesn't
- # contain micro data, e.g. 1.0 ---> 1.0${wp_micro_prefix}1
+ # The default patch prefix when bumping patch from a version that doesn't
+ # contain patch data, e.g. 1.0 ---> 1.0${wp_patch_prefix}1
  #
-wp_micro_prefix='.'
+wp_patch_prefix='.'
 
 ##
  # BEGIN FUNCTIONS
@@ -186,6 +186,20 @@ function load_config() {
 
   # Load project config
   parse_config .web_package/config
+
+  if [[ ! "$wp_php" ]]; then
+    wp_php=$(which php)
+  fi
+
+  if [[ ! "$wp_bash" ]]; then
+    wp_bash=$(which bash)
+  fi
+
+  # Legacy support convert micro to patch and alert user
+  if [[ "$wp_create_tags" == 'micro' ]]; then
+    wp_create_tags='patch';
+    echo "`tput setaf 3`Replace 'create_tags = micro' with 'create_tags = patch' in .web_package/config`tput op`"
+  fi
 }
 
 ##
@@ -253,7 +267,7 @@ function do_init() {
     echo "push_tags = $wp_push_tags" >> .web_package/config
     echo "push_master = $wp_push_master" >> .web_package/config
     echo "push_develop = $wp_push_develop" >> .web_package/config
-    echo "micro_prefix = $wp_micro_prefix" >> .web_package/config
+    echo "patch_prefix = $wp_patch_prefix" >> .web_package/config
 
     # Restore the defaults
     load_config
@@ -264,9 +278,14 @@ function do_init() {
   then
     read -e -p "Enter package name: " name
     read -e -p "Enter package description: " description
+    read -e -p "Enter package homepage: " url
     echo "name = \"$name\"" > $wp_info_file
     echo "description = \"$description\"" >> $wp_info_file
+    if [ "$url" ]; then
+      echo "homepage = $url" >> $wp_info_file
+    fi
     echo "version = $wp_init_version" >> $wp_info_file
+
     # It may be that users don't want the author tag at all, so unless they
     # provide we will not write it to the .info file
     if [ "$wp_author" ]
@@ -294,11 +313,11 @@ function do_test() {
     return
   fi
 
-  staged=$wp_micro_prefix;
+  staged=$wp_patch_prefix;
 
   # standard versions
-  echo 'MAJOR.MINOR.MICRO:'
-  wp_micro_prefix='.'
+  echo 'MAJOR.MINOR.PATCH:'
+  wp_patch_prefix='.'
   test_version 0.0.1 0.0.2 0.1 1.0 '0.1-alpha1' '0.1-beta1' '0.1-rc1'
   test_version "0.1" "0.1.1" "0.2" "1.0" "0.2-alpha1" "0.2-beta1" "0.2-rc1"
   test_version 1.0 1.0.1 1.1 2.0 '1.1-alpha1' '1.1-beta1' '1.1-rc1'
@@ -306,39 +325,39 @@ function do_test() {
   test_version 9.9.9 9.9.10 9.10 10.0 "9.10-alpha9" "9.10-beta9" "9.10-rc9"
   test_version 99.99.99 99.99.100 99.100 100.0 "99.100-alpha99" "99.100-beta99" "99.100-rc99"
 
-  echo 'MAJOR.MINOR(MINOR_PREFIX)MICRO:'
-  wp_micro_prefix='-alpha'
-  test_version "0.3${wp_micro_prefix}4" "0.3${wp_micro_prefix}5" "0.3" "1.0${wp_micro_prefix}1" "0.3${wp_micro_prefix}4" "0.3-beta1" "0.3-rc1"
+  echo 'MAJOR.MINOR(MINOR_PREFIX)PATCH:'
+  wp_patch_prefix='-alpha'
+  test_version "0.3${wp_patch_prefix}4" "0.3${wp_patch_prefix}5" "0.3" "1.0${wp_patch_prefix}1" "0.3${wp_patch_prefix}4" "0.3-beta1" "0.3-rc1"
 
 
-  test_version 0.1 "0.2${wp_micro_prefix}1" "0.2" "1.0" "0.2-alpha1" "0.2-beta1" "0.2-rc1"
-  test_version 1.0 "1.1${wp_micro_prefix}1" "1.1" "2.0" "1.1-alpha1" "1.1-beta1" "1.1-rc1"
-  test_version 1 "1.1${wp_micro_prefix}1" "1.1" "2.0" "1.1-alpha1" "1.1-beta1" "1.1-rc1"
+  test_version 0.1 "0.2${wp_patch_prefix}1" "0.2" "1.0" "0.2-alpha1" "0.2-beta1" "0.2-rc1"
+  test_version 1.0 "1.1${wp_patch_prefix}1" "1.1" "2.0" "1.1-alpha1" "1.1-beta1" "1.1-rc1"
+  test_version 1 "1.1${wp_patch_prefix}1" "1.1" "2.0" "1.1-alpha1" "1.1-beta1" "1.1-rc1"
   #test_version 9.9.9 9.9.10 9.10 10.0
   #test_version 99.99.99 99.99.100 99.100 100.0
 
   # Drupal
 
   echo 'DRUPAL STYLE:'
-  wp_micro_prefix='-alpha'
+  wp_patch_prefix='-alpha'
   test_version 7.x-1.0-alpha1 7.x-1.0-alpha2 7.x-1.0 7.x-2.0-alpha1 7.x-1.0-alpha1 7.x-1.0-beta1 7.x-1.0-rc1
   test_version 7.x-1.0-alpha217 7.x-1.0-alpha218 7.x-1.0 7.x-2.0-alpha1 7.x-1.0-alpha217 7.x-1.0-beta1 7.x-1.0-rc1
-  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0 7.x-1.1-alpha1 7.x-1.1-beta1 7.x-1.1-rc1
+  test_version 7.x-1.0 7.x-1.1${wp_patch_prefix}1 7.x-1.1 7.x-2.0 7.x-1.1-alpha1 7.x-1.1-beta1 7.x-1.1-rc1
 
   echo 'DRUPAL STYLE:'
-  wp_micro_prefix='-beta'
+  wp_patch_prefix='-beta'
   test_version 7.x-1.0-alpha9 7.x-1.0-alpha10 7.x-1.0 7.x-2.0-alpha1 7.x-1.0-alpha9 7.x-1.0-beta1 7.x-1.0-rc1
-  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0 7.x-1.1-alpha1 7.x-1.1-beta1 7.x-1.1-rc1
+  test_version 7.x-1.0 7.x-1.1${wp_patch_prefix}1 7.x-1.1 7.x-2.0 7.x-1.1-alpha1 7.x-1.1-beta1 7.x-1.1-rc1
 
   echo 'DRUPAL STYLE:'
-  wp_micro_prefix='-rc'
+  wp_patch_prefix='-rc'
   test_version 7.x-1.0-alpha1 7.x-1.0-alpha2 7.x-1.0 7.x-2.0-alpha1 7.x-1.0-alpha1 7.x-1.0-beta1 7.x-1.0-rc1
-  test_version 7.x-1.0 7.x-1.1${wp_micro_prefix}1 7.x-1.1 7.x-2.0 7.x-1.1-alpha1 7.x-1.1-beta1 7.x-1.1-rc1
+  test_version 7.x-1.0 7.x-1.1${wp_patch_prefix}1 7.x-1.1 7.x-2.0 7.x-1.1-alpha1 7.x-1.1-beta1 7.x-1.1-rc1
 
   # source: http://drupal.org/node/1015226
-  test_version 7.0 7.1${wp_micro_prefix}1 7.1 8.0 7.1-alpha1 7.1-beta1 7.1-rc1
+  test_version 7.0 7.1${wp_patch_prefix}1 7.1 8.0 7.1-alpha1 7.1-beta1 7.1-rc1
   test_version 8.0-beta1 8.0-beta2 8.0 9.0-beta1 8.0-beta1 8.0-beta1 8.0-rc1
-  test_version 7.x-2.3 7.x-2.4${wp_micro_prefix}1 7.x-2.4 7.x-3.0 7.x-2.4-alpha1 7.x-2.4-beta1 7.x-2.4-rc1
+  test_version 7.x-2.3 7.x-2.4${wp_patch_prefix}1 7.x-2.4 7.x-3.0 7.x-2.4-alpha1 7.x-2.4-beta1 7.x-2.4-rc1
   test_version 8.x-2.0-alpha6 8.x-2.0-alpha7 8.x-2.0 8.x-3.0-alpha1 8.x-2.0-alpha6 8.x-2.0-beta1 8.x-2.0-rc1
 
   test_version 2.3-rc5 2.3-rc6 2.3 3.0-rc1 2.3-rc5 2.3-rc5 2.3-rc5
@@ -353,15 +372,15 @@ function do_test() {
   #test_version ${_p}0.1 ${_p}0.1.1 ${_p}0.2 ${_p}2.0
   #test_version ${_p}1 ${_p}1.0.1 ${_p}1.1 ${_p}2.0
   #
-  #echo ODD MICRO_PREFIX:
+  #echo ODD PATCH_PREFIX:
   #test_version 1.0${_mp}1 1.0${_mp}2 1.0 2.0
   #
-  #echo ODD PREFIX AND MICRO_PREFIX
+  #echo ODD PREFIX AND PATCH_PREFIX
   #test_version ${_p}0.0.1${_mp}
   #test_version ${_p}0.1${_mp}
   #test_version ${_p}1${_mp}
 
-  wp_micro_prefix=$staged
+  wp_patch_prefix=$staged
 
 }
 
@@ -371,7 +390,7 @@ function do_test() {
  # @param string $1
  #   The version to test
  # @param string $2
- #   The expected micro result
+ #   The expected patch result
  # @param string $3
  #   The expected minor result
  # @param string $4
@@ -386,7 +405,7 @@ function do_test() {
  # @return NULL
  #
 function test_version() {
-  test_version_severity $1 micro $2
+  test_version_severity $1 patch $2
   test_version_severity $1 alpha $5
   test_version_severity $1 beta $6
   test_version_severity $1 rc $7
@@ -432,7 +451,7 @@ function test_version_severity() {
  # @param string $1
  #   The version string to increment
  # @param string $2
- #   The severity of the increment: micro, minor, major, alpha, beta, rc
+ #   The severity of the increment: patch, minor, major, alpha, beta, rc
  #
  ##
 increment_version_return=''
@@ -451,8 +470,8 @@ function increment_version () {
     major="${BASH_REMATCH[2]}"
     major_suffix="${BASH_REMATCH[3]}"
     minor="${BASH_REMATCH[4]}"
-    micro_prefix="${BASH_REMATCH[5]}"
-    micro="${BASH_REMATCH[6]}"
+    patch_prefix="${BASH_REMATCH[5]}"
+    patch="${BASH_REMATCH[6]}"
 
   # 7.x-1.0
   elif [[ "$1" =~ $regex2 ]]
@@ -462,8 +481,8 @@ function increment_version () {
     major="${BASH_REMATCH[2]}"
     major_suffix="${BASH_REMATCH[3]}"
     minor="${BASH_REMATCH[4]}"
-    micro_prefix=''
-    micro=0
+    patch_prefix=''
+    patch=0
 
   # 7.x-1
   elif [[ "$1" =~ $regex3 ]]
@@ -473,46 +492,46 @@ function increment_version () {
     major="${BASH_REMATCH[2]}"
     major_suffix='.'
     minor=0
-    micro_prefix=''
-    micro=0
+    patch_prefix=''
+    patch=0
   else
-    end "'$1' uses an unknown schema and cannot be incremented."
+    end "'$1' uses an unknown version schema and cannot be incremented."
   fi
 
   case "$2" in
     major)
-      if [ "$micro_prefix" == '.' ] || [ "$micro_prefix" = '' ]
+      if [ "$patch_prefix" == '.' ] || [ "$patch_prefix" = '' ]
       then
         major=$(($major + 1))
         major_suffix='.'
         minor=0
-        micro_prefix=''
-        micro=''
+        patch_prefix=''
+        patch=''
       else
         major=$(($major + 1))
         major_suffix='.'
         minor=0
-        micro=1
+        patch=1
       fi
 
       ;;
     minor)
       # Only increment minor if the prefix is '.' or prefix is empty
-      if [ "$micro_prefix" == '.' ] || [ ! "$micro_prefix" ]
+      if [ "$patch_prefix" == '.' ] || [ ! "$patch_prefix" ]
       then
         minor=$(($minor + 1))
       fi
-      micro_prefix=''
-      micro=''
+      patch_prefix=''
+      patch=''
       ;;
-    micro)
-      micro=$(($micro + 1))
-      if [ ! "$micro_prefix" ]
+    patch)
+      patch=$(($patch + 1))
+      if [ ! "$patch_prefix" ]
       then
-        micro_prefix=$wp_micro_prefix
-        #if you bump micro and theres no prefix and the default is not . then
+        patch_prefix=$wp_patch_prefix
+        #if you bump patch and theres no prefix and the default is not . then
         #you increment minor too
-        if [ $wp_micro_prefix != '.' ]
+        if [ $wp_patch_prefix != '.' ]
         then
           minor=$(($minor + 1))
         fi
@@ -524,28 +543,28 @@ function increment_version () {
   then
 
     # Determine the current version state
-    strstr $micro_prefix alpha
+    strstr $patch_prefix alpha
     is_alpha=$strstr_return
-    strstr $micro_prefix beta
+    strstr $patch_prefix beta
     is_beta=$strstr_return
-    strstr $micro_prefix rc
+    strstr $patch_prefix rc
     is_rc=$strstr_return
 
-    if [[ "$micro_prefix" == '.' ]] || [ ! "$micro_prefix" ] || ([ $is_alpha == true ] && ([ $2 == 'beta' ] || [ $2 == 'rc' ])) || ([ $is_beta == true ] && [ $2 == 'rc' ])
+    if [[ "$patch_prefix" == '.' ]] || [ ! "$patch_prefix" ] || ([ $is_alpha == true ] && ([ $2 == 'beta' ] || [ $2 == 'rc' ])) || ([ $is_beta == true ] && [ $2 == 'rc' ])
     then
-      if [ "$micro_prefix" != '.' ] || [ ! "$micro_prefix" ]
+      if [ "$patch_prefix" != '.' ] || [ ! "$patch_prefix" ]
       then
-        micro=1
+        patch=1
       fi
-      if [ "$micro_prefix" == '.' ] || [ ! "$micro_prefix" ] || [ "$2" == 'alpha' ]
+      if [ "$patch_prefix" == '.' ] || [ ! "$patch_prefix" ] || [ "$2" == 'alpha' ]
       then
         minor=$(($minor + 1))
       fi
-      micro_prefix="-$2"
+      patch_prefix="-$2"
     fi
   fi
 
-  increment_version_return="${prefix}${major}${major_suffix}${minor}${micro_prefix}${micro}"
+  increment_version_return="${prefix}${major}${major_suffix}${minor}${patch_prefix}${patch}"
   return;
 }
 
@@ -582,7 +601,28 @@ function strstr() {
  #
 get_branch_return='';
 function get_branch() {
-  get_branch_return=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+  get_branch_return=''
+  if in_git_repo; then
+    get_branch_return=$(git branch | sed -n -e 's/^\* \(.*\)/\1/p')
+  fi
+}
+
+#
+# Test if we're in a git repo
+#
+# @code
+#   if in_git_repo; then
+# @endcode
+#
+function in_git_repo () {
+  # Copyright (C) 2006,2007 Shawn O. Pearce <spearce@spearce.org>
+  # Conceptually based on gitcompletion (http://gitweb.hawaga.org.uk/).
+  # Distributed under the GNU General Public License, version 2.0.
+  if [ -d .git ] || (git rev-parse --git-dir 2> /dev/null); then
+    return 0;
+  fi;
+
+  return -1;
 }
 
 ##
@@ -643,22 +683,38 @@ function get_version() {
  # Return the current version
  #
  # @return NULL
- #   Sets the value of global $get_version_return
+ #   Sets the value of global $get_version_with_prefix_return
  #
 get_version_with_prefix_return='';
 function get_version_with_prefix() {
-  get_version_with_prefix_return=$(grep "version" $wp_info_file | cut -f2 -d "=" | sed -e 's/^ *//g' -e 's/ *$//g');
+  get_info_string 'version'
+  get_version_with_prefix_return=$get_info_string_return
 }
 
 ##
- # Return the current version
+ # Return the a string from the info file
+ # 
+ # @param string the info key
  #
  # @return NULL
- #   Sets the value of global $get_version_return
+ #   Sets the value of global $get_info_string_return
+ #
+get_info_string_return='';
+function get_info_string() {
+  get_info_string_return=$(grep "$1" $wp_info_file | cut -f2 -d "=" | sed -e 's/^ *//g' -e 's/ *$//g');
+  get_info_string_return=$(echo $get_info_string_return | sed -e 's/^[" ]*//g' -e 's/[" ]*$//g');
+}
+
+##
+ # Return the name
+ #
+ # @return NULL
+ #   Sets the value of global $get_name_return
  #
 get_name_return='';
 function get_name() {
-  get_name_return=$(grep "name" $wp_info_file | cut -f2 -d "=" | sed -e 's/^ *//g' -e 's/ *$//g');
+  get_info_string 'name'
+  get_name_return=$get_info_string_return
 }
 
 ##
@@ -753,7 +809,7 @@ function do_done() {
   # Tag the new release if we are supposed to for this severity
   storage severity
   do_tag=false;
-  if [ $wp_create_tags == 'micro' ]
+  if [ $wp_create_tags == 'patch' ]
   then
     do_tag=true
   fi
@@ -857,7 +913,7 @@ then
   echo "push_develop = $wp_push_develop"
   echo "push_master = $wp_push_master"
   echo "info_file = $wp_info_file"
-  echo "micro_prefix = $wp_micro_prefix"
+  echo "patch_prefix = $wp_patch_prefix"
   exit
 fi
 
@@ -879,6 +935,9 @@ fi
 
 if [ ! -f "$wp_info_file" ]
 then
+  if [[ -d "$HOME/.web_package" ]]; then
+    ls "$HOME/.web_package"
+  fi
   end "`tput setaf 1`$wp_info_file`tput op` not found. Have you created your Web Package yet?"
 fi
 
@@ -903,7 +962,7 @@ fi
 ##
  # Show test output
  #
-if [ $1 == 'test' ]
+if [ "$1" == 'test' ]
 then
   do_test $2 $3 $4 $5 $6 $7 $8
   end 'End of test.'
@@ -943,7 +1002,7 @@ fi
  #
 if [ "$1" == 'hotfix' ]
 then
-  severity='micro'
+  severity='patch'
   release_type=$1
 elif [ "$1" == 'release' ]
 then
@@ -981,12 +1040,12 @@ fi
 ##
  # Prompt if invalid input
  #
-if [ "$severity" != 'major' ] && [ "$severity" != 'minor' ] && [ "$severity" != 'micro' ] && [ "$severity" != 'alpha' ] && [ "$severity" != 'beta' ] && [ "$severity" != 'rc' ]
+if [ "$severity" != 'major' ] && [ "$severity" != 'minor' ] && [ "$severity" != 'patch' ] && [ "$severity" != 'alpha' ] && [ "$severity" != 'beta' ] && [ "$severity" != 'rc' ]
 then
   echo
   echo 'Web Package Version Bump'
   echo '--------------------'
-  echo "Arg 1 is one of: major, minor, micro, hotfix*, release*, alpha, beta, rc"
+  echo "Arg 1 is one of: major, minor, patch, hotfix*, release*, alpha, beta, rc"
   echo "Arg 2 is one of: hotfix*, release*"
   echo
   echo "Arg 1 can also be: init, config, name(n), version(v), info(i), test"
@@ -1003,7 +1062,7 @@ fi
  #
 get_version
 version=$get_version_return
-previous=$(grep "version" $wp_info_file | cut -f2 -d "=");
+previous=$version
 
 # Increment the version based on $severity level
 increment_version $version $severity
@@ -1014,13 +1073,32 @@ then
   echo "Version unchanged: $previous ---> `tput setaf 1`$version`tput op`";
 else
   echo "Version bumped: $previous ---> `tput setaf 2`$version`tput op`";
+  
+  # Update the file with the new version string
+  sed -i.bak "s/version *= *${previous}/version = $version/1" $wp_info_file
+  rm $wp_info_file.bak  
+
+  # Lookfor version.php || version.sh callback scripts and call
+  #for file in $(find .web_package -name version.* -maxdepth 1); do
+  for file in $(ls .web_package/version.*); do
+    if [[ ${file##*.} == 'php' ]]; then
+      cmd=$wp_php
+    elif [[ ${file##*.} == 'sh' ]]; then
+      cmd=$wp_bash
+    fi
+    if [[ "$cmd" ]]; then
+      get_name
+      get_info_string 'description'
+      description=$get_info_string_return;
+      get_info_string 'homepage'
+      homepage=$get_info_string_return;
+      get_info_string 'author'
+      author=$get_info_string_return;      
+      output=$($cmd $file "$previous" "$version" "$get_name_return" "$description" "$homepage" "$author")
+      echo "`tput setaf 3`$output`tput op`"
+    fi
+  done
 fi
-
-
-
-# Update the file with the new version string
-sed -i.bak "s/version *= *${previous}/version = $version/1" $wp_info_file
-rm $wp_info_file.bak
 
 # Git Integration...
 if [ "$release_type" == 'hotfix' ] || [ "$release_type" == 'release' ]
