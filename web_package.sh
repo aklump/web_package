@@ -1150,6 +1150,6 @@ then
   # Create the new release, add the release data, and commit
   get_version_with_prefix
   git co -b "$release_type-$get_version_with_prefix_return"
-  git add $wp_info_file
+  git add -u
   git ci -m "Version bumped from $previous to $version"
 fi
