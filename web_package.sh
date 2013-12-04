@@ -1100,6 +1100,15 @@ else
   done
 fi
 
+# Pause to allow for processing
+if [[ "$wp_pause" -lt 0 ]]; then  
+  read -n1 -p "`tput setaf 3`Press any key to proceed...`tput op`"
+  echo
+elif [[ "$wp_pause" -gt 0 ]]; then
+  echo "`tput setaf 2`Waiting for $wp_pause seconds...`tput op`"
+  sleep $wp_pause
+fi
+
 # Git Integration...
 if [ "$release_type" == 'hotfix' ] || [ "$release_type" == 'release' ]
 then
