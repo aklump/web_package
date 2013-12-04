@@ -908,12 +908,17 @@ then
   echo "master = $wp_master"
   echo "develop = $wp_develop"
   echo "remote = $wp_remote"
+  if [[ "$wp_pause" ]]; then
+    echo "pause = $wp_pause"
+  fi
   echo "create_tags = $wp_create_tags"
   echo "push_tags = $wp_push_tags"
   echo "push_develop = $wp_push_develop"
   echo "push_master = $wp_push_master"
   echo "info_file = $wp_info_file"
   echo "patch_prefix = $wp_patch_prefix"
+  #echo "php = $wp_php"
+  #echo "bash = $wp_patch_bash"
   exit
 fi
 
