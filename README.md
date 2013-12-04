@@ -318,6 +318,9 @@ If develop branches should be pushed to `git_remote`.  Set to `auto` and you wil
 ###bash: `"(string)"`
 (Optional)  The path to bash to use for shell callback scripts.
 
+###pause: `"(int)"`
+(Optional)  Enter a number of seconds to pause before git creates a branch and adds files.  This is here in case you need to allow time for file processing after the version file has been updated. If you want to be prompted before git does it's thing enter a -1 here.
+
 
 ##Global Configuration
 A global configuration file may be created at `~/.web_package/config`, the contents of which will be used as defaults for new projects or existing projects without said parameter.  This is most useful for the `author` and `info_file` parameters.  **Note: if a global config parameter is set, but the project does not override it, the global will apply for that project, even after `bump init`.
