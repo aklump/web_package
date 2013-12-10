@@ -1084,8 +1084,7 @@ else
   rm $wp_info_file.bak  
 
   # Lookfor version.php || version.sh callback scripts and call
-  #for file in $(find .web_package -name version.* -maxdepth 1); do
-  for file in $(ls .web_package/version.*); do
+  for file in $(find .web_package -name version.*); do
     if [[ ${file##*.} == 'php' ]]; then
       cmd=$wp_php
     elif [[ ${file##*.} == 'sh' ]]; then
