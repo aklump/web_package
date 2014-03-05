@@ -326,6 +326,9 @@ function do_init() {
 #
 # Look for and call build scripts
 # 
+# @param $previous string The previous version
+# @param $version string The current version
+# 
 # @return 0 if build occurred, 1 otherwise
 # 
 function do_build() {
@@ -345,7 +348,8 @@ function do_build() {
         homepage=$get_info_string_return
         get_info_string 'author'
         author=$get_info_string_return
-        output=$($cmd $file "$previous" "$build" "$get_name_return" "$description" "$homepage" "$author" "$project_root")
+        output=$($cmd $file "$1" "$2" "$get_name_return" "$description" "$homepage" "$author" "$project_root")
+        echo "`tput setaf 2`Calling $file...`tput op`"
         echo "`tput setaf 3`$output`tput op`"
       fi
     done
@@ -1092,7 +1096,8 @@ fi
 # bump done
 # 
 if [[ "$1" == 'build' ]]; then
-  do_build
+  get_version
+  do_build $get_version_return $get_version_return
   end "`tput setaf 2`Build complete.`tput op`"
 fi
 
@@ -1199,7 +1204,7 @@ else
   rm $wp_info_file.bak  
 
   # Lookfor build scripts and call
-  if do_build; then
+  if do_build $previous $version; then
     # Pause to allow for processing
     if [[ "$wp_pause" -lt 0 ]]; then  
       read -n1 -p "`tput setaf 3`Press any key to proceed...`tput op`"
