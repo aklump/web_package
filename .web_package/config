@@ -1,0 +1,9 @@
+master = "master"
+develop = "develop"
+git_remote = origin
+create_tags = minor
+push_tags = auto
+push_develop = auto
+push_master = auto
+author = "Aaron Klump <sourcecode@intheloftstudios.com>"
+patch_prefix = .

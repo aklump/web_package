@@ -56,6 +56,11 @@
  # BEGIN CONFIGURATION
  #
 
+#
+# Determine the root folder of the project; where .web_package lives
+#
+project_root=${PWD}
+
 ##
  # The name of the branch servering "master" role
  #
@@ -126,6 +131,16 @@ wp_init_version="7.x-1.0-alpha1"
  # contain patch data, e.g. 1.0 ---> 1.0${wp_patch_prefix}1
  #
 wp_patch_prefix='.'
+
+##
+ # The default number of seconds to sleep
+ # 
+wp_pause=5
+
+##
+ # The directory to scan for build scripts
+ # 
+wp_build=./.web_package/build/
 
 ##
  # BEGIN FUNCTIONS
@@ -238,8 +253,16 @@ load_config
 function do_init() {
   if [ ! -d .web_package ]
   then
-    mkdir .web_package
+    mkdir -p .web_package/tmp
     touch .web_package/config
+
+    # Build script support
+    mkdir .web_package/build
+    echo "This directory is for build scripts.  See <http://www.intheloftstudios.com/packages/bash/web_package> for how to implement." >> .web_package/build/README.md
+
+    # Create the .gitignore
+    touch .web_package/.gitignore
+    echo "tmp" >> .web_package/.gitignore
 
     # If we have a template then load it
     template=false
@@ -300,6 +323,71 @@ function do_init() {
   end "A new web_package \"$get_name_return\" (version: $get_version_return) has been created."
 }
 
+#
+# Look for and call build scripts
+# 
+function do_build() {
+  if [ $wp_build ] && [[ -d $wp_build ]]; then
+    for file in $(find $wp_build); do
+      cmd=''
+      if [[ ${file##*.} == 'php' ]]; then
+        cmd=$wp_php
+      elif [[ ${file##*.} == 'sh' ]]; then
+        cmd=$wp_bash
+      fi
+      if [[ "$cmd" ]]; then
+        get_name
+        get_info_string 'description'
+        description=$get_info_string_return
+        get_info_string 'homepage'
+        homepage=$get_info_string_return
+        get_info_string 'author'
+        author=$get_info_string_return
+        output=$($cmd $file "$previous" "$build" "$get_name_return" "$description" "$homepage" "$author" "$project_root")
+        echo "`tput setaf 3`$output`tput op`"
+      fi
+    done
+  fi  
+}
+
+function do_check_update_needed() {
+  local needed=0
+  if [[ ! -d "$project_root/.web_package/tmp" ]]; then
+    needed=1
+  fi
+
+  if [[ $needed -eq 1 ]]; then
+    end "`tput setaf 3`Update required; call 'bump update'`tput op`"
+  fi
+}
+
+#
+# Automatic updates between versions
+# 
+# This script should never assume a version and she act accordingly
+# 
+function do_update() {
+  local root="$project_root/.web_package"
+  local tmp="$project_root/.web_package/tmp"
+  
+  if [[ ! -d $tmp ]]; then
+    echo "`tput setaf 2`Creating tmp and moving storage files.`tput op`"
+    mkdir -v $tmp
+
+    # Move persistent storage into tmp folder
+    for i in $(find $root -name *.txt -type f); do
+      mv "$i" "$tmp/"
+    done
+
+    # Strip .txt extensions
+    find "$tmp" -name '*.txt' -type f | while read NAME ; do mv "${NAME}" "${NAME%.txt}"; done
+  fi
+
+  if [[ ! -f $project_root/.web_package/.gitignore ]]; then
+    echo "`tput setaf 2`Creating .gitignore.`tput op`"
+    echo 'tmp' > $project_root/.web_package/.gitignore
+  fi
+}
 
 ##
  # Test all version bumping
@@ -733,7 +821,7 @@ function get_name() {
  #
 storage_return='';
 function storage() {
-  file=".web_package/$1.txt"
+  file=".web_package/tmp/$1"
   if [ "$2" ]
   then
     echo $2 > $file
@@ -917,6 +1005,7 @@ then
   echo "push_master = $wp_push_master"
   echo "info_file = $wp_info_file"
   echo "patch_prefix = $wp_patch_prefix"
+  echo "build = $wp_build"
   #echo "php = $wp_php"
   #echo "bash = $wp_patch_bash"
   exit
@@ -994,6 +1083,27 @@ then
   end "`tput setaf 1`.web_package`tput op` directory not found. Try 'bump init'..."
 fi
 
+#
+# bump done
+# 
+if [[ "$1" == 'build' ]]; then
+  do_build
+  end "`tput setaf 2`Build complete.`tput op`"
+fi
+
+#
+# bump update
+# 
+if [[ "$1" == 'update' ]]; then
+  do_update
+  end "`tput setaf 2`Update complete.`tput op`"
+fi
+
+#
+# Checks fi update needs to be run
+# 
+do_check_update_needed
+
 ##
  # Merge (develop and master), delete branch, create tag
  #
@@ -1053,7 +1163,7 @@ then
   echo "Arg 1 is one of: major, minor, patch, hotfix*, release*, alpha, beta, rc"
   echo "Arg 2 is one of: hotfix*, release*"
   echo
-  echo "Arg 1 can also be: init, config, name(n), version(v), info(i), test"
+  echo "Arg 1 can also be: init, config, name(n), version(v), info(i), test, build, update"
   echo
   echo "*Workflow with Git:"
   echo "1. bump hotfix || bump release"
@@ -1083,34 +1193,17 @@ else
   sed -i.bak "s/version *= *${previous}/version = $version/1" $wp_info_file
   rm $wp_info_file.bak  
 
-  # Lookfor version.php || version.sh callback scripts and call
-  for file in $(find .web_package -name version.*); do
-    if [[ ${file##*.} == 'php' ]]; then
-      cmd=$wp_php
-    elif [[ ${file##*.} == 'sh' ]]; then
-      cmd=$wp_bash
-    fi
-    if [[ "$cmd" ]]; then
-      get_name
-      get_info_string 'description'
-      description=$get_info_string_return;
-      get_info_string 'homepage'
-      homepage=$get_info_string_return;
-      get_info_string 'author'
-      author=$get_info_string_return;      
-      output=$($cmd $file "$previous" "$version" "$get_name_return" "$description" "$homepage" "$author")
-      echo "`tput setaf 3`$output`tput op`"
-    fi
-  done
-fi
+  # Lookfor build scripts and call
+  do_build
 
-# Pause to allow for processing
-if [[ "$wp_pause" -lt 0 ]]; then  
-  read -n1 -p "`tput setaf 3`Press any key to proceed...`tput op`"
-  echo
-elif [[ "$wp_pause" -gt 0 ]]; then
-  echo "`tput setaf 2`Waiting for $wp_pause seconds...`tput op`"
-  sleep $wp_pause
+  # Pause to allow for processing
+  if [[ "$wp_pause" -lt 0 ]]; then  
+    read -n1 -p "`tput setaf 3`Press any key to proceed...`tput op`"
+    echo
+  elif [[ "$wp_pause" -gt 0 ]]; then
+    echo "`tput setaf 2`Waiting for $wp_pause seconds...`tput op`"
+    sleep $wp_pause
+  fi
 fi
 
 # Git Integration...
