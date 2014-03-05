@@ -90,7 +90,7 @@ To test this script against your version schema, you may call `bump test`.  The 
     rc: 1.0 --> 1.1-rc1  [OK]
 
 
-##About the .info File
+##About the `.info` File
 Web Package looks for a file with the .info extension and will use that for storing the meta data about your project.  If none is found, then `web_package.info` will be created.  You may configure the actual filename in the config file e.g. `info_file = some_other_file.info` if these first two options do not work for you. Here is a basic `.info` file.
 
     name = "Apple"
@@ -99,13 +99,15 @@ Web Package looks for a file with the .info extension and will use that for stor
     version = 0.0.1
     author = Aaron Klump <sourcecode@intheloftstudios.com>
 
-### Advanced Use: Callback scripts
-In some cases, say with a jQuery plugin, you may need to embed the version string _inside_ the `jquery.pluging_name.js` file.  In such a case the  `.info` file strategy doesn't meet your needs.  For such a scenario you may use a callback script.  Callback scripts are called anytime the version number changes.
+## Build Scripts
+You may add php or shell scripts to `.web_package/build` and they will be run each time the version increments.  You may also trigger a build by calling `bump build`.
 
-A callback script is named either `version.php` or `version.sh` and is placed in `.web_package`.  You may use either one, or both depending upon your scripting language preference.  Refer to the parameter chart below for script arguments:
+Any file ending in `.php` or `.sh` found in the build script folder (configurable using `build`) will be called during version bumping.  Refer to the parameter chart below for script arguments:
 
-#### Callback arguments
-| info          | version.php | version.sh |
+One example of using a build script, say with a jQuery plugin, is when you want to embed the version string _inside_ the `jquery.pluging_name.js` file.  In such a case the  `.info` file strategy doesn't meet your needs.  For such a scenario you would use a build script.
+
+### Callback Arguments
+| data          | build.php | build.sh |
 |---------------|-------------|------------|
 | prev version  | $argv[1]    | $1         |
 | new version   | $argv[2]    | $2         |
@@ -113,87 +115,87 @@ A callback script is named either `version.php` or `version.sh` and is placed in
 | description   | $argv[4]    | $4         |
 | homepage      | $argv[5]    | $5         |
 | author        | $argv[6]    | $6         |
+| path to root  | $argv[7]    | $7         |
 
-If your script echos any output it will simply be displayed to the screen.
+* If your script echos any output it will simply be displayed to the screen.
+* Be sure to use _path to root_ if you reference any files in your project, from within a build script.
 
 ##Beginning A New Project
 1. In this example you see how we being a new project called example, initialize the git repository and start with a version number of 0.1
 1. Had you wanted to start with version 1.0, then you would have used `bump major`; and if you had wanted to start with version 0.0.1 you would have used `bump patch`.
 
-<pre>
-$ mkdir example
-$ cd example
-$ git init
-Initialized empty Git repository in /Library/WebServer/Documents/globalonenessproject/site-dev/public_html/sites/all/modules/contrib/example/.git/
-$ bump init
-Enter package name: Example Package
-Enter package description: An example package showing how to do this.
 
-A new web_package "Example Package" has been created.
+        $ mkdir example
+        $ cd example
+        $ git init
+        Initialized empty Git repository in /Library/WebServer/Documents/globalonenessproject/site-dev/public_html/sites/all/modules/contrib/example/.git/
+        $ bump init
+        Enter package name: Example Package
+        Enter package description: An example package showing how to do this.
 
-$ bump minor
-Version bumped:  0.0.0 ---> 0.1
-$ git add .
-$ git commit -m 'initial commit'
-[master (root-commit) e604ade] initial commit
- 1 file changed, 3 insertions(+)
- create mode 100644 web_package.info
-$
-</pre>
+        A new web_package "Example Package" has been created.
+
+        $ bump minor
+        Version bumped:  0.0.0 ---> 0.1
+        $ git add .
+        $ git commit -m 'initial commit'
+        [master (root-commit) e604ade] initial commit
+         1 file changed, 3 insertions(+)
+         create mode 100644 web_package.info
+        $
+
+## What to add to Version Control
+1. You should include `.web_package` in version control, but not the subfolder `tmp`.
 
 ##Developing A Project
 1. In this example you make your changes to the develop branch (see [gitflow](http://nvie.com/posts/a-successful-git-branching-model)) and then commit as normal. You could have also done things on feature branches and merged then back into develop.
 1. When all your work is done and you're ready for the release then type `bump release`; this is shorthand for `bump minor release`. If you only want a patch release then type `bump patch release`.  Consequently if you want a major release type `bump major release`. 
 2. Immediately thereafter (unless you know what you're doing), type `bump done`
 
-<pre>
-$ git co -b develop
-Switched to a new branch 'develop'
-$ touch do
-$ touch re
-$ touch mi
-$ git add .
-$ git commit -m 'added do re mi'
-[develop 7094ae4] added do re mi
- 0 files changed
- create mode 100644 do
- create mode 100644 mi
- create mode 100644 re
-$ bump release
-Version bumped:  0.1.0 ---> 0.2.0
-M	web_package.info
-Switched to a new branch 'release-0.2.0'
-[release-0.2.0 83abd01] Version bumped from  0.1.0 to 0.2.0
- 1 file changed, 1 insertion(+), 1 deletion(-)
-$ bump done
-Merging into develop...
-Switched to branch 'develop'
-Merge made by the 'recursive' strategy.
- web_package.info |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-Continue to master? (y/n) y
-Switched to branch 'master'
-Merge made by the 'recursive' strategy.
- web_package.info |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
- create mode 100644 do
- create mode 100644 mi
- create mode 100644 re
-Delete release-0.2.0? (y/n) y
-Deleted branch release-0.2.0 (was 83abd01).
-</pre>
+        $ git co -b develop
+        Switched to a new branch 'develop'
+        $ touch do
+        $ touch re
+        $ touch mi
+        $ git add .
+        $ git commit -m 'added do re mi'
+        [develop 7094ae4] added do re mi
+         0 files changed
+         create mode 100644 do
+         create mode 100644 mi
+         create mode 100644 re
+        $ bump release
+        Version bumped:  0.1.0 ---> 0.2.0
+        M	web_package.info
+        Switched to a new branch 'release-0.2.0'
+        [release-0.2.0 83abd01] Version bumped from  0.1.0 to 0.2.0
+         1 file changed, 1 insertion(+), 1 deletion(-)
+        $ bump done
+        Merging into develop...
+        Switched to branch 'develop'
+        Merge made by the 'recursive' strategy.
+         web_package.info |    2 +-
+         1 file changed, 1 insertion(+), 1 deletion(-)
+        Continue to master? (y/n) y
+        Switched to branch 'master'
+        Merge made by the 'recursive' strategy.
+         web_package.info |    2 +-
+         1 file changed, 1 insertion(+), 1 deletion(-)
+         create mode 100644 do
+         create mode 100644 mi
+         create mode 100644 re
+        Delete release-0.2.0? (y/n) y
+        Deleted branch release-0.2.0 (was 83abd01).
 
 Now you can list the tags and see that a tag was just created that matches the current version of your package.
 
-<pre>
-$ git tag -l
-0.2.0
-$ bump -i
-name = Example Package
-description = An example package showing how to do this
-version = 0.2.0
-$
-</pre>
+    $ git tag -l
+    0.2.0
+    $ bump -i
+    name = Example Package
+    description = An example package showing how to do this
+    version = 0.2.0
+    $
 
 At this point you need to use `git push` as necessary for your remotes.
 
@@ -204,48 +206,44 @@ An example of a hotfix to the master branch.
 2. Do the work needed.
 3. Type `bump done`.
 
-<pre>
-$ git status
-On branch master
-nothing to commit (working directory clean)
-$ bump hotfix
-Version bumped:  0.2.0 ---> 0.2.1
-M	web_package.info
-Switched to a new branch 'hotfix-0.2.1'
-[hotfix-0.2.1 75b936a] Version bumped from  0.2.0 to 0.2.1
- 1 file changed, 1 insertion(+), 1 deletion(-)
-$ touch fa
-$ git add .
-$ git commit -m 'added fa'
-[hotfix-0.2.1 75b936a] added fa
- 0 files changed
- create mode 100644 fa
-$ bump done
-Merging into develop...
-Switched to branch 'develop'
-Merge made by the 'recursive' strategy.
- web_package.info |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-Continue to master? (y/n)y
-Switched to branch 'master'
-Merge made by the 'recursive' strategy.
- web_package.info |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-Delete hotfix-0.2.1? (y/n)y
-Deleted branch hotfix-0.2.1 (was 75b936a).
-</pre>
+        $ git status
+        On branch master
+        nothing to commit (working directory clean)
+        $ bump hotfix
+        Version bumped:  0.2.0 ---> 0.2.1
+        M	web_package.info
+        Switched to a new branch 'hotfix-0.2.1'
+        [hotfix-0.2.1 75b936a] Version bumped from  0.2.0 to 0.2.1
+         1 file changed, 1 insertion(+), 1 deletion(-)
+        $ touch fa
+        $ git add .
+        $ git commit -m 'added fa'
+        [hotfix-0.2.1 75b936a] added fa
+         0 files changed
+         create mode 100644 fa
+        $ bump done
+        Merging into develop...
+        Switched to branch 'develop'
+        Merge made by the 'recursive' strategy.
+         web_package.info |    2 +-
+         1 file changed, 1 insertion(+), 1 deletion(-)
+        Continue to master? (y/n)y
+        Switched to branch 'master'
+        Merge made by the 'recursive' strategy.
+         web_package.info |    2 +-
+         1 file changed, 1 insertion(+), 1 deletion(-)
+        Delete hotfix-0.2.1? (y/n)y
+        Deleted branch hotfix-0.2.1 (was 75b936a).
 
 Again, checking that a tag was created...
 
-<pre>
-$ git tag -l
-0.2.0
-0.2.1
-$ bump -i
-name = Example Package
-description = An example package showing how to do this
-version = 0.2.1
-</pre>
+    $ git tag -l
+    0.2.0
+    0.2.1
+    $ bump -i
+    name = Example Package
+    description = An example package showing how to do this
+    version = 0.2.1
 
 ## Merge conflict during `bump done`
 Follow these steps if you experience a merge conflict after typing `bump done`; they should get you through it.
@@ -313,10 +311,10 @@ If develop branches should be pushed to `git_remote`.  Set to `auto` and you wil
 (Optional)  This is used as the default patch_prefix.
 
 ###php: `"(string)"`
-(Optional)  The path to the php to use for PHP callback scripts.
+(Optional)  The path to the php to use for PHP build scripts.
 
 ###bash: `"(string)"`
-(Optional)  The path to bash to use for shell callback scripts.
+(Optional)  The path to bash to use for shell build scripts.
 
 ###pause: `"(int)"`
 (Optional)  Enter a number of seconds to pause before git creates a branch and adds files.  This is here in case you need to allow time for file processing after the version file has been updated. If you want to be prompted before git does it's thing enter a -1 here.
@@ -383,43 +381,41 @@ Here's how to modify the config file for a Drupal project.  Change the appropria
 
 In summary what you are saying is this: **I have three master branches, which are one in the same with my develop branches.**  This has the benefit of letting you `bump hotfix` and `bump release` off of the same branch.  Your workflow would then resemble this:
 
-<pre>
-$ mkdir drupal_module
-$ cd drupal_module
-$ git init
-Initialized empty Git repository in /Volumes/Data/Users/aklump/Repos/git/drupal_module/.git/
-$ bump init
-Enter package name: Drupal Module
-Enter package description: Drupal module example
+    $ mkdir drupal_module
+    $ cd drupal_module
+    $ git init
+    Initialized empty Git repository in /Volumes/Data/Users/aklump/Repos/git/drupal_module/.git/
+    $ bump init
+    Enter package name: Drupal Module
+    Enter package description: Drupal module example
 
-A new web_package "Drupal Module" has been created. Please set the initial version now.
+    A new web_package "Drupal Module" has been created. Please set the initial version now.
 
-$ bump major
-Version bumped:  0.0.0 ---> 1.0
-$ bump i
-name = Drupal Module
-description = Drupal module example
-version = 1.0
-$ git add .
-$ git cim 'initial commit'
-[master (root-commit) 7194384] initial import
- 1 file changed, 3 insertions(+)
- create mode 100644 web_package.info
-$ git br -m 6.x-1.x
-$ git co -b 7.x-1.x
-$ git co -b 8.x-1.x
-Switched to a new branch '6.x-1.x'
-$ git br -l
-  6.x-1.x
-  7.x-1.x
-* 8.x-1.x  
-</pre>
+    $ bump major
+    Version bumped:  0.0.0 ---> 1.0
+    $ bump i
+    name = Drupal Module
+    description = Drupal module example
+    version = 1.0
+    $ git add .
+    $ git cim 'initial commit'
+    [master (root-commit) 7194384] initial import
+     1 file changed, 3 insertions(+)
+     create mode 100644 web_package.info
+    $ git br -m 6.x-1.x
+    $ git co -b 7.x-1.x
+    $ git co -b 8.x-1.x
+    Switched to a new branch '6.x-1.x'
+    $ git br -l
+      6.x-1.x
+      7.x-1.x
+    * 8.x-1.x  
 
 At this point the workflow is pretty much the same, although as noted you will be able to choose `bump hotfix` or `bump release` from each major Drupal version branch.  You get to decide which is best.
 
 ##Questions
 ###When should I use 'bump hotfix'?
-When you need to make an immediate change to the production state of the project, you will use `bump hotfix`.  A hotfix is unique in that the release number gets bumped _before_ the work is done.
+When you need to make an immediate change to the production state (master branch) of the project, you will use `bump hotfix`.  A hotfix is unique in that the release number gets bumped _before_ the work is done.
 
 ###When should I use 'bump release'?
 When you have finished work on the development branch and you want to release it to the production-ready state of the project, you will use `bump release`.  A release is different from a hotfix, in that the version is bumped _after_ the work is done.

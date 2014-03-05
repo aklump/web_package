@@ -1,4 +1,4 @@
 name = Web Package
 description = A shell script to help the management of files as a package.
-version = 1.9.4
+version = 1.10
 author = "Aaron Klump <sourcecode@intheloftstudios.com>"
