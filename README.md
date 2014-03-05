@@ -33,11 +33,9 @@ If so, Web Package is for you! Read on...
 ##Installation
 1. Create a symlink to `web_package.sh`, I suggest `bump` and add it to `~/bin` you can then call this script by typing `bump` on the command line as in the examples below.
 1. Make sure that `~/bin` is in your PATH variable
-2. Consider adding `.web_package` to your global `.git_ignore` file. **Make sure you are using the leading '.'; you do not want to add `web_package` to the ignores.**to 
 1. Below you will see three basic examples for usage:
 1. For more info see: <http://nvie.com/posts/a-successful-git-branching-model>
 1. For a list of commands, type `bump`.
-
 
 ##About Version Numbers
 1. Two versioning schemas may be used `(prefix-)major.minor.patch` and `(prefix-)major.minor(patch_prefix)patch`.
@@ -79,9 +77,20 @@ The key difference to notice is that when you `bump minor` in this schema, it si
 
 
 ###Testing A Version Schema
-To test this script against your version schema, you may call `bump test`.  The arguments the follow are: the version string to test, the expected outcome of a bump for: patch, minor, major, alpha, beta, rc.  Here is an example:
+To test this script against your version schema, you may call `bump test`.  The arguments are as follows, in this order:
+
+1. the version string to test
+2. the expected outcome of a bump for: patch
+3. ...minor
+3. ...major
+3. ...alpha
+3. ...beta
+3. ...rc
+
+Here is an example:
 
     $ bump test 1.0 1.0.1 1.1 2.0 1.1-alpha1 1.1-beta1 1.1-rc1
+    
     patch: 1.0 --> 1.0.1  [OK]
     minor: 1.0 --> 1.1  [OK]
     major: 1.0 --> 2.0  [OK]
@@ -89,9 +98,10 @@ To test this script against your version schema, you may call `bump test`.  The 
     beta: 1.0 --> 1.1-beta1  [OK]
     rc: 1.0 --> 1.1-rc1  [OK]
 
+If you call `bump test` without arguments you will see a litany of internal tests, which check supported schemas.
 
 ##About the `.info` File
-Web Package looks for a file with the .info extension and will use that for storing the meta data about your project.  If none is found, then `web_package.info` will be created.  You may configure the actual filename in the config file e.g. `info_file = some_other_file.info` if these first two options do not work for you. Here is a basic `.info` file.
+Web Package looks for a file with the .info extension and will use that for storing the meta data about your project.  This file is one that can be parsed using php's `parse_ini_file()` function.  If none is found, then `web_package.info` will be created.  You may configure the actual filename in the config file e.g. `info_file = some_other_file.info` if these first two options do not work for you. Here is a basic `.info` file.
 
     name = "Apple"
     description = "A red, green or yellow fruit."
@@ -144,7 +154,7 @@ One example of using a build script, say with a jQuery plugin, is when you want 
          create mode 100644 web_package.info
         $
 
-## What to add to Version Control
+## What to add to your project's version control
 1. You should include `.web_package` in version control, but not the subfolder `tmp`.
 
 ##Developing A Project
