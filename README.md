@@ -102,7 +102,7 @@ Web Package looks for a file with the .info extension and will use that for stor
 ## Build Scripts
 You may add php or shell scripts to `.web_package/build` and they will be run each time the version increments.  You may also trigger a build by calling `bump build`.
 
-Any file ending in `.php` or `.sh` found in the build script folder (configurable using `build`) will be called during version bumping.  Refer to the parameter chart below for script arguments:
+Any file ending in `.php` or `.sh` found in the build script folder will be called during version bumping.  Refer to the parameter chart below for script arguments:
 
 One example of using a build script, say with a jQuery plugin, is when you want to embed the version string _inside_ the `jquery.pluging_name.js` file.  In such a case the  `.info` file strategy doesn't meet your needs.  For such a scenario you would use a build script.
 
@@ -117,8 +117,8 @@ One example of using a build script, say with a jQuery plugin, is when you want 
 | author        | $argv[6]    | $6         |
 | path to root  | $argv[7]    | $7         |
 
-* If your script echos any output it will simply be displayed to the screen.
-* Be sure to use _path to root_ if you reference any files in your project, from within a build script.
+* Your script should print/echo details as to what it did; this will be output to the console.
+* Be sure to use _path to root_ in your scripts when you reference any files in your project.
 
 ##Beginning A New Project
 1. In this example you see how we being a new project called example, initialize the git repository and start with a version number of 0.1
