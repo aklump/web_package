@@ -326,6 +326,8 @@ function do_init() {
 #
 # Look for and call build scripts
 # 
+# @return 0 if build occurred, 1 otherwise
+# 
 function do_build() {
   if [ $wp_build ] && [[ -d $wp_build ]]; then
     for file in $(find $wp_build); do
@@ -347,7 +349,10 @@ function do_build() {
         echo "`tput setaf 3`$output`tput op`"
       fi
     done
+    return 0
   fi  
+
+  return 1
 }
 
 function do_check_update_needed() {
@@ -1194,15 +1199,15 @@ else
   rm $wp_info_file.bak  
 
   # Lookfor build scripts and call
-  do_build
-
-  # Pause to allow for processing
-  if [[ "$wp_pause" -lt 0 ]]; then  
-    read -n1 -p "`tput setaf 3`Press any key to proceed...`tput op`"
-    echo
-  elif [[ "$wp_pause" -gt 0 ]]; then
-    echo "`tput setaf 2`Waiting for $wp_pause seconds...`tput op`"
-    sleep $wp_pause
+  if do_build; then
+    # Pause to allow for processing
+    if [[ "$wp_pause" -lt 0 ]]; then  
+      read -n1 -p "`tput setaf 3`Press any key to proceed...`tput op`"
+      echo
+    elif [[ "$wp_pause" -gt 0 ]]; then
+      echo "`tput setaf 2`Waiting for $wp_pause seconds...`tput op`"
+      sleep $wp_pause
+    fi
   fi
 fi
 
