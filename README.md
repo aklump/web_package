@@ -126,6 +126,7 @@ One example of using a build script, say with a jQuery plugin, is when you want 
 | homepage      | $argv[5]    | $5         |
 | author        | $argv[6]    | $6         |
 | path to root  | $argv[7]    | $7         |
+| date/time     | $argv[8]    | $8         |
 
 * Your script should print/echo details as to what it did; this will be output to the console.
 * Be sure to use _path to root_ in your scripts when you reference any files in your project.
