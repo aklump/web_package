@@ -51,6 +51,13 @@
 # @ingroup loft_git Loft Git
 # @{
 #
+source="${BASH_SOURCE[0]}"
+while [ -h "$source" ]; do # resolve $source until the file is no longer a symlink
+  dir="$( cd -P "$( dirname "$source" )" && pwd )"
+  source="$(readlink "$source")"
+  [[ $source != /* ]] && source="$dir/$source" # if $source was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+root="$( cd -P "$( dirname "$source" )" && pwd )"
 
 ##
  # BEGIN CONFIGURATION
@@ -253,16 +260,9 @@ load_config
 function do_init() {
   if [ ! -d .web_package ]
   then
-    mkdir -p .web_package/tmp
-    touch .web_package/config
-
-    # Build script support
-    mkdir .web_package/build
-    echo "This directory is for build scripts.  See <http://www.intheloftstudios.com/packages/bash/web_package> for how to implement." >> .web_package/build/README.md
-
-    # Create the .gitignore
-    touch .web_package/.gitignore
-    echo "tmp" >> .web_package/.gitignore
+    # Copy the template folder as .web_package in target
+    rsync -a "$root/template/" ./.web_package/
+    echo "`tput setaf 3`For build script examples, take a look at .web_package/examples.`tput op`"
 
     # If we have a template then load it
     template=false
@@ -348,7 +348,8 @@ function do_build() {
         homepage=$get_info_string_return
         get_info_string 'author'
         author=$get_info_string_return
-        output=$($cmd $file "$1" "$2" "$get_name_return" "$description" "$homepage" "$author" "$project_root")
+        date=$(date)
+        output=$($cmd $file "$1" "$2" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date")
         echo "`tput setaf 2`Calling $file...`tput op`"
         echo "`tput setaf 3`$output`tput op`"
       fi
@@ -376,7 +377,7 @@ function do_check_update_needed() {
 # This script should never assume a version and she act accordingly
 # 
 function do_update() {
-  local root="$project_root/.web_package"
+  local wp_root="$project_root/.web_package"
   local tmp="$project_root/.web_package/tmp"
   
   if [[ ! -d $tmp ]]; then
@@ -384,7 +385,7 @@ function do_update() {
     mkdir -v $tmp
 
     # Move persistent storage into tmp folder
-    for i in $(find $root -name *.txt -type f); do
+    for i in $(find "$wp_root" -name '*.txt' -type f); do
       mv "$i" "$tmp/"
     done
 
