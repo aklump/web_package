@@ -156,7 +156,7 @@ One example of using a build script, say with a jQuery plugin, is when you want 
         $
 
 ## What to add to your project's version control
-1. You should include `.web_package` in version control, but not the subfolder `tmp`.
+1. You should include `.web_package` in version control.  It has a .gitignore file that you can refer to for files that may safely be excluded.
 
 ##Developing A Project
 1. In this example you make your changes to the develop branch (see [gitflow](http://nvie.com/posts/a-successful-git-branching-model)) and then commit as normal. You could have also done things on feature branches and merged then back into develop.
