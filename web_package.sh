@@ -264,6 +264,9 @@ function do_init() {
     rsync -a "$root/template/" ./.web_package/
     echo "`tput setaf 3`For build script examples, take a look at .web_package/examples.`tput op`"
 
+    # Make the .gitignore file active by adding '.'
+    mv ./.web_package/gitignore ./.web_package/.gitignore
+
     # If we have a template then load it
     template=false
     if [ "$1" ]
