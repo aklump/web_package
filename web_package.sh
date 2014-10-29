@@ -1204,7 +1204,7 @@ else
   echo "Version bumped: $previous ---> `tput setaf 2`$version`tput op`";
   
   # Update the file with the new version string
-  sed -i.bak "s/version *= *${previous}/version = $version/1" $wp_info_file
+  sed -i.bak "s/version *= *\"*${previous}\"*/version = \"$version\"/1" $wp_info_file
   rm $wp_info_file.bak  
 
   # Lookfor build scripts and call
