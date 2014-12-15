@@ -261,7 +261,7 @@ function do_init() {
   if [ ! -d .web_package ]
   then
     # Copy the template folder as .web_package in target
-    rsync -a "$root/template/" ./.web_package/
+    rsync -a "$root/template/" ./.web_package/ --exclude=tests
     echo "`tput setaf 3`For build script examples, take a look at .web_package/examples.`tput op`"
 
     # Make the .gitignore file active by adding '.'
