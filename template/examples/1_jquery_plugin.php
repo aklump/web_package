@@ -42,6 +42,11 @@ list(
 $source_file = $path_to_root . '/{{ plugin file }}';
 $source = file_get_contents($source_file);
 
+// We're expected an initial comment block for the file.
+if (substr($source, 0, 3) !== '/**') {
+  throw new Exception("Unable to parse $source_file; file must begin with /**", 1);
+}
+
 // Pull out only comment lines for manipulation to protect code.
 preg_match_all("/(\/\*\*).+?(\*\/)/s", $source, $matches);
 $find = $matches[0][0];
