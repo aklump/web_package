@@ -140,6 +140,14 @@ wp_init_version="7.x-1.0-alpha1"
 wp_patch_prefix='.'
 
 ##
+ # The default value for version stepping.
+ # Can also be "odd" or "even".
+ #
+wp_major_step=1
+wp_minor_step=1
+wp_patch_step=1
+
+##
  # The default number of seconds to sleep
  # 
 wp_pause=5
@@ -198,16 +206,28 @@ function load_config() {
 
   # If we have an master template file use it as source instead
   template_file=$HOME/.web_package/config_$wp_template
-  if [ -f "$template_file" ]
-  then
+  if [ -f "$template_file" ]; then
     load_config_return=$template_file
   fi
 
   # Load user config
   parse_config $load_config_return
 
+  # Load user local config
+  config=$HOME/.web_package/local_config
+  if [ -f "$config" ]; then
+    parse_config $config
+  fi
+
   # Load project config
   parse_config .web_package/config
+
+  # Load project local config
+  config=.web_package/local_config
+  if [ -f "$config" ]; then
+    parse_config $config
+  fi
+
 
   if [[ ! "$wp_php" ]]; then
     wp_php=$(which php)
@@ -415,6 +435,7 @@ function do_test() {
   fi
 
   staged=$wp_patch_prefix;
+  as_test=''
 
   # standard versions
   echo 'MAJOR.MINOR.PATCH:'
@@ -506,13 +527,27 @@ function do_test() {
  # @return NULL
  #
 function test_version() {
+  as_test="bump test $1"
   test_version_severity $1 patch $2
-  test_version_severity $1 alpha $5
-  test_version_severity $1 beta $6
-  test_version_severity $1 rc $7
+  as_test="$as_test $increment_version_return"
+
   test_version_severity $1 minor $3
+  as_test="$as_test $increment_version_return"
+
   test_version_severity $1 major $4
+  as_test="$as_test $increment_version_return"
+
+  test_version_severity $1 alpha $5
+  as_test="$as_test $increment_version_return"
+
+  test_version_severity $1 beta $6
+  as_test="$as_test $increment_version_return"
+
+  test_version_severity $1 rc $7
+  as_test="$as_test $increment_version_return"
+
   echo
+  echo "`tty -s && tput setaf 3`$as_test`tty -s && tput op`"
 }
 
 ##
@@ -542,6 +577,13 @@ function test_version_severity() {
 }
 
 
+#
+# Checks if a version part is even.
+#
+function is_even () {
+  num=$1
+  return $((num%2))
+}
 
 ###
  # Increment the version number
@@ -599,17 +641,49 @@ function increment_version () {
     end "'$1' uses an unknown version schema and cannot be incremented."
   fi
 
+  
+  major_step=$wp_major_step
+  minor_step=$wp_minor_step
+  patch_step=$wp_patch_step
+
+  # Convert odds and evens to an int.
+  odd_step=2;
+  even_step=1;
+  if is_even $patch; then
+    odd_step=1;
+    even_step=2;
+  fi
+    
+  if [[ $major_step == 'odd' ]]; then
+    major_step=$odd_step
+  elif [[ $major_step == 'even' ]]; then
+    major_step=$even_step
+  fi
+
+  if [[ $minor_step == 'odd' ]]; then
+    minor_step=$odd_step
+  elif [[ $minor_step == 'even' ]]; then
+    minor_step=$even_step
+  fi
+  
+  if [[ $patch_step == 'odd' ]]; then
+    patch_step=$odd_step
+  elif [[ $patch_step == 'even' ]]; then
+    patch_step=$even_step
+  fi
+  # Done convert
+
   case "$2" in
     major)
       if [ "$patch_prefix" == '.' ] || [ "$patch_prefix" = '' ]
       then
-        major=$(($major + 1))
+        major=$(($major + $major_step))
         major_suffix='.'
         minor=0
         patch_prefix=''
         patch=''
       else
-        major=$(($major + 1))
+        major=$(($major + $major_step))
         major_suffix='.'
         minor=0
         patch=1
@@ -620,13 +694,13 @@ function increment_version () {
       # Only increment minor if the prefix is '.' or prefix is empty
       if [ "$patch_prefix" == '.' ] || [ ! "$patch_prefix" ]
       then
-        minor=$(($minor + 1))
+        minor=$(($minor + $minor_step))
       fi
       patch_prefix=''
       patch=''
       ;;
     patch)
-      patch=$(($patch + 1))
+      patch=$(($patch + $patch_step))
       if [ ! "$patch_prefix" ]
       then
         patch_prefix=$wp_patch_prefix
@@ -634,7 +708,7 @@ function increment_version () {
         #you increment minor too
         if [ $wp_patch_prefix != '.' ]
         then
-          minor=$(($minor + 1))
+          minor=$(($minor + $minor_step))
         fi
       fi
       ;;
@@ -659,7 +733,7 @@ function increment_version () {
       fi
       if [ "$patch_prefix" == '.' ] || [ ! "$patch_prefix" ] || [ "$2" == 'alpha' ]
       then
-        minor=$(($minor + 1))
+        minor=$(($minor + $minor_step))
       fi
       patch_prefix="-$2"
     fi
@@ -1021,6 +1095,10 @@ then
   echo "build = $wp_build"
   #echo "php = $wp_php"
   #echo "bash = $wp_patch_bash"
+  echo "major_step = $wp_major_step"
+  echo "minor_step = $wp_minor_step"
+  echo "patch_step = $wp_patch_step"
+  echo "author = $wp_author"
   exit
 fi
 

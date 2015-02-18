@@ -75,17 +75,34 @@ The key difference to notice is that when you `bump minor` in this schema, it si
     minor: 8.x-2.0-alpha6 --> 8.x-2.0
     major: 8.x-2.0-alpha6 --> 8.x-3.0-alpha1
 
+### Stepping by > 1, odd or even
+By default, the major, minor and patch step increment is 1.  This can be changed in a `local_config` file as necessary (either user or project level).
+
+    major_step = 1
+    minor_step = 1
+    patch_step = 2
+
+Let's say that two developers are working on the same master branch and they are rolling out rapid hotfixes.  Wouldn't it be nice if developer A only did odd-numbered hotfixes and developer B only did even-numbered hotfixes, so as to not step on each others' toes?  This the idea behind version incrementing with steps > 1.
+
+You can override the default using the `local_config` and use odd steps by adding the following lines, be sure to include a line break at the end of the line.
+
+    patch_step = "odd"
+
+For even just change the value to `"even"`.
+
+_In this example, if you were to add this directive to the `config` file, that would negate the whole point, since `config` is checked into the repo.  You need to use the `local_config`._
 
 ###Testing A Version Schema
 To test this script against your version schema, you may call `bump test`.  The arguments are as follows, in this order:
 
 1. the version string to test
-2. the expected outcome of a bump for: patch
-3. ...minor
-3. ...major
-3. ...alpha
-3. ...beta
-3. ...rc
+2. the expected outcome of a bump for: 
+    1. patch
+    1. minor
+    1. major
+    1. alpha
+    1. beta
+    1. rc
 
 Here is an example:
 
