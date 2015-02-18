@@ -1,8 +1,8 @@
-##Summary
+## Summary
 
 A shell script to help the management of files as a package through easy version number manipulation. Supports name, description, author and version number. Integrates with .git and uses gitflow methodology to automatically merge and tag.
 
-##Why Use Web Package?
+## Why Use Web Package?
 If you're used to typing this:
     
     $ git add .
@@ -30,14 +30,14 @@ How would you rather type this, instead from now on...
 
 If so, Web Package is for you! Read on...
     
-##Installation
+## Installation
 1. Create a symlink to `web_package.sh`, I suggest `bump` and add it to `~/bin` you can then call this script by typing `bump` on the command line as in the examples below.
 1. Make sure that `~/bin` is in your PATH variable
 1. Below you will see three basic examples for usage:
 1. For more info see: <http://nvie.com/posts/a-successful-git-branching-model>
 1. For a list of commands, type `bump`.
 
-##About Version Numbers
+## About Version Numbers
 1. Two versioning schemas may be used `(prefix-)major.minor.patch` and `(prefix-)major.minor(patch_prefix)patch`.
 2. There is no limit the to value of each part; as an example something like this is theoretically possible `999.999.999`.  Important to note: the next minor version after `1.9` is not `2.0`, but rather `1.10`.
 3. `(prefix-)` is a string of any chars ending in a hyphen, e.g. `7.x-`.
@@ -115,7 +115,7 @@ Here is an example:
     beta: 1.0 --> 1.1-beta1  [OK]
     rc: 1.0 --> 1.1-rc1  [OK]
 
-If you call `bump test` without arguments you will see a litany of internal tests, which check supported schemas.
+If you call `bump test` without arguments you will see a litany of internal tests, which check supported schemas.  **Note: at this time the internal tests expect all steps to be set to 1, if you call this in a project whose config alters the step values, you will see that some of the internal tests fail.**
 
 ##About the `.info` File
 Web Package looks for a file with the .info extension and will use that for storing the meta data about your project.  This file is one that can be parsed using php's `parse_ini_file()` function.  If none is found, then `web_package.info` will be created.  You may configure the actual filename in the config file e.g. `info_file = some_other_file.info` if these first two options do not work for you. Here is a basic `.info` file.
@@ -175,7 +175,7 @@ One example of using a build script, say with a jQuery plugin, is when you want 
 ## What to add to your project's version control
 1. You should include `.web_package` in version control.  It has a .gitignore file that you can refer to for files that may safely be excluded.
 
-##Developing A Project
+## Developing A Project
 1. In this example you make your changes to the develop branch (see [gitflow](http://nvie.com/posts/a-successful-git-branching-model)) and then commit as normal. You could have also done things on feature branches and merged then back into develop.
 1. When all your work is done and you're ready for the release then type `bump release`; this is shorthand for `bump minor release`. If you only want a patch release then type `bump patch release`.  Consequently if you want a major release type `bump major release`. 
 2. Immediately thereafter (unless you know what you're doing), type `bump done`
@@ -227,7 +227,7 @@ Now you can list the tags and see that a tag was just created that matches the c
 
 At this point you need to use `git push` as necessary for your remotes.
 
-##Hotfix On Existing Project
+## Hotfix On Existing Project
 An example of a hotfix to the master branch.
 
 1. While on the master branch type `bump hotfix`.
