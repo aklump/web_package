@@ -1,4 +1,5 @@
 name = Web Package
 description = A shell script to help the management of files as a package.
-version = "1.12.7"
+version = "1.12.8"
 author = "Aaron Klump <sourcecode@intheloftstudios.com>"
+homepage = "http://www.intheloftstudios.com/packages/bash/web_package"
