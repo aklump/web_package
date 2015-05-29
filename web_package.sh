@@ -372,7 +372,7 @@ function do_build() {
         get_info_string 'author'
         author=$get_info_string_return
         date=$(date)
-        output=$($cmd $file "$1" "$2" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date")
+        output=$($cmd $file "$1" "$2" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file")
         echo "`tput setaf 2`Calling $file...`tput op`"
         echo "`tput setaf 3`$output`tput op`"
       fi
