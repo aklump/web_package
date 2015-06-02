@@ -1,9 +1,28 @@
 ## Summary
 
-A shell script to help the management of files as a package through easy version number manipulation. Supports name, description, author and version number. Integrates with .git and uses gitflow methodology to automatically merge and tag.
+A shell script to help the management of files as a package through easy version number manipulation. Supports name, description, author and version number. Integrates with .git and uses [gitflow methodology](http://nvie.com/posts/a-successful-git-branching-model) to automatically merge and tag.
+
+## Script Installation
+
+The web_package scripts need to be installed on your system once to make the tool available.  Don't confuse this with intializing a project which comes later.
+
+1. Download [this package](http://www.intheloftstudios.com/packages/bash/web_package/download) somewhere on your computer, e.g., `~/lib/web_package-master`.
+1. Make sure that `~/bin` is in your `$PATH` variable of BASH.  To verify type `echo $PATH` in a shell window and look for the path `~/bin`; **note that it will probably appear as the expanded home directory, not `~`**.
+1. Create a symlink to `web_package.sh` as `bump` as seen in the following snippet. (In all examples the symlink is called `bump` but that is not functionally necessary; you may rename as desired.)  For this snippet we're assuming that the package has been saved to `~/lib/web_package-master`
+    
+        cd ~/bin && ln -s ~/lib/web_package-master/web_package.sh bump && bump
+
+1. If all went well you should see something like this:
+
+        web_package.info not found. Have you created your Web Package yet?
 
 ## Why Use Web Package?
-If you're used to typing this:
+
+* To simplify using Gitflow.
+* To incorporate build scripts in package management.
+* To automate the process of version incrementing a package.
+
+This will save you keystrokes if you're used to typing this:
     
     $ git add .
     $ git cim 'some changes'
@@ -29,13 +48,6 @@ How would you rather type this, instead from now on...
     $ bump done
 
 If so, Web Package is for you! Read on...
-    
-## Installation
-1. Create a symlink to `web_package.sh`, I suggest `bump` and add it to `~/bin` you can then call this script by typing `bump` on the command line as in the examples below.
-1. Make sure that `~/bin` is in your PATH variable
-1. Below you will see three basic examples for usage:
-1. For more info see: <http://nvie.com/posts/a-successful-git-branching-model>
-1. For a list of commands, type `bump`.
 
 ## About Version Numbers
 1. Two versioning schemas may be used `(prefix-)major.minor.patch` and `(prefix-)major.minor(patch_prefix)patch`.
