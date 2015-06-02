@@ -155,7 +155,17 @@ wp_pause=5
 ##
  # The directory to scan for build scripts
  # 
-wp_build=./.web_package/build/
+wp_build=./.web_package/hooks/build/
+
+##
+ # The directory to scan for build scripts
+ # 
+wp_unbuild=./.web_package/hooks/unbuild/
+
+##
+ # The directory to scan for build scripts
+ # 
+wp_dev=./.web_package/hooks/dev/
 
 ##
  # BEGIN FUNCTIONS
@@ -278,8 +288,7 @@ load_config
  # @return NULL
  #
 function do_init() {
-  if [ ! -d .web_package ]
-  then
+  if [ ! -d .web_package ]; then
     # Copy the template folder as .web_package in target
     rsync -a "$root/template/" ./.web_package/ --exclude=tests
     echo "`tput setaf 3`For build script examples, take a look at .web_package/examples.`tput op`"
@@ -354,25 +363,29 @@ function do_init() {
 # 
 # @return 0 if build occurred, 1 otherwise
 # 
-function do_build() {
-  if [ $wp_build ] && [[ -d $wp_build ]]; then
-    for file in $(find $wp_build); do
-      cmd=''
+function do_scripts() {
+  local dir=$1
+  if [ "$dir" ] && [[ -d "$dir" ]]; then
+    local prev=$2
+    local version=$3
+    get_name
+    get_info_string 'description'
+    local description=$get_info_string_return
+    get_info_string 'homepage'
+    local homepage=$get_info_string_return
+    get_info_string 'author'
+    local author=$get_info_string_return
+    local date=$(date)  
+
+    for file in $(find "$dir"); do
+      local cmd=''
       if [[ ${file##*.} == 'php' ]]; then
         cmd=$wp_php
       elif [[ ${file##*.} == 'sh' ]]; then
         cmd=$wp_bash
       fi
       if [[ "$cmd" ]]; then
-        get_name
-        get_info_string 'description'
-        description=$get_info_string_return
-        get_info_string 'homepage'
-        homepage=$get_info_string_return
-        get_info_string 'author'
-        author=$get_info_string_return
-        date=$(date)
-        output=$($cmd $file "$1" "$2" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file")
+        output=$($cmd $file "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file")
         echo "`tput setaf 2`Calling $file...`tput op`"
         echo "`tput setaf 3`$output`tput op`"
       fi
@@ -386,6 +399,10 @@ function do_build() {
 function do_check_update_needed() {
   local needed=0
   if [[ ! -d "$project_root/.web_package/tmp" ]]; then
+    needed=1
+  fi
+
+  if [[ ! -d "$project_root/.web_package/hooks" ]]; then
     needed=1
   fi
 
@@ -419,6 +436,13 @@ function do_update() {
   if [[ ! -f $project_root/.web_package/.gitignore ]]; then
     echo "`tput setaf 2`Creating .gitignore.`tput op`"
     echo 'tmp' > $project_root/.web_package/.gitignore
+  fi
+
+  if [ ! -d "$wp_root/hooks" ]; then
+    rsync -a "$root/template/hooks/" "$wp_root/hooks/"
+    if [ -d "$wp_root/build" ]; then
+      rm -r "$wp_root/hooks/build" && mv "$wp_root/build" "$wp_root/hooks/build"
+    fi
   fi
 }
 
@@ -1093,6 +1117,8 @@ then
   echo "info_file = $wp_info_file"
   echo "patch_prefix = $wp_patch_prefix"
   echo "build = $wp_build"
+  echo "unbuild = $wp_unbuild"
+  echo "dev = $wp_dev"
   #echo "php = $wp_php"
   #echo "bash = $wp_patch_bash"
   echo "major_step = $wp_major_step"
@@ -1175,12 +1201,31 @@ then
 fi
 
 #
-# bump done
+# bump build
 # 
 if [[ "$1" == 'build' ]]; then
   get_version
-  do_build $get_version_return $get_version_return
+  do_scripts $wp_build $get_version_return $get_version_return
   end "`tput setaf 2`Build complete.`tput op`"
+fi
+
+#
+# bump unbuild
+# 
+if [[ "$1" == 'unbuild' ]]; then
+  get_version
+  do_scripts $wp_unbuild $get_version_return $get_version_return
+  end "`tput setaf 2`Un-build complete.`tput op`"
+fi
+
+
+#
+# bump dev
+# 
+if [[ "$1" == 'dev' ]]; then
+  get_version
+  do_scripts $wp_dev $get_version_return $get_version_return
+  end "`tput setaf 2`Dev mode has been enabled.`tput op`"
 fi
 
 #
@@ -1255,7 +1300,7 @@ then
   echo "Arg 1 is one of: major, minor, patch, hotfix*, release*, alpha, beta, rc"
   echo "Arg 2 is one of: hotfix*, release*"
   echo
-  echo "Arg 1 can also be: init, config, name(n), version(v), info(i), test, build, update"
+  echo "Arg 1 can also be: init, config, name(n), version(v), info(i), test, build, unbuild, dev, update"
   echo
   echo "*Workflow with Git:"
   echo "1. bump hotfix || bump release"
@@ -1286,7 +1331,7 @@ else
   rm $wp_info_file.bak  
 
   # Lookfor build scripts and call
-  if do_build $previous $version; then
+  if do_scripts $previous $version; then
     # Pause to allow for processing
     if [[ "$wp_pause" -lt 0 ]]; then  
       read -n1 -p "`tput setaf 3`Press any key to proceed...`tput op`"

@@ -129,7 +129,7 @@ Here is an example:
 
 If you call `bump test` without arguments you will see a litany of internal tests, which check supported schemas.  **Note: at this time the internal tests expect all steps to be set to 1, if you call this in a project whose config alters the step values, you will see that some of the internal tests fail.**
 
-##About the `.info` File
+## About the `.info` File
 Web Package looks for a file with the .info extension and will use that for storing the meta data about your project.  This file is one that can be parsed using php's `parse_ini_file()` function.  If none is found, then `web_package.info` will be created.  You may configure the actual filename in the config file e.g. `info_file = some_other_file.info` if these first two options do not work for you. Here is a basic `.info` file.
 
     name = "Apple"
@@ -138,8 +138,20 @@ Web Package looks for a file with the .info extension and will use that for stor
     version = 0.0.1
     author = Aaron Klump <sourcecode@intheloftstudios.com>
 
+## Timesaving hooks: build, unbuild, dev
+There are three commands that are important to know about.  On their own, that is without special implementation, they do nothing.  However they can be configured to help your process out and save time and reduce errors
+
+### `bump build`
+Scripts added to `.web_package/hooks/build` are run.  By design, these scripts should serve the purpose of building the package and making it ready for a release.  Such as create a `dist` directory and copy over distribution files, etc.  **Of the three, this is the only command that is automatically called by calling `bump done`.
+
+### `bump unbuild`
+Scripts added to `.web_package/hooks/unbuild` are run.  You may delete files as necessary to reverse the build step.  May not be that useful for most.
+
+### `bump dev`
+Scripts added to `.web_package/hooks/dev` are run.  The intention here is to set up the project to be developed.  I use this to symlink dependencies during development.  These symlinks get reversed in my build scripts.
+
 ## Build Scripts
-You may add php or shell scripts to `.web_package/build` and they will be run each time the version increments.  You may also trigger a build by calling `bump build`.
+You may add php or shell scripts to `.web_package/hooks/build` and they will be run each time the version increments.  You may also trigger a build by calling `bump build`.
 
 Any file ending in `.php` or `.sh` found in the build script folder will be called during version bumping.  Refer to the parameter chart below for script arguments:
 
@@ -161,7 +173,7 @@ One example of using a build script, say with a jQuery plugin, is when you want 
 * Your script should print/echo details as to what it did; this will be output to the console.
 * Be sure to use _path to root_ in your scripts when you reference any files in your project.
 
-##Beginning A New Project
+## Beginning A New Project
 1. In this example you see how we being a new project called example, initialize the git repository and start with a version number of 0.1
 1. Had you wanted to start with version 1.0, then you would have used `bump major`; and if you had wanted to start with version 0.0.1 you would have used `bump patch`.
 
@@ -184,6 +196,9 @@ One example of using a build script, say with a jQuery plugin, is when you want 
          1 file changed, 3 insertions(+)
          create mode 100644 web_package.info
         $
+
+## Reversing `bump init`
+By the way--to reverse the action of `bump init`, simply delete the folder `.web_package` from the root of your project.  You may or may not want to delete the `*.info` file from the root of your project.
 
 ## What to add to your project's version control
 1. You should include `.web_package` in version control.  It has a .gitignore file that you can refer to for files that may safely be excluded.
@@ -305,7 +320,7 @@ There are three commands that will move your package through the stages, but onl
 3. Calling `bump rc` on a `1.1-beta3` bumps it to `1.1-rc1`
 4. You can go directly to beta or to rc, but not the other direction, e.g. if your version is `2.3` you can `bump rc` and it becomes `2.4-rc1`.
 
-##Configuration
+## Configuration
 The configuration file is created during `bump init` and is located at `.web_package/config`.  Default contents look like this:
 
     master = "master"
@@ -361,10 +376,10 @@ If develop branches should be pushed to `git_remote`.  Set to `auto` and you wil
 (Optional)  Enter a number of seconds to pause before git creates a branch and adds files.  This is here in case you need to allow time for file processing after the version file has been updated. If you want to be prompted before git does it's thing enter a -1 here.
 
 
-##Global Configuration
+## Global Configuration
 A global configuration file may be created at `~/.web_package/config`, the contents of which will be used as defaults for new projects or existing projects without said parameter.  This is most useful for the `author` and `info_file` parameters.  **Note: if a global config parameter is set, but the project does not override it, the global will apply for that project, even after `bump init`.
 
-##Configuration Templates
+## Configuration Templates
 Let's take the use case of a Drupal module, which has a different configuration setup than a website project.  For our module we want the following configuration:
 
     master = 8.x-1.x 7.x-1.x 6.x-1.x
@@ -379,10 +394,10 @@ Let's take the use case of a Drupal module, which has a different configuration 
 
 Wouldn't it be nice to not have to retype that for every new Drupal module?  Well you don't have to if you use a Global Template.
 
-###Defining a Global Template
+### Defining a Global Template
 For a template called `drupal`, create a file at `~/.web_package/config_drupal`, containing the configuration you wish to use for that class of projects.  So the pattern is `~/.web_package/config_[template name]`.
 
-###Implementing a Global Template
+### Implementing a Global Template
 When creating a new project, use the command `bump init drupal` and your template will automatically be used as the default configuration.
 
     $ mkdir new_drupal
@@ -406,7 +421,7 @@ When creating a new project, use the command `bump init drupal` and your templat
     patch_prefix = -rc
     $
 
-##[Drupal Modules/Themes](id:drupal)
+## [Drupal Modules/Themes](id:drupal)
 When I use this with my Drupal modules, the workflow is a bit different.  For starters, there is no master branch.  Actually the master and development branches are one in the same, but we have one branch for each major version of Drupal.  The tags become really important as the release packages are built from them.  Observe `git br -l`
 
     * 7.x-1.x
@@ -454,16 +469,15 @@ In summary what you are saying is this: **I have three master branches, which ar
 
 At this point the workflow is pretty much the same, although as noted you will be able to choose `bump hotfix` or `bump release` from each major Drupal version branch.  You get to decide which is best.
 
-##Questions
-###When should I use 'bump hotfix'?
+## Questions
+### When should I use 'bump hotfix'?
 When you need to make an immediate change to the production state (master branch) of the project, you will use `bump hotfix`.  A hotfix is unique in that the release number gets bumped _before_ the work is done.
 
-###When should I use 'bump release'?
+### When should I use 'bump release'?
 When you have finished work on the development branch and you want to release it to the production-ready state of the project, you will use `bump release`.  A release is different from a hotfix, in that the version is bumped _after_ the work is done.
 
-###When should I use 'bump major', 'bump minor', or 'bump patch'?
+### When should I use 'bump major', 'bump minor', or 'bump patch'?
 These three commands are unique in that they do not interact with git in any way, they simply modify `web_package.info`.  The choice of which of the three to use is based on the severity of the changes and your versioning mandates.  However, _why_ you would use one of these three can be answered thus: __Any time that you will need to step away from the development branch for an extended period of time, but cannot release the package.__  This way you can be certain that no implementation of your web_package thinks it has the most recent version.  I would argue it's best practice to `bump_patch` at the end of each work session, if you have multiple projects underway.
-
 
 ##Contact
 **In the Loft Studios**  
