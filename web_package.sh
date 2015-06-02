@@ -970,8 +970,7 @@ function do_done() {
   master=$storage_return
 
   # Get the develop to merge back into
-  if [ "$develop" ] && [ "$develop" != "$master" ]
-  then
+  if [ "$develop" ] && [ "$develop" != "$master" ]; then
     echo "Merging into $develop (develop)..."
     git co "$develop"
     git merge --no-ff $get_branch_return -m "Merge branch '$get_branch_return'"
@@ -989,8 +988,7 @@ function do_done() {
   fi
 
   # Merge into master
-  if [ "$master" ]
-  then
+  if [ "$master" ]; then
     git co "$master"
     git merge --no-ff $get_branch_return -m "Merge branch '$get_branch_return'"
 
@@ -998,8 +996,7 @@ function do_done() {
     echo
     read -n1 -p "Delete $get_branch_return? (y/n) " a;
     echo
-    if [ "$a" == 'y' ]
-    then
+    if [ "$a" == 'y' ]; then
       # Delete the hotfix or release branch
       git br -d $get_branch_return
     fi
@@ -1008,24 +1005,20 @@ function do_done() {
   # Tag the new release if we are supposed to for this severity
   storage severity
   do_tag=false;
-  if [ $wp_create_tags == 'patch' ]
-  then
+  if [ $wp_create_tags == 'patch' ]; then
     do_tag=true
   fi
-  if [ $wp_create_tags == 'major' ] && [ $storage_return == 'major' ]
-  then
+  if [ $wp_create_tags == 'major' ] && [ $storage_return == 'major' ]; then
     do_tag=true
   fi
   if [ $wp_create_tags == 'minor' ]
   then
-    if [ $storage_return == 'major' ] || [ $storage_return == 'minor' ]
-    then
+    if [ $storage_return == 'major' ] || [ $storage_return == 'minor' ]; then
       do_tag=true
     fi
   fi
 
-  if [ "$do_tag" == true ]
-  then
+  if [ "$do_tag" == true ]; then
     get_version_with_prefix
     tagname=$get_version_with_prefix_return
     git tag $tagname
@@ -1054,15 +1047,13 @@ function do_done() {
 
   # Ask to push the develop branch to origin?
   a=''
-  if [ "$develop" ] && [ "$wp_push_develop" == 'ask' ]
-  then
+  if [ "$develop" ] && [ "$wp_push_develop" == 'ask' ]; then
     echo
     read -n1 -p "git push $wp_remote $develop? (y/n) " a;
     echo
   fi
   # Push the tag if auto or prompt was yes
-  if [ "$a" == 'y' ] || [ "$wp_push_develop" == 'auto' ]
-  then
+  if [ "$a" == 'y' ] || [ "$wp_push_develop" == 'auto' ]; then
     if [ "$wp_push_develop" == 'auto' ]
     then
       echo
@@ -1073,15 +1064,13 @@ function do_done() {
 
   # Ask to push the master branch to origin?
   a=''
-  if [ "$master" ] && [ "$wp_push_master" == 'ask' ]
-  then
+  if [ "$master" ] && [ "$wp_push_master" == 'ask' ]; then
     echo
     read -n1 -p "git push $wp_remote $master? (y/n) " a;
     echo
   fi
   # Push the tag if auto or prompt was yes
-  if [ "$a" == 'y' ] || [ "$wp_push_master" == 'auto' ]
-  then
+  if [ "$a" == 'y' ] || [ "$wp_push_master" == 'auto' ]; then
     if [ "$wp_push_master" == 'auto' ]
     then
       echo
@@ -1092,8 +1081,7 @@ function do_done() {
 
   # return to the original branch if not yet there
   get_branch
-  if [ "$get_branch_return" != "$original_branch" ]
-  then
+  if [ "$get_branch_return" != "$original_branch" ]; then
     git co $original_branch
   fi
   end "Welcome back to $original_branch!"
@@ -1102,8 +1090,7 @@ function do_done() {
 ##
  # Show Info if requested
  #
-if [ "$1" == 'config' ]
-then
+if [ "$1" == 'config' ]; then
   echo "master = $wp_master"
   echo "develop = $wp_develop"
   echo "remote = $wp_remote"
@@ -1131,8 +1118,7 @@ fi
 ##
  # Show Version if requested
  #
-if [ "$1" == 'init' ]
-then
+if [ "$1" == 'init' ]; then
   do_init $2
 fi
 
@@ -1144,8 +1130,7 @@ fi
  # Anything below here must have a .info file
  #
 
-if [ ! -f "$wp_info_file" ]
-then
+if [ ! -f "$wp_info_file" ]; then
   if [[ -d "$HOME/.web_package" ]]; then
     ls "$HOME/.web_package"
   fi
@@ -1155,8 +1140,7 @@ fi
 ##
  # Show Info if requested
  #
-if [ "$1" == 'info' ] || [ "$1" == 'i' ]
-then
+if [ "$1" == 'info' ] || [ "$1" == 'i' ]; then
   cat $wp_info_file
   exit
 fi
@@ -1164,8 +1148,7 @@ fi
 ##
  # Show Version if requested
  #
-if [ "$1" == 'version' ] || [ "$1" == 'v' ]
-then
+if [ "$1" == 'version' ] || [ "$1" == 'v' ]; then
   get_version
   end 'Version: '$get_version_return;
 fi
@@ -1173,8 +1156,7 @@ fi
 ##
  # Show test output
  #
-if [ "$1" == 'test' ]
-then
+if [ "$1" == 'test' ]; then
   do_test $2 $3 $4 $5 $6 $7 $8
   end 'End of test.'
 fi
@@ -1182,8 +1164,7 @@ fi
 ##
  # Show Name if requested
  #
-if [ "$1" == 'name' ] || [ "$1" == 'n' ]
-then
+if [ "$1" == 'name' ] || [ "$1" == 'n' ]; then
   get_name
   end 'Name: '$get_name_return;
 fi
@@ -1195,8 +1176,7 @@ fi
  # Anything below here needs to have .web_package
  #
 
-if [ ! -d ".web_package" ]
-then
+if [ ! -d ".web_package" ]; then
   end "`tput setaf 1`.web_package`tput op` directory not found. Try 'bump init'..."
 fi
 
@@ -1244,20 +1224,17 @@ do_check_update_needed
 ##
  # Merge (develop and master), delete branch, create tag
  #
-if [ "$1" == 'done' ]
-then
+if [ "$1" == 'done' ]; then
   do_done
 fi
 
 ##
  # Explode shortcuts
  #
-if [ "$1" == 'hotfix' ]
-then
+if [ "$1" == 'hotfix' ]; then
   severity='patch'
   release_type=$1
-elif [ "$1" == 'release' ]
-then
+elif [ "$1" == 'release' ]; then
   severity='minor'
   release_type=$1
 else
@@ -1269,21 +1246,18 @@ fi
 allow=true
 
 is_master_branch
-if [ "$release_type" == 'hotfix' ] && [ $is_master_branch_return == false ]
-then
+if [ "$release_type" == 'hotfix' ] && [ $is_master_branch_return == false ]; then
   allow=false
   from_branch=master
 fi
 
 is_develop_branch
-if [ "$release_type" == 'release' ] && [ $is_develop_branch_return == false ]
-then
+if [ "$release_type" == 'release' ] && [ $is_develop_branch_return == false ]; then
   allow=false
   from_branch=develop
 fi
 
-if [ "$allow" == false ]
-then
+if [ "$allow" == false ]; then
   get_branch
   echo "current branch: `tput setaf 1`$get_branch_return`tput op` is not defined as a \"$from_branch\" branch."
   end "To execute a $release_type you must be on a \"$from_branch\" branch. Switch and try again."
@@ -1292,8 +1266,7 @@ fi
 ##
  # Prompt if invalid input
  #
-if [ "$severity" != 'major' ] && [ "$severity" != 'minor' ] && [ "$severity" != 'patch' ] && [ "$severity" != 'alpha' ] && [ "$severity" != 'beta' ] && [ "$severity" != 'rc' ]
-then
+if [ "$severity" != 'major' ] && [ "$severity" != 'minor' ] && [ "$severity" != 'patch' ] && [ "$severity" != 'alpha' ] && [ "$severity" != 'beta' ] && [ "$severity" != 'rc' ]; then
   echo
   echo 'Web Package Version Bump'
   echo '--------------------'
@@ -1320,8 +1293,7 @@ previous=$version
 increment_version $version $severity
 version=$increment_version_return
 
-if [ $previous == $version ]
-then
+if [ $previous == $version ]; then
   echo "Version unchanged: $previous ---> `tput setaf 1`$version`tput op`";
 else
   echo "Version bumped: $previous ---> `tput setaf 2`$version`tput op`";
@@ -1331,7 +1303,7 @@ else
   rm $wp_info_file.bak  
 
   # Lookfor build scripts and call
-  if do_scripts $previous $version; then
+  if do_scripts $wp_build $previous $version; then
     # Pause to allow for processing
     if [[ "$wp_pause" -lt 0 ]]; then  
       read -n1 -p "`tput setaf 3`Press any key to proceed...`tput op`"
@@ -1344,8 +1316,7 @@ else
 fi
 
 # Git Integration...
-if [ "$release_type" == 'hotfix' ] || [ "$release_type" == 'release' ]
-then
+if [ "$release_type" == 'hotfix' ] || [ "$release_type" == 'release' ]; then
   # Store this branch so we can return to it when done
   get_branch
   storage return $get_branch_return
@@ -1354,11 +1325,9 @@ then
   # Make note of the correct master/develop branches of this context
   is_master_branch
   is_develop_branch
-  if [ "$is_master_branch_return" == true ]
-  then
+  if [ "$is_master_branch_return" == true ]; then
     branches=($wp_master)
-  elif [ "$is_develop_branch_return" == true ]
-  then
+  elif [ "$is_develop_branch_return" == true ]; then
     branches=($wp_develop)
   fi
 
@@ -1366,8 +1335,7 @@ then
   i=0
   for branch in "${branches[@]}"
   do
-    if [ "$branch" == "$get_branch_return" ]
-    then
+    if [ "$branch" == "$get_branch_return" ]; then
       master_branches=($wp_master)
       develop_branches=($wp_develop)
       storage master ${master_branches[$i]}
