@@ -32,13 +32,16 @@ if (isset($json->version)) {
 preg_match('/(.*?)\s*<(.*?)>/', $info['author'], $author);
 $author += array('', '');
 $found = FALSE;
-foreach ($json->authors as $key => $item) {
-  if ($item->name === $author[1] && $found = 1 && isset($author[2])) {
-    $json->authors[$key]->email = $author[2];
-    break;
+if (isset($json->authors)) {
+  foreach ($json->authors as $key => $item) {
+    if ($item->name === $author[1] && $found = 1 && isset($author[2])) {
+      $json->authors[$key]->email = $author[2];
+      break;
+    }
   }
 }
-if (!$found) {
+if (!$found && count($author)) {
+  $json->authors = !isset($json->authors) ? array() : $json->authors;
   $json->authors[] = (object) array(
     'name' => $author[1],
     'email' => $author[2],
