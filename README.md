@@ -153,6 +153,10 @@ Scripts added to `.web_package/hooks/dev` are run.  The intention here is to set
 ## Build Scripts
 You may add php or shell scripts to `.web_package/hooks/build` and they will be run each time the version increments.  You may also trigger a build by calling `bump build`.
 
+You can also trigger a single file by passing it's filename; you would want to do this if you need to trigger this one script from an external program, while preserving the callback arguments.  Here is an example (this also works for unbuild and dev):
+
+        bump build only_this_script.sh
+
 Any file ending in `.php` or `.sh` found in the build script folder will be called during version bumping.  Refer to the parameter chart below for script arguments:
 
 One example of using a build script, say with a jQuery plugin, is when you want to embed the version string _inside_ the `jquery.pluging_name.js` file.  In such a case the  `.info` file strategy doesn't meet your needs.  For such a scenario you would use a build script.

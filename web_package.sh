@@ -360,6 +360,8 @@ function do_init() {
 # 
 # @param $previous string The previous version
 # @param $version string The current version
+# @param $target_script Optional. Specify a single target script in the $dir,
+#   otherwise all scripts will be searched.
 # 
 # @return 0 if build occurred, 1 otherwise
 # 
@@ -375,19 +377,29 @@ function do_scripts() {
     local homepage=$get_info_string_return
     get_info_string 'author'
     local author=$get_info_string_return
-    local date=$(date)  
+    local date=$(date)
 
-    for file in $(find "$dir"); do
-      local cmd=''
-      if [[ ${file##*.} == 'php' ]]; then
-        cmd=$wp_php
-      elif [[ ${file##*.} == 'sh' ]]; then
-        cmd=$wp_bash
-      fi
-      if [[ "$cmd" ]]; then
-        output=$($cmd $file "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file")
-        echo "`tput setaf 2`Calling $file...`tput op`"
-        echo "`tput setaf 3`$output`tput op`"
+    local target_scripts="$(find "$dir")"
+    # Check to see if a scriptname has been provided, instead.
+    if [[ "$4" ]]; then
+      target_scripts="$dir/$4"
+    fi
+
+    for file in ${target_scripts[@]}; do
+      if ! test -e "$file"; then
+        echo "`tty -s && tput setaf 1`$file doesn't exist!`tty -s && tput op`"
+      else
+        local cmd=''
+        if [[ ${file##*.} == 'php' ]]; then
+          cmd=$wp_php
+        elif [[ ${file##*.} == 'sh' ]]; then
+          cmd=$wp_bash
+        fi
+        if [[ "$cmd" ]]; then
+          output=$($cmd $file "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file")
+          echo "`tput setaf 2`Calling $file...`tput op`"
+          echo "`tput setaf 3`$output`tput op`"
+        fi
       fi
     done
     return 0
@@ -1185,7 +1197,8 @@ fi
 # 
 if [[ "$1" == 'build' ]]; then
   get_version
-  do_scripts $wp_build $get_version_return $get_version_return
+  # $2 would be a target script
+  do_scripts $wp_build $get_version_return $get_version_return "$2"
   end "`tput setaf 2`Build complete.`tput op`"
 fi
 
@@ -1194,7 +1207,7 @@ fi
 # 
 if [[ "$1" == 'unbuild' ]]; then
   get_version
-  do_scripts $wp_unbuild $get_version_return $get_version_return
+  do_scripts $wp_unbuild $get_version_return $get_version_return "$2"
   end "`tput setaf 2`Un-build complete.`tput op`"
 fi
 
@@ -1204,7 +1217,7 @@ fi
 # 
 if [[ "$1" == 'dev' ]]; then
   get_version
-  do_scripts $wp_dev $get_version_return $get_version_return
+  do_scripts $wp_dev $get_version_return $get_version_return "$2"
   end "`tput setaf 2`Dev mode has been enabled.`tput op`"
 fi
 
