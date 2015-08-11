@@ -396,7 +396,7 @@ function do_scripts() {
           cmd=$wp_bash
         fi
         if [[ "$cmd" ]]; then
-          output=$($cmd $file "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file")
+          output=$($cmd $file "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file" "$dir")
           echo "`tput setaf 2`Calling $file...`tput op`"
           echo "`tput setaf 3`$output`tput op`"
         fi
