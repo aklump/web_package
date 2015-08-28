@@ -18,7 +18,7 @@
  * {{ description }}.
  *
  * Copyright 2013, {{ name }}
- * Dual licensed under the MIT or GPL Version 2 licenses.
+ * @license Dual licensed under the MIT or GPL Version 2 licenses.
  *
  * Date: {{ date }}
  */
