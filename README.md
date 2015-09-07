@@ -162,18 +162,19 @@ Any file ending in `.php` or `.sh` found in the build script folder will be call
 One example of using a build script, say with a jQuery plugin, is when you want to embed the version string _inside_ the `jquery.pluging_name.js` file.  In such a case the  `.info` file strategy doesn't meet your needs.  For such a scenario you would use a build script.
 
 ### Callback Arguments
-| data                   | build.php   | build.sh   |
-|------------------------|-------------|------------|
-| prev version           | $argv[1]    | $1         |
-| new version            | $argv[2]    | $2         |
-| package name           | $argv[3]    | $3         |
-| description            | $argv[4]    | $4         |
-| homepage               | $argv[5]    | $5         |
-| author                 | $argv[6]    | $6         |
-| path to root           | $argv[7]    | $7         |
-| date/time              | $argv[8]    | $8         |
-| path to info file      | $argv[9]    | $9         |
-| dir of the script      | $argv[10]   | ${10}      |
+| data                     | build.php   | build.sh   |
+|--------------------------|-------------|------------|
+| prev version             | $argv[1]    | $1         |
+| new version              | $argv[2]    | $2         |
+| package name             | $argv[3]    | $3         |
+| description              | $argv[4]    | $4         |
+| homepage                 | $argv[5]    | $5         |
+| author                   | $argv[6]    | $6         |
+| path to root             | $argv[7]    | $7         |
+| date/time                | $argv[8]    | $8         |
+| path to info file        | $argv[9]    | $9         |
+| dir of the script        | $argv[10]   | ${10}      |
+| dir of functions.php/.sh | $argv[11]   | ${11}      |
 
 * Your script should print/echo details as to what it did; this will be output to the console.
 * Be sure to use _path to root_ in your scripts when you reference any files in your project.
@@ -181,6 +182,7 @@ One example of using a build script, say with a jQuery plugin, is when you want 
 
         #!/bin/bash
         source "${10}/config"
+        source "${11}/functions.sh"
         ...
 
 ## Beginning A New Project
