@@ -4,7 +4,7 @@
 # Provides common functions to .web_package scripts
 
 #
-# Duplicates files or folders using cp or rsync as appropriate.
+# Duplicates (overwrites) folders or files from one point to another.
 #
 # @param string $from A path or filename as the source.
 # @param string $to A path or filename as the destination.
@@ -21,12 +21,12 @@ function wp_duplicate() {
   fi
 
   if [ -f "$from" ]; then
-    if mkdir -p "$(dirname $to)" &&  cp "$from" "$to"; then
+    if ( [ -d "$(dirname $to)" ] ||  mkdir -p "$(dirname $to)") &&  cp "$from" "$to"; then
       echo "`tty -s && tput setaf 2`$to_file duplicated.`tty -s && tput op`"
       return 0
     fi
   elif [ -d "$from" ]; then
-    if mkdir -p "$to" && rsync -a "$from/" "$to/"; then
+    if ( [ -d "$to" ] || mkdir -p "$to") && rsync -a "$from/" "$to/"; then
       echo "`tty -s && tput setaf 2`$to_file duplicated.`tty -s && tput op`"
       return 0;
     fi
