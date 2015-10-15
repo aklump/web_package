@@ -7,7 +7,7 @@
  * @{
  */
 function js_replace_name_version(&$text, $package_name, $new_version) {
-  $regex = '/(.*?)( JQuery JavaScript Plugin v)([^\s]+)/i';
+  $regex = '/(.*?)(\s+(?:JQuery|JavaScript|JS).*v)(\{\{\s*version\s*\}\}|[\d\.a-z\-]+)$/i';
   $text = preg_replace($regex, ' * ' . $package_name . '${2}' . $new_version,  $text);
 }
 
@@ -21,6 +21,21 @@ function js_replace_date(&$text, $date) {
 
 function js_replace_homepage(&$text, $homepage) {
   $text = " * $homepage";
+}
+
+function js_replace_copyright(&$text, $holder) {
+  $regex = '/copyright\s*((\d{4})(?:\-(\d{4}))?),\s*(.*)$/i';
+  if (preg_match($regex, $text, $matches)) {
+    list(, $find_date, $original_date, , $find_name) = $matches;
+    $replace_date[] = $original_date;
+    $now = new \DateTime('now', new \DateTimeZone('America/Los_Angeles'));
+    $replace_date[] = $now->format('Y');
+    $replace_date = implode('-', array_unique($replace_date));
+    $text = str_replace($find_date, $replace_date, $text);
+
+    $text = str_replace($find_name, $holder, $text);
+  }
+
 }
 
 function js_replace_version_function(&$source, $new_version) {
