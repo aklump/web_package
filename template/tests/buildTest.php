@@ -7,6 +7,46 @@
 require_once dirname(__FILE__) . '/../vendor/autoload.php';
 
 class buildTest extends \PHPUnit_Framework_TestCase {
+  
+  /**
+   * Provides data for testReplaceCopyright.
+   *
+   * @return 
+   *   - 0: 
+   */
+  function testReplaceCopyrightProvider() {
+    return array(
+      array(
+        " * Copyright 2013-2014, Paul Bunyan",
+        "2015",
+        "Aaron Klump",
+        " * Copyright 2013-2015, Aaron Klump",
+      ),
+      array(
+        " * Copyright 2013, {{ name }}",
+        "2015",
+        "Aaron Klump",
+        " * Copyright 2013-2015, Aaron Klump",
+      ),
+      array(
+        " * Copyright 2013, {{ name }}",
+        "2013",
+        "In the Loft Studios",
+        " * Copyright 2013, In the Loft Studios",
+      ),
+    );
+  }
+  
+  /**
+   * @dataProvider testReplaceCopyrightProvider 
+   */
+  public function testReplaceCopyright($source, $name, $year, $control) {
+  
+  }
+  
+
+
+
   public function testReplaceHomepage() {
     $subject = ' * http://www.intheloftstudios.com/packages/jquery/jquery.click_replace';
     $control = ' * http://www.intheloftstudios.com/packages/jquery/jquery.click_replace_plus';
@@ -25,10 +65,46 @@ class buildTest extends \PHPUnit_Framework_TestCase {
     js_replace_description($subject, 'my new description');
     $this->assertSame($control, $subject);
   }
-  public function testReplaceNameVersion() {
-    $subject = ' * Click Replace jQuery JavaScript Plugin v0.1-rc8';
-    $control = ' * Click Replace Plus jQuery JavaScript Plugin v1.2.4';
-    js_replace_name_version($subject, 'Click Replace Plus', '1.2.4');
+  /**
+   * Provides data for testNameVersion.
+   *
+   * @return 
+   *   - 0: 
+   */
+  function testNameVersionProvider() {
+    return array(
+      array(
+        ' * LoftImages JS Module v1.0.9',
+        'Apple Blossom',
+        '0.1',
+        ' * Apple Blossom JS Module v0.1',
+      ),
+      array(
+        ' * {{ name }} Javascript Module v{{ version }}',
+        'Apple Blossom',
+        '0.1',
+        ' * Apple Blossom Javascript Module v0.1',
+      ),
+      array(
+        ' * {{ name }} jQuery JavaScript Plugin v{{ version }}',
+        'Apple Blossom',
+        '0.1',
+        ' * Apple Blossom jQuery JavaScript Plugin v0.1',
+      ),
+      array(
+        ' * Click Replace jQuery JavaScript Plugin v0.1-rc8',
+        'Click Replace Plus',
+        '1.2.4',
+        ' * Click Replace Plus jQuery JavaScript Plugin v1.2.4',
+      ),
+    );
+  }
+  
+  /**
+   * @dataProvider testNameVersionProvider 
+   */
+  public function testReplaceNameVersion($subject, $name, $version, $control) {
+    js_replace_name_version($subject, $name, $version);
     $this->assertSame($control, $subject);
   }  
 }
