@@ -8,6 +8,28 @@ require_once dirname(__FILE__) . '/../vendor/autoload.php';
 
 class buildTest extends \PHPUnit_Framework_TestCase {
   
+
+  /**
+   * Provides data for testReplaceJsFunction.
+   *
+   * @return 
+   *   - 0: 
+   */
+  function replaceJsFunctionTestProvider() {
+    return array(
+      array('    this.version = "1.0.0";', '2.9.3', '    this.version = "2.9.3";'),
+      array("$.fn.areaMapper.version = function() { return '0.1.2'; };", "1.6", "$.fn.areaMapper.version = function() { return '1.6'; };"),
+    );
+  }
+  
+  /**
+   * @dataProvider replaceJsFunctionTestProvider 
+   */
+  function testReplaceJsFunction($source, $new_version, $control) {
+    js_replace_version_function($source, $new_version, $control);
+    $this->assertSame($control, $source);
+  }
+
   /**
    * Provides data for testReplaceCopyright.
    *
@@ -40,12 +62,10 @@ class buildTest extends \PHPUnit_Framework_TestCase {
   /**
    * @dataProvider testReplaceCopyrightProvider 
    */
-  public function testReplaceCopyright($source, $name, $year, $control) {
-  
+  public function testReplaceCopyright($source, $year, $name, $control) {
+    js_replace_copyright($source, $name, $year);
+    $this->assertSame($control, $source);
   }
-  
-
-
 
   public function testReplaceHomepage() {
     $subject = ' * http://www.intheloftstudios.com/packages/jquery/jquery.click_replace';
