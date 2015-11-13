@@ -12,7 +12,7 @@
 // Additional comments should come AFTER the date line.
 
 /**
- * {{ name }} jQuery JavaScript Plugin v{{ version }}
+ * {{ name }} JavaScript Module v{{ version }}
  * {{ homepage }}
  *
  * {{ description }}.

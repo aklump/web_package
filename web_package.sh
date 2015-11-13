@@ -382,12 +382,13 @@ function do_scripts() {
     local target_scripts="$(find "$dir")"
     # Check to see if a scriptname has been provided, instead.
     if [[ "$4" ]]; then
+      echo "Looking for provided file: '$4'"
       target_scripts="$dir/$4"
     fi
-
     for file in ${target_scripts[@]}; do
       if ! test -e "$file"; then
-        echo "`tty -s && tput setaf 1`$file doesn't exist!`tty -s && tput op`"
+        echo "`tty -s && tput setaf 1`wp error: $dir`tty -s && tput op`"
+        echo "`tty -s && tput setaf 1`detected hook file: '$file' doesn't exist!`tty -s && tput op`"
       else
         local cmd=''
         if [[ ${file##*.} == 'php' ]]; then
@@ -912,7 +913,7 @@ function get_version_with_prefix() {
  #
 get_info_string_return='';
 function get_info_string() {
-  get_info_string_return=$(grep "$1" $wp_info_file | cut -f2 -d "=" | sed -e 's/^ *//g' -e 's/ *$//g');
+  get_info_string_return=$(grep -m 1 "$1" $wp_info_file | cut -f2 -d "=" | sed -e 's/^ *//g' -e 's/ *$//g');
   get_info_string_return=$(echo $get_info_string_return | sed -e 's/^[" ]*//g' -e 's/[" ]*$//g');
 }
 
