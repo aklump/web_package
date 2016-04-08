@@ -985,7 +985,7 @@ function do_done() {
   # Get the develop to merge back into
   if [ "$develop" ] && [ "$develop" != "$master" ]; then
     echo "Merging into $develop (develop)..."
-    git co "$develop"
+    git checkout "$develop"
     git merge --no-ff $get_branch_return -m "Merge branch '$get_branch_return'"
 
     # Try to merge into master
@@ -995,14 +995,14 @@ function do_done() {
     if [ "$a" != 'y' ]
     then
       echo 'CANCELLED!'
-      git co $get_branch_return
+      git checkout $get_branch_return
       exit
     fi
   fi
 
   # Merge into master
   if [ "$master" ]; then
-    git co "$master"
+    git checkout "$master"
     git merge --no-ff $get_branch_return -m "Merge branch '$get_branch_return'"
 
     # Delete the temp branch
@@ -1095,7 +1095,7 @@ function do_done() {
   # return to the original branch if not yet there
   get_branch
   if [ "$get_branch_return" != "$original_branch" ]; then
-    git co $original_branch
+    git checkout $original_branch
   fi
   end "Welcome back to $original_branch!"
 }
@@ -1360,7 +1360,7 @@ if [ "$release_type" == 'hotfix' ] || [ "$release_type" == 'release' ]; then
 
   # Create the new release, add the release data, and commit
   get_version_with_prefix
-  git co -b "$release_type-$get_version_with_prefix_return"
+  git checkout -b "$release_type-$get_version_with_prefix_return"
   git add -u
-  git ci -m "Version bumped from $previous to $version"
+  git commit -m "Version bumped from $previous to $version"
 fi
