@@ -26,18 +26,18 @@ This will save you keystrokes if you're used to typing this:
     
     $ git add .
     $ git cim 'some changes'
-    $ git co -b release-1.1
+    $ git checkout -b release-1.1
     $ cat version.info
     version = 1.0
     $ echo version.info > "version = 1.1"
     $ git add version.info
     $ git cim 'Bumped version to 1.1'
-    $ git co develop
+    $ git checkout develop
     $ git merge --no-ff release-1.1
-    $ git co master
+    $ git checkout master
     $ git merge --no-ff release-1.1
     $ git br -d release-1.1
-    $ git co develop
+    $ git checkout develop
 
 
 How would you rather type this, instead from now on...
@@ -220,7 +220,7 @@ By the way--to reverse the action of `bump init`, simply delete the folder `.web
 1. When all your work is done and you're ready for the release then type `bump release`; this is shorthand for `bump minor release`. If you only want a patch release then type `bump patch release`.  Consequently if you want a major release type `bump major release`. 
 2. Immediately thereafter (unless you know what you're doing), type `bump done`
 
-        $ git co -b develop
+        $ git checkout -b develop
         Switched to a new branch 'develop'
         $ touch do
         $ touch re
@@ -321,7 +321,7 @@ Follow these steps if you experience a merge conflict after typing `bump done`; 
 3. Save the file and `git add [file]`
 4. Repeat until all conflicts are resolved
 5. Type `git commit`
-6. Now go back the hotfix or release branch: `git co hotfix…`
+6. Now go back the hotfix or release branch: `git checkout hotfix…`
 7. Re-initiate `bump done`
 
 ## Alpha, Beta and RC
@@ -471,8 +471,8 @@ In summary what you are saying is this: **I have three master branches, which ar
      1 file changed, 3 insertions(+)
      create mode 100644 web_package.info
     $ git br -m 6.x-1.x
-    $ git co -b 7.x-1.x
-    $ git co -b 8.x-1.x
+    $ git checkout -b 7.x-1.x
+    $ git checkout -b 8.x-1.x
     Switched to a new branch '6.x-1.x'
     $ git br -l
       6.x-1.x
