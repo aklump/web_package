@@ -1,0 +1,20 @@
+Web Package by Aaron Klump
+
+usage: web_package <command> [<args>]
+
+The most commonly used commands are:
+
+      init      Initialize the current directory
+      bump      Increment the current version
+      info      Show info about the current package
+      help      Show this help screen.  Include second argument for more info about a topic, e.g. help init
+
+      build     Execute build scripts.
+      unbuild   Execute unbuild scripts.
+      dev       Execute dev scripts.
+
+      config    Show configuration
+      test      Run tests or test your own
+      update    Update the current directory
+
+Calling 'web_package' without a command is equivalent to 'web_package help'

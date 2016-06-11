@@ -1,0 +1,15 @@
+Show all package info, or specific by arg
+
+usage: web_package info [<key>]
+
+For some keys you may omit the 'info' as the first argument as a shorthand method.
+
+The optional arguments for show are, these may be
+      version | v
+      name
+      templates [<template>]
+
+To see the contents of a template type:
+
+    web_package info templates drupal
+

@@ -1,0 +1,1 @@
+lobster_color_echo "green" "$LOBSTER_PWD_ROOT"

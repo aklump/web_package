@@ -1,0 +1,20 @@
+Observe/test how a version string will be incremented using this script.
+
+usage: web_package test <version>|v [<patch> <minor> <major> <alpha> <beta> <rc>]
+
+  You may test the current project version by passing 'v'.
+
+    By omitting the optional expected severity arguments, you will simply observe the change.  By including them, tests will be run to make sure the output is as expected.  Try calling the script with only one argument to generate a longer string, to save typing.  You may then alter than string, if needed, and then use it to run tests.
+
+Here is an example called with expected outcomes:
+
+    $ bump test 1.0 1.0.1 1.1 2.0 1.1-alpha1 1.1-beta1 1.1-rc1
+
+    patch: 1.0 --> 1.0.1  [OK]
+    minor: 1.0 --> 1.1  [OK]
+    major: 1.0 --> 2.0  [OK]
+    alpha: 1.0 --> 1.1-alpha1  [OK]
+    beta: 1.0 --> 1.1-beta1  [OK]
+    rc: 1.0 --> 1.1-rc1  [OK]
+
+If you call `bump test` without arguments you will see a litany of internal tests, which check supported schemas.  **Note: at this time the internal tests expect all steps to be set to 1, if you call this in a project whose config alters the step values, you will see that some of the internal tests fail.**

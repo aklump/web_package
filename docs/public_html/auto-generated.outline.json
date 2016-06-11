@@ -1,0 +1,14 @@
+{
+    "chapters": [],
+    "sections": [
+        {
+            "id": "readme",
+            "title": "README",
+            "file": "README.md",
+            "sort": 0
+        }
+    ],
+    "settings": {
+        "search": "tipuesearch"
+    }
+}

@@ -1,0 +1,5 @@
+View list of templates or contents of one.
+
+usage: web_package tpl [<*template name>]
+
+*You may omit the 'config_' prefix of a template filename when typing the argument.

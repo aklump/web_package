@@ -1,0 +1,64 @@
+#!/bin/bash
+# 
+# @file
+# App configuration file for Lobster Shell
+
+# The machine name of your app, lowercase + underscore only.
+lobster_app_name="web_package"
+
+# Human readable name of your app
+lobster_app_title="Web Package"
+
+# This is used for the app's config filename.
+lobster_app_config=".web_packageconfig"
+
+# It can also specific a file within a folder relative to the working directory. But the upfind function does not yet work on this.
+#lobster_app_config=".web_packageconfig"
+
+# Set this to 1 and calling lobster_show_debug() will return the contents
+# of the include/debug.  Set this to 0 and calling lobster_show_debug() will
+# not produce any output.
+lobster_debug=0
+
+lobster_escape_char="\033"
+
+# Current terminal color
+lobster_color_current="null"
+
+# Default terminal color.
+lobster_color_default="null"
+
+# Set this to 1 and the colors will be brigher/lighter
+lobster_color_bright=0
+
+lobster_color_confirm="1;31"
+lobster_color_notice="0;34"
+lobster_color_verbose="grey"
+lobster_color_success="1;32"
+lobster_color_warning="1;33"
+lobster_color_error="1;31"
+
+# The name of the default theme.
+lobster_theme="default"
+
+# These define the extensions and the order of include for route files.
+lobster_route_extensions=("sh" "php")
+
+# These define the extensions and the order of include for template files.
+lobster_tpl_extensions=("twig" "txt")
+
+# The default route when no arguments present
+lobster_default_route="help"
+
+# You may override the auto-detected value, if needed.
+#lobster_php='/usr/local/bin/php'
+
+# You may override the auto-detected value, if needed.
+#lobster_bash='/bin/bash'
+
+# Path to folder where lobster may write it's logs.  If this is blank then
+# logs will not be written.  If this is not an absolute path it will be in relation to the $LOBSTER_PWD_ROOT.
+lobster_logs=""
+
+# The message to output when lobster_access fails.
+lobster_access_denied=""
