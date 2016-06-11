@@ -1,0 +1,20 @@
+Increment the package version.
+
+usage: web_package bump [<severity>] <type>
+
+The optional <severity> arguments are:
+      major
+      minor
+      patch
+      alpha
+      beta
+      rc
+
+The <type> arguments are:
+      hotfix
+      release
+
+Workflow with Git:
+1. web_package bump hotfix || web_package bump release
+2. make the changes to your package and commit them
+3. Type web_package bump done

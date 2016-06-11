@@ -1,0 +1,1 @@
+lobster_color_echo "green" "$lobster_app_title is located at: $LOBSTER_APP_ROOT"
