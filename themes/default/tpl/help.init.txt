@@ -1,0 +1,20 @@
+Initialize the current directory
+
+usage: web_package init [<template>] [--<config filetype>] [--file=<filename>]
+
+Normally the storage file type is defined by the template used, or the default settings.  However you can force a storage file type by including one of the following:
+      --json
+      --yaml, --yml
+      --ini
+      --composer
+
+You can also explicitly set the filename of the storage file using the --file=<name>; it must have a valid extension as listed above.  Note that this flag superscedes the filetype flags.
+
+To initialize using a yml storage config with no template (either is the same):
+
+    web_package init --yml
+    web_package init --yaml
+
+To initialize with a given filename
+
+    web_package init --file=composer.json

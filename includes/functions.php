@@ -9,7 +9,7 @@
 function wp_key_value_chart($info) {
   $build = array();
   $build[] = '';
-  foreach ($info as $key => $value) {
+  foreach ((array) $info as $key => $value) {
     if (is_array($value)) {
       $value = json_encode($value);
     }

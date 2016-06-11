@@ -1,5 +1,10 @@
 {
-    "require": {
-        "symfony/yaml": "^3.1"
+  "require": {
+    "symfony/yaml": "^3.1"
+  },
+  "autoload": {
+    "psr-4": {
+      "AKlump\\LoftLib\\": "lib/loft_php_lib/dist/src/AKlump/LoftLib"
     }
+  }
 }

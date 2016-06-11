@@ -379,6 +379,7 @@ function lobster_in_array() {
   return 1  
 }
 
+
 #
 # Extracts all flags (values beginning with a single -) from an array
 # 
@@ -466,9 +467,37 @@ function lobster_has_flag() {
  #   1: it does not have the param
  #
 function lobster_has_param() {
-  for var in "${lobster_params[@]}"
-  do
+  for var in "${lobster_params[@]}"; do
     if [[ "$var" =~ $1 ]]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
+##
+ # Test for a parameter
+ #
+ # @code
+ #   declare -a array=('ini' 'json' 'yaml' 'yml');
+ #   if lobster_has_params ${array[@]}; then
+ #     info_file="$lobster_app_name.$lobster_has_params_return";
+ #   fi
+ # @endcode
+ #
+ # @param string $1a
+ #   The param name to test for, omit the -
+ #
+ # @return int
+ #   0: it has one of the params; $lobster_has_params_return is set with the first matched param.
+ #   1: it does not have any of the param
+ #
+lobster_has_params_return=''
+function lobster_has_params() {
+  for var in "${lobster_params[@]}"; do
+    declare -a test=("$var" "${@}")
+    if lobster_in_array ${test[@]}; then
+      lobster_has_params_return="$var"
       return 0
     fi
   done

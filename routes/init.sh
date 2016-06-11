@@ -38,22 +38,38 @@ lobster_echo "git_root = $PWD" >> $conf
 # Restore the defaults
 load_config
 
+if lobster_has_param 'file'; then
+  wp_info_file=$(lobster_get_param 'file')
+else
+  # Tweak the filetype based on certain flags
+  declare -a array=('ini' 'json' 'yaml' 'yml');
+  if lobster_has_params ${array[@]}; then
+    wp_info_file="$base.$lobster_has_params_return";
+  fi
+
+  if lobster_has_param 'composer'; then
+    wp_info_file="composer.json"
+  fi
+fi
+
+lobster_echo "info_file = $wp_info_file" >> $conf
+
 # Create the info file
 if [ ! -s "$wp_info_file" ]; then
   read -e -p "Enter package name: " name
+  put_info_string 'name' "$name"
   read -e -p "Enter package description: " description
+  put_info_string 'description' "$description"
   read -e -p "Enter package homepage: " url
-  lobster_echo "name = \"$name\"" > $wp_info_file
-  lobster_echo "description = \"$description\"" >> $wp_info_file
   if [ "$url" ]; then
-    lobster_echo "homepage = $url" >> $wp_info_file
+    put_info_string 'homepage' "$url"
   fi
-  lobster_echo "version = $wp_init_version" >> $wp_info_file
+  put_info_string 'version' "$wp_init_version"
 
   # It may be that users don't want the author tag at all, so unless they
   # provide we will not write it to the .info file
   if [ "$wp_author" ]; then
-    lobster_echo "author = $wp_author" >> $wp_info_file
+    put_info_string 'author' $wp_author
   fi
 fi
 

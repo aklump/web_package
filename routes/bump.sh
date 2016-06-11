@@ -17,8 +17,7 @@ else
   lobster_echo
 
   # Update the file with the new version string
-  sed -i.bak "s/version *= *\"*${previous}\"*/version = \"$version\"/1" $wp_info_file
-  rm $wp_info_file.bak
+  put_info_string 'version' "$version"
 
   # Look for build scripts and call
   if do_scripts $wp_build $previous $version; then

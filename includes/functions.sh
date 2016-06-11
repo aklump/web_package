@@ -22,14 +22,6 @@ load_config_return=''
 function load_config() {
   load_config_return=''
 
-  # this will convert somethign like *.info to a filename.
-  if ! test -e "$wp_info_file"; then
-    for file in $(ls $wp_info_file 2>/dev/null); do
-      wp_info_file=$file
-      break;
-    done
-  fi
-
   # FIRST CHOICE: Take the template name from argument 1
   if [ $# -eq 1 ]; then
     wp_template=$1
@@ -86,6 +78,19 @@ function load_config() {
   if [[ "$wp_create_tags" == 'micro' ]]; then
     wp_create_tags='patch';
     echo "`tput setaf 3`Replace 'create_tags = micro' with 'create_tags = patch' in .web_package/config`tput op`"
+  fi
+
+  # this will convert something like *.info to a filename.
+  if ! test -e "$wp_info_file"; then
+    for file in $(ls $wp_info_file 2>/dev/null); do
+      wp_info_file=$file
+      break;
+    done
+  fi
+
+  # If there is still no file, then we will replace * with web_package
+  if [ "$wp_info_file" ] && ! test -e "$wp_info_file" && [ "${wp_info_file:0:1}" == "*" ]; then
+    wp_info_file="$lobster_app_name${wp_info_file:1}"
   fi
 }
 
@@ -627,6 +632,16 @@ function get_version_with_prefix() {
 get_info_string_return='';
 function get_info_string() {
   get_info_string_return=$($wp_php $LOBSTER_APP_ROOT/plugins/$wp_plugin_parse/$wp_plugin_parse.php $wp_info_file $1)
+}
+
+##
+ # Put an info string to persistent storage
+ #
+ # @param string the info key
+ # @param string the info value
+ #
+function put_info_string() {
+  result=$($wp_php $LOBSTER_APP_ROOT/plugins/$wp_plugin_parse/$wp_plugin_parse.php $wp_info_file $1 $2)
 }
 
 ##

@@ -2,35 +2,41 @@
 /**
  * Basic parse of configuration files: .info, .json, .yml
  */
-use \Symfony\Component\Yaml\Yaml;
+namespace AKlump\LoftLib\Component\Config;
 
 require_once getenv('LOBSTER_ROOT') . '/bootstrap.php';
 
-$file = $argv[1];
+$dir = dirname($argv[1]);
+$file = basename($argv[1]);
+$key = isset($argv[2]) ? $argv[2] : NULL;
+$value = isset($argv[3]) ? $argv[3] : NULL;
 
-$info = array();
-if (is_readable($file)) {
-  $ext = pathinfo($file, PATHINFO_EXTENSION);
-  switch ($ext) {
-    case 'info':
-      $info = parse_ini_file($file);
-      break;
-    case 'json':
-      $info = json_decode(file_get_contents($file));
-      break;
-    case 'yml':
-    case 'yaml':
-      try {
-        $info = Yaml::parse(file_get_contents($file));
-      } catch (\Exception $e) {
-        // Purposefully left blank.
-      }
-  }
+$ext = pathinfo($file, PATHINFO_EXTENSION);
+$options = isset($value) ? array('install' => TRUE) : array();
+switch ($ext) {
+  case 'info':
+    $conf = new ConfigIni($dir, $file, $options);
+    break;
+  case 'json':
+    $conf = new ConfigJson($dir, $file, $options);
+    break;
+  case 'yml':
+  case 'yaml':
+    $conf = new ConfigYaml($dir, $file, $options);
+    break;
 }
 
-if (isset($argv[2])) {
-  print isset($info[$argv[2]]) ? $info[$argv[2]] : '';
+//
+//
+// If we have a value then we need to write the value
+if ($value) {
+  $conf->write($key, $value);
+}
+
+
+if (isset($key)) {
+  print $conf->read($key, '');
 }
 else {
-  print wp_key_value_chart($info);
+  print wp_key_value_chart($conf->readAll());
 }
