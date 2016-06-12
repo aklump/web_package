@@ -214,6 +214,7 @@ Build Scripts
    path to info file        $argv[9]  $9
    dir of the script        $argv[10] ${10}
    dir of functions.php/.sh $argv[11] ${11}
+   root dir of web_package  $argv[12] ${12}
 
      * Your script should print/echo details as to what it did; this will
        be output to the console.
