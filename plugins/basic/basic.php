@@ -79,7 +79,7 @@ if (!empty($key)) {
     $stored = reset($stored);
     $stored = $stored['name'] . ' <' . $stored['email'] . '>';
   }
-  print $stored;
+  print is_array($stored) ? json_encode($stored) : $stored;
 }
 else {
   print wp_key_value_chart($conf->readAll());
