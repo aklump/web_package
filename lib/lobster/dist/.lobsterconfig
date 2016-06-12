@@ -32,6 +32,8 @@ lobster_color_default="null"
 lobster_color_bright=0
 
 lobster_color_confirm="1;31"
+lobster_color_input="0;34"
+lobster_color_input_suggestion="0;33"
 lobster_color_notice="0;34"
 lobster_color_verbose="grey"
 lobster_color_success="1;32"

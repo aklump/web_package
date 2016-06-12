@@ -34,10 +34,9 @@ lobster_route=''
 # From the routes folder
 declare -a dirs=("$LOBSTER_APP_ROOT" "$LOBSTER_ROOT");
 for suggestion in "${lobster_suggestions[@]}"; do
-  for ext in "${lobster_route_extensions[@]}"; do
-    filename=$suggestion.$ext
-
-    for dir in "${dirs[@]}"; do
+  for dir in "${dirs[@]}"; do
+    for ext in "${lobster_route_extensions[@]}"; do
+      filename=$suggestion.$ext
       if [ -f "$dir/routes/$filename" ]; then
         lobster_route="$dir/routes/$filename"
 
@@ -56,15 +55,13 @@ for suggestion in "${lobster_suggestions[@]}"; do
             ;;
         esac
       fi
-      
     done
   done
 
   # From the theme folder
-  for ext in "${lobster_tpl_extensions[@]}"; do
-    filename=$suggestion.$ext
-
-    for dir in "${dirs[@]}"; do
+  for dir in "${dirs[@]}"; do
+    for ext in "${lobster_tpl_extensions[@]}"; do
+      filename=$suggestion.$ext
       if [ -f "$dir/themes/$lobster_theme/tpl/$filename" ]; then
         lobster_route="$dir/themes/$lobster_theme/tpl/$filename"
 

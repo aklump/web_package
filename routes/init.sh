@@ -55,23 +55,39 @@ fi
 lobster_echo "info_file = $wp_info_file" >> $conf
 
 # Create the info file
-if [ ! -s "$wp_info_file" ]; then
-  read -e -p "Enter package name: " name
-  put_info_string 'name' "$name"
-  read -e -p "Enter package description: " description
-  put_info_string 'description' "$description"
-  read -e -p "Enter package homepage: " url
-  if [ "$url" ]; then
-    put_info_string 'homepage' "$url"
-  fi
-  put_info_string 'version' "$wp_init_version"
+get_info_string 'name'
+lobster_input "Package name" "$get_info_string_return"
+put_info_string 'name' "$lobster_input_return"
 
-  # It may be that users don't want the author tag at all, so unless they
-  # provide we will not write it to the .info file
-  if [ "$wp_author" ]; then
-    put_info_string 'author' $wp_author
-  fi
+get_info_string 'description'
+lobster_input "Description" "$get_info_string_return"
+put_info_string 'description' "$lobster_input_return"
+
+get_info_string 'homepage'
+lobster_input "Homepage URL" "$get_info_string_return"
+if [ "$input" ]; then
+  put_info_string 'homepage' "$lobster_input_return"
 fi
+
+get_info_string 'version'
+if [ ! "$get_info_string_return" ]; then
+  get_info_string_return=$wp_init_version
+fi
+lobster_input "Version" "$get_info_string_return"
+put_info_string 'version' "$lobster_input_return"
+
+get_info_string 'author'
+if [ ! "$get_info_string_return" ]; then
+  get_info_string_return="$wp_author"
+fi
+lobster_input "Author" "$get_info_string_return"
+# It may be that users don't want the author tag at all, so unless they
+# provide we will not write it to the .info file
+if [ "$wp_author" ]; then
+  put_info_string 'author' "$wp_author"
+fi
+
+
 
 get_name
 get_version

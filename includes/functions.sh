@@ -631,7 +631,7 @@ function get_version_with_prefix() {
  #
 get_info_string_return='';
 function get_info_string() {
-  get_info_string_return=$($wp_php $LOBSTER_APP_ROOT/plugins/$wp_plugin_parse/$wp_plugin_parse.php $wp_info_file $1)
+  get_info_string_return=$($wp_php $LOBSTER_APP_ROOT/plugins/$wp_plugin_parse/$wp_plugin_parse.php $LOBSTER_PWD/$wp_info_file "$1")
 }
 
 ##
@@ -641,7 +641,7 @@ function get_info_string() {
  # @param string the info value
  #
 function put_info_string() {
-  result=$($wp_php $LOBSTER_APP_ROOT/plugins/$wp_plugin_parse/$wp_plugin_parse.php $wp_info_file $1 $2)
+  result=$($wp_php $LOBSTER_APP_ROOT/plugins/$wp_plugin_parse/$wp_plugin_parse.php $LOBSTER_PWD/$wp_info_file "$1" "$2")
 }
 
 ##
