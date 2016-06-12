@@ -19,14 +19,9 @@ if [ "$develop" ] && [ "$develop" != "$master" ]; then
   $wp_git merge --no-ff $get_branch_return -m "Merge branch '$get_branch_return'"
 
   # Try to merge into master
-  echo
-  read -n1 -p "Continue to $master (master)? (y/n) " a;
-  echo
-  if [ "$a" != 'y' ]
-  then
-    lobster_success 'CANCELLED!'
+  if ! lobster_confirm "Continue to $master (master)"; then
     $wp_git checkout $get_branch_return
-    exit
+    lobster_failed
   fi
 fi
 
@@ -36,10 +31,7 @@ if [ "$master" ]; then
   $wp_git merge --no-ff $get_branch_return -m "Merge branch '$get_branch_return'"
 
   # Delete the temp branch
-  echo
-  read -n1 -p "Delete $get_branch_return? (y/n) " a;
-  echo
-  if [ "$a" == 'y' ]; then
+  if lobster_confirm "Delete $get_branch_return"; then
     # Delete the hotfix or release branch
     $wp_git br -d $get_branch_return
   fi
@@ -67,14 +59,7 @@ if [ "$do_tag" == true ]; then
   lobster_success "Git tag created: $tagname"
 
   # Ask to push the tag to origin?
-  a=''
-  if [ "$wp_push_tags" == 'ask' ]; then
-    echo
-    read -n1 -p "git push $wp_remote $tagname? (y/n) " a;
-    echo
-  fi
-  # Push the tag if auto or prompt was yes
-  if [ "$a" == 'y' ] || [ "$wp_push_tags" == 'auto' ]; then
+  if [ "$wp_push_tags" != 'no' ] && ([ "$wp_push_tags" == 'auto' ] || lobster_confirm "Push tag ($tagname) to $wp_remote"); then
     if [ "$wp_push_tags" == 'auto' ]; then
       lobster_notice "AUTO: git push $wp_remote $tagname"
     fi
@@ -83,14 +68,7 @@ if [ "$do_tag" == true ]; then
 fi
 
 # Ask to push the develop branch to origin?
-a=''
-if [ "$develop" ] && [ "$wp_push_develop" == 'ask' ]; then
-  echo
-  read -n1 -p "git push $wp_remote $develop? (y/n) " a;
-  echo
-fi
-# Push the tag if auto or prompt was yes
-if [ "$a" == 'y' ] || [ "$wp_push_develop" == 'auto' ]; then
+if [ "$wp_push_develop" != 'no' ] && ([ "$wp_push_develop" == 'auto' ] || lobster_confirm "Push develop branch ($develop) to $wp_remote"); then
   if [ "$wp_push_develop" == 'auto' ]; then
     lobster_notice "AUTO: git push $wp_remote $develop"
   fi
@@ -98,22 +76,14 @@ if [ "$a" == 'y' ] || [ "$wp_push_develop" == 'auto' ]; then
 fi
 
 # Ask to push the master branch to origin?
-a=''
-if [ "$master" ] && [ "$wp_push_master" == 'ask' ]; then
-  echo
-  read -n1 -p "git push $wp_remote $master? (y/n) " a;
-  echo
-fi
-
-# Push the tag if auto or prompt was yes
-if [ "$a" == 'y' ] || [ "$wp_push_master" == 'auto' ]; then
+if [ "$wp_push_master" != 'no' ] && ([ "$wp_push_master" == 'auto' ] || lobster_confirm "Push master branch ($master) to $wp_remote"); then
   if [ "$wp_push_master" == 'auto' ]; then
     lobster_notice "AUTO: git push $wp_remote $master"
   fi
   $wp_git push $wp_remote $master
 fi
 
-# return to the original branch if not yet there
+# Return to the original branch if not yet there
 get_branch
 if [ "$get_branch_return" != "$original_branch" ]; then
   $wp_git checkout $original_branch
