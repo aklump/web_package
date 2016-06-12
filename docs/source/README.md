@@ -154,6 +154,7 @@ One example of using a build script, say with a jQuery plugin, is when you want 
 | path to info file        | $argv[9]    | $9         |
 | dir of the script        | $argv[10]   | ${10}      |
 | dir of functions.php/.sh | $argv[11]   | ${11}      |
+| root dir of web_package  | $argv[12]   | ${12}      |
 
 * Your script should print/echo details as to what it did; this will be output to the console.
 * Be sure to use _path to root_ in your scripts when you reference any files in your project.

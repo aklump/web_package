@@ -15,8 +15,12 @@ abstract class ConfigFileBasedStorage extends Config {
   /**
    * Constructor
    *
-   * @param string $dir      Directory where the config will be stored.
-   * @param string $basename The config file basename.
+   * @param string $dir      Directory where the config will be stored.  You
+   *                         may also pass the full path to an existing file,
+   *                         in which case the dirname will be set as $dir and
+   *                         the basename as $basename automatically for
+   *                         you--$basename must be null in this case.
+   * @param string $basename The config file basename.  Optional
    * @param array  $options  Defaults to expanded.
    *                         - install boolean Set this to true and $dir will
    *                         be created (and config file) if it doesn't already
@@ -24,6 +28,12 @@ abstract class ConfigFileBasedStorage extends Config {
    *                         - encode @see json_encode.options
    */
   public function __construct($dir, $basename = NULL, $options = array()) {
+
+    if (is_null($basename) && is_file($dir)) {
+      $dir = dirname($dir);
+      $basename = basename($dir);
+    }
+
     $basename = isset($basename) ? $basename : 'config.' . static::EXTENSION;
 
     if (empty($dir)) {

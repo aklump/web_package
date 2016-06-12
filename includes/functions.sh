@@ -162,7 +162,7 @@ function do_scripts() {
         if [[ "$cmd" ]]; then
           local script=$(basename $file)
           lobster_notice "Executing callback: $script..."
-          output=$($cmd $file "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file" "$dir" "$project_root/.web_package")
+          output=$($cmd $file "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file" "$dir" "$project_root/.web_package" "$LOBSTER_APP_ROOT")
           lobster_echo $output
         fi
       fi
