@@ -30,8 +30,8 @@ abstract class ConfigFileBasedStorage extends Config {
   public function __construct($dir, $basename = NULL, $options = array()) {
 
     if (is_null($basename) && is_file($dir)) {
-      $dir = dirname($dir);
       $basename = basename($dir);
+      $dir = dirname($dir);
     }
 
     $basename = isset($basename) ? $basename : 'config.' . static::EXTENSION;
