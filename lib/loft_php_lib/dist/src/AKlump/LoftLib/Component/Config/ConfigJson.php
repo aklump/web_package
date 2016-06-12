@@ -23,8 +23,11 @@ class ConfigJson extends ConfigFileBasedStorage {
 
   public function _read() {
     $data = parent::_read();
+    if ($data && !($json = json_decode($data, TRUE))) {
+      throw new \RuntimeException("Invalid JSON in " . $this->getStorage()->value);
+    }
 
-    return $data ? json_decode($data, TRUE) : array();
+    return $data ? $json : array();
   }
 
   public function _write($data) {
