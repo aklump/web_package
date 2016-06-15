@@ -2,6 +2,8 @@ Increment the package version.
 
 usage: web_package bump [<severity>] <type>
 
+If omitted, <severity> will default to 'patch', so 'bump hotfix' is the same as 'bump patch hotfix'
+
 The optional <severity> arguments are:
       major
       minor

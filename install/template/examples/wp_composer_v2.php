@@ -13,6 +13,6 @@ require_once $argv[12] . '/vendor/autoload.php';
 $options = array('encode' => JSON_PRETTY_PRINT);
 $json = new ConfigJson($argv[7] . '/composer.json', NULL, $options);
 $json->write('description', $argv[4]);
-
+$json->write('homepage', $argv[5]);
 // https://getcomposer.org/doc/04-schema.md#version
 $json->write('version', $argv[2]);

@@ -731,8 +731,17 @@ function bump_access () {
     return 1
   fi
 
+  # See if the severity is implied
+  declare -a array=("${lobster_args[1]}" "hotfix" "release")
+  if lobster_in_array ${array[@]}; then
+    severity="patch"
+    release_type=${lobster_args[1]}
+  else
+    severity=${lobster_args[1]}
+    release_type=${lobster_args[2]}
+  fi
+
   # Validate the severity.
-  severity=${lobster_args[1]}
   declare -a array=("$severity" "major" "minor" "patch" "alpha" "beta" "rc")
   if ! lobster_in_array ${array[@]}; then
     lobster_error "Invalid severity $severity"
@@ -740,7 +749,6 @@ function bump_access () {
   fi
 
   # Validate the type.
-  release_type=${lobster_args[2]}
   declare -a array=("$release_type" "hotfix" "release")
   if [ "$release_type" ] && ! lobster_in_array ${array[@]}; then
     lobster_error "Invalid release type $release_type"
