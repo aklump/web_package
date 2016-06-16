@@ -22,6 +22,17 @@ load_config_return=''
 function load_config() {
   load_config_return=''
 
+  # These are default fallbacks
+  # @todo Remove these when .lobsterconfig is no longer being used.
+  wp_info_file="web_package.info"
+  wp_php=$(which php)
+  wp_git=$(which git)
+  wp_bash=$(which bash)
+  wp_plugin_parse='basic'
+  wp_major_step=1
+  wp_minor_step=1
+  wp_patch_step=1
+
   # FIRST CHOICE: Take the template name from argument 1
   if [ $# -eq 1 ]; then
     wp_template=$1
@@ -58,14 +69,6 @@ function load_config() {
     parse_config $config
   fi
 
-
-#  if [[ ! "$wp_php" ]]; then
-#    wp_php=$(which php)
-#  fi
-#
-#  if [[ ! "$wp_bash" ]]; then
-#    wp_bash=$(which bash)
-#  fi
   # Handle the git root, or auto detect.
   if [ ! "$wp_git_root" ]; then
     wp_git_root=$(lobster_upfind .git && echo "$lobster_upfind_dir")
@@ -395,7 +398,7 @@ function increment_version () {
     patch_prefix=''
     patch=0
   else
-    lobster_failed "'$1' uses an unknown version schema and cannot be incremented."
+    lobster_failed "'$1' is not a valid version pattern and cannot be incremented."
   fi
 
   major_step=$wp_major_step
