@@ -28,12 +28,28 @@ lobster_core_verbose "Flags: ${lobster_flags[@]}"
 lobster_core_verbose "Params: ${lobster_params[@]}"
 lobster_core_verbose "Args: ${lobster_args[@]}"
 
-lobster_load_config ".lobsterconfig"
+# Load the configuration for lobster and the app's overrides for lobster
+source "$LOBSTER_ROOT/.lobsterconfig"
+if ! test -e "$LOBSTER_APP_ROOT/.lobsterconfig"; then
+  lobster_failed "Can't bootstrap, missing .lobsterconfig in the app root"
+fi
+source "$LOBSTER_APP_ROOT/.lobsterconfig"
+if [ ! "$lobster_app_config" ]; then
+  lobster_failed "Can't bootstrap, missing variable 'lobster_app_config'"
+fi
+if [ ! "$lobster_app_name" ]; then
+  lobster_failed "Can't bootstrap, missing variable 'lobster_app_name'"
+fi
+
+# Capture this in case we need it later.
+LOBSTER_PWD=$PWD
 
 # This is the first parent directory containing the app's config file that is
 # above $PWD.
-LOBSTER_PWD=$PWD
-LOBSTER_PWD_ROOT=$(lobster_upfind "$lobster_app_config" && echo $(dirname "$lobster_upfind_dir"))
+LOBSTER_INSTANCE_ROOT=$(lobster_upfind "$lobster_app_config" && echo $(dirname "$lobster_upfind_dir"))
+
+# Here for legacy support.
+LOBSTER_PWD_ROOT="$LOBSTER_INSTANCE_ROOT"
 
 # Set up the default text colors.
 lobster_color_current=''
@@ -41,10 +57,9 @@ lobster_color $lobster_color_default
 
 # By convention if you pass a second argument it will be taken as a
 # target directory and checked.  The directory test will be stored in the
-# variable lobster_target_error
+# variable lobster_target_error. It is up to your app to do something with this info.
 # 
 # App usage can go like this:
-# 
 # @code
 #   if [ $lobster_target_error -eq 1 ]; then
 #     lobster_error "'$lobster_target_dir' is not a directory!"
@@ -64,10 +79,10 @@ fi
 # File logging.
 if [ "$lobster_logs" ]; then
 
-  # If this is relative make it relative to $LOBSTER_PWD_ROOT
+  # If this is relative make it relative to $LOBSTER_INSTANCE_ROOT
   if [ ${lobster_logs:0:1} != "/" ]; then
-    if [ "$LOBSTER_PWD_ROOT" ]; then
-      lobster_logs="$LOBSTER_PWD_ROOT/$lobster_logs"
+    if [ "$LOBSTER_INSTANCE_ROOT" ]; then
+      lobster_logs="$LOBSTER_INSTANCE_ROOT/$lobster_logs"
     else
       lobster_logs=''
     fi
@@ -110,14 +125,17 @@ export LOBSTER_ROOT
 export LOBSTER_APP_ROOT
 export LOBSTER_PWD
 export LOBSTER_PWD_ROOT
+export LOBSTER_INSTANCE_ROOT
 export LOBSTER_TMPDIR
 
 # Run the app's config at the last moment to maximum variable access.
+
 lobster_load_config "$lobster_app_config"
 
 # Bootstrap the project layer
+lobster_op=${lobster_args[0]}
 lobster_include 'bootstrap'
 
-# Keep this here to allow app bootstrap to modify the arguments before we assign the op.
+# Keep this reassign here to allow app bootstrap to modify the arguments before we assign the op.
 lobster_op=${lobster_args[0]}
 lobster_include 'functions'

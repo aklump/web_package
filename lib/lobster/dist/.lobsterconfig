@@ -1,7 +1,12 @@
 #!/bin/bash
-# 
+#
 # @file
 # App configuration file for Lobster Shell
+
+#!/bin/bash
+#
+# @file
+# Pre-bootstrap file to configure Lobster for your app.
 
 # The machine name of your app, lowercase + underscore only.
 lobster_app_name="example_app"
@@ -10,10 +15,14 @@ lobster_app_name="example_app"
 lobster_app_title="A Lobster App Example"
 
 # This is used for the app's config filename.
-lobster_app_config=".example_appconfig"
+lobster_app_config=".{$lobster_app_name}config"
 
+# @todo Make this work
 # It can also specific a file within a folder relative to the working directory. But the upfind function does not yet work on this.
-#lobster_app_config=".example_app/config"
+#lobster_app_config=".{$lobster_app_name}/config"
+
+# The default route when no arguments present
+lobster_default_route="help"
 
 # Set this to 1 and calling lobster_show_debug() will return the contents
 # of the include/debug.  Set this to 0 and calling lobster_show_debug() will
@@ -48,9 +57,6 @@ lobster_route_extensions=("sh" "php")
 
 # These define the extensions and the order of include for template files.
 lobster_tpl_extensions=("twig" "txt")
-
-# The default route when no arguments present
-lobster_default_route="help"
 
 # You may override the auto-detected value, if needed.
 #lobster_php='/usr/local/bin/php'

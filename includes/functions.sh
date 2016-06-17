@@ -22,17 +22,6 @@ load_config_return=''
 function load_config() {
   load_config_return=''
 
-  # These are default fallbacks
-  # @todo Remove these when .lobsterconfig is no longer being used.
-  wp_info_file="web_package.info"
-  wp_php=$(which php)
-  wp_git=$(which git)
-  wp_bash=$(which bash)
-  wp_plugin_parse='basic'
-  wp_major_step=1
-  wp_minor_step=1
-  wp_patch_step=1
-
   # FIRST CHOICE: Take the template name from argument 1
   if [ $# -eq 1 ]; then
     wp_template=$1

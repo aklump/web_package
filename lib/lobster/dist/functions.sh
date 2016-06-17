@@ -6,19 +6,20 @@
 #
 # Load the configuration cascade by name
 # 
-# Given 1='lobster' the files will load in this order
+# Given 1='my_app' the files will load in this order
 # 
-# 1. $LOBSTER_ROOT/.lobsterconfig
-# 2. $LOBSTER_APP_ROOT/.lobsterconfig
-# 3. ~/.lobsterconfig
-# 4. $pwd/.lobsterconfig
+# 2. $LOBSTER_APP_ROOT/.my_appconfig
+# 3. ~/.my_appconfig
 # 5. The first file found in parent dirs, if found.
 # 
-# @param string app name, e.g. 'lobster'
+# @param string app name, e.g. 'my_app'
 #
 function lobster_load_config() {
   base=$1
-  declare -a cascade=("$LOBSTER_ROOT/$base" "$LOBSTER_APP_ROOT/$base" "$HOME/$base" "$PWD/$base");
+  if ! test -e "$LOBSTER_APP_ROOT/install/$base"; then
+    lobster_failed "App defaults must be declard in /install/$base";
+  fi
+  declare -a cascade=("$LOBSTER_APP_ROOT/install/$base" "$HOME/$base" "$LOBSTER_INSTANCE_ROOT/$base" );
   for file in "${cascade[@]}"; do
     if [ -f "$file" ]; then
       lobster_core_verbose "Loading config file: $file"
@@ -26,11 +27,11 @@ function lobster_load_config() {
     fi
   done
 
-  path=$(lobster_upfind $base && echo "$lobster_upfind_dir")
-  if [ "$path" != "" ] && [ -f "$path" ]; then
-    source "$path"
-    lobster_core_verbose "Loading config file: $path"
-  fi
+#  path=$(lobster_upfind $base && echo "$lobster_upfind_dir")
+#  if [ "$path" != "" ] && [ -f "$path" ]; then
+#    source "$path"
+#    lobster_core_verbose "Loading config file: $path"
+#  fi
 }
 
 function lobster_verbose() {
