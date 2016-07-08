@@ -25,7 +25,7 @@ if [[ ! -f $project_root/.web_package/.gitignore ]]; then
 fi
 
 if [ ! -d "$wp_root/hooks" ]; then
-  rsync -a "$root/template/hooks/" "$wp_root/hooks/"
+  rsync -a "$LOBSTER_APP_ROOT/install/template/hooks/" "$wp_root/hooks/"
   if [ -d "$wp_root/build" ]; then
     rm -r "$wp_root/hooks/build" && mv "$wp_root/build" "$wp_root/hooks/build"
   fi

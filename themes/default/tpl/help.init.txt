@@ -1,6 +1,6 @@
 Initialize the current directory
 
-usage: web_package init [<template>] [--<config filetype>] [--file=<filename>]
+usage: web_package init [<template>] [--<config filetype>] [--file=<filename>] [--noinput]
 
 Normally the storage file type is defined by the template used, or the default settings.  However you can force a storage file type by including one of the following:
       --json
@@ -18,3 +18,5 @@ To initialize using a yml storage config with no template (either is the same):
 To initialize with a given filename
 
     web_package init --file=composer.json
+
+The `--noinput` parameter allows you to skip the dialogs at the beginning, say if you're running this from a php process or something where input is not allowed.

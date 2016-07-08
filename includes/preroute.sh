@@ -4,7 +4,7 @@
 # Pre-route is automatically called every time example_app.sh is executed, after bootstrap and before the route is executed.  The route is available as $lobster_route
 
 # Check for updates if needed
-if is_initialized > /dev/null && needs_update; then
+if [ "$lobster_op" != 'update' ] && is_initialized > /dev/null && needs_update; then
   lobster_failed "Updated required; use 'bump update'"
 fi
 
