@@ -121,12 +121,20 @@ if ! test -e "$LOBSTER_TMPDIR" && ! mkdir "$LOBSTER_TMPDIR"; then
   lobster_failed "Unable to establish a temporary directory."
 fi
 
+# Establish a project tmp dir
+LOBSTER_APP_TMPDIR="${LOBSTER_TMPDIR%/}/$lobster_app_name"
+if ! test -e "$LOBSTER_APP_TMPDIR" && ! mkdir "$LOBSTER_APP_TMPDIR"; then
+  lobster_failed "Unable to establish a app temporary directory at $LOBSTER_APP_TMPDIR."
+fi
+
 export LOBSTER_ROOT
+export LOBSTER_APP
 export LOBSTER_APP_ROOT
 export LOBSTER_PWD
 export LOBSTER_PWD_ROOT
 export LOBSTER_INSTANCE_ROOT
 export LOBSTER_TMPDIR
+export LOBSTER_APP_TMPDIR
 
 # Run the app's config at the last moment to maximum variable access.
 
