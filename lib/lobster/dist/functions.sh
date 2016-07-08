@@ -310,15 +310,25 @@ function lobster_failed() {
 }
 
 #
-# Prints the footer and exits the script
+# Prints the footer and exits the script with optional exit status 0-5
 function lobster_exit() {
-  local status=0
-  if [ "$1" ]; then
-    status=$1
-  fi
   lobster_theme 'footer'
   lobster_include 'shutdown'
-  exit $status
+  # @todo Can't find a way to typecast so arg is a numeric argument.
+  case "$1" in
+  1)
+    exit 1 ;;
+  2)
+    exit 2 ;;
+  3)
+    exit 3 ;;
+  4)
+    exit 4 ;;
+  5)
+    exit 5 ;;
+  esac
+
+  exit 0
 }
 
 function lobster_show_debug {
@@ -346,7 +356,9 @@ function lobster_include() {
   # Run the include at the project layer
   if [ -f "$dir/$basename.sh" ]; then
     source "$dir/$basename.sh"
-  fi  
+  elif [ -f "$dir/$basename.php" ]; then
+    $lobster_php "$dir/$basename.php"
+  fi
 }
 
 #
