@@ -120,6 +120,7 @@ fi
 if ! test -e "$LOBSTER_TMPDIR" && ! mkdir "$LOBSTER_TMPDIR"; then
   lobster_failed "Unable to establish a temporary directory."
 fi
+LOBSTER_TMPDIR="${LOBSTER_TMPDIR%/}"
 
 # Establish a project tmp dir
 LOBSTER_APP_TMPDIR="${LOBSTER_TMPDIR%/}/$lobster_app_name"

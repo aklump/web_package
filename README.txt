@@ -215,6 +215,7 @@ Build Scripts
    dir of the script        $argv[10] ${10}
    dir of functions.php/.sh $argv[11] ${11}
    root dir of web_package  $argv[12] ${12}
+   path to hooks dir        $argv[13] ${13}
 
      * Your script should print/echo details as to what it did; this will
        be output to the console.

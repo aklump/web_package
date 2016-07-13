@@ -68,10 +68,7 @@ function lobster_upfind () {
 # @param string $arg
 #
 function lobster_error() {
-  local stash=$lobster_color_current
-  lobster_color 'error'
-  lobster_echo "$1"
-  lobster_color "$stash"
+  lobster_color_echo error "$1"
 }
 
 #
@@ -80,10 +77,7 @@ function lobster_error() {
 # @param string $arg
 #
 function lobster_warning() {
-  local stash=$lobster_color_current
-  lobster_color 'warning'
-  lobster_echo "$1"
-  lobster_color "$stash"
+  lobster_color_echo warning "$1"
 }
 
 #
@@ -92,10 +86,7 @@ function lobster_warning() {
 # @param string $arg
 #
 function lobster_success() {
-  local stash=$lobster_color_current
-  lobster_color 'success'
-  lobster_echo "$1"
-  lobster_color "$stash"
+  lobster_color_echo success "$1"
 }
 
 #
@@ -104,10 +95,7 @@ function lobster_success() {
 # @param string $arg
 #
 function lobster_notice() {
-  local stash=$lobster_color_current
-  lobster_color 'notice'
-  lobster_echo "$1"
-  lobster_color "$stash"
+  lobster_color_echo notice "$1"
 }
 
 #
@@ -176,7 +164,11 @@ function lobster_color() {
 
     'verbose' )
       lobster_color $lobster_color_verbose
-      ;;   
+      ;;
+
+    'info' )
+      lobster_color $lobster_color_info
+      ;;
   esac
 }
 
@@ -249,7 +241,7 @@ function lobster_underline() {
 function lobster_color_echo() {
   local stash=$lobster_current_color
   lobster_color $1
-  lobster_echo ${@:2}
+  lobster_echo "${@:2}"
   lobster_color $stash
 }
 
@@ -737,4 +729,49 @@ function lobster_access() {
     fi
     lobster_failed
   fi
+}
+
+##
+ # Clears all previously added twig vars.
+ #
+function lobster_clear_twig_vars() {
+  file="$LOBSTER_TMPDIR/twig_vars.csv"
+  test -e $file && rm "$file"
+  lobster_verbose "Twig vars cleared from $LOBSTER_TMPDIR/twig_vars.csv"
+}
+
+##
+ # Add a key/value variable to be used by lobster_process_twig()
+ #
+ # @code
+ #   lobster_add_twig_var varName 'value'
+ # @endcode
+ #
+function lobster_add_twig_var() {
+  file="$LOBSTER_TMPDIR/twig_vars.csv"
+  echo "$1,$2" >> $file
+  lobster_verbose "Twig var $1 added to $file"
+}
+
+##
+ # Process a twig file located at $1 with all vars added via lobster_add_twig_var.
+ #
+ # @code
+ #   replaced=$(lobster_process_twig '/path/to/template.twig')
+ # @endcode
+ #
+function lobster_process_twig() {
+  file=$1
+  if ! test -e $file; then
+    lobster_error "Cannot process non-existent twig file: $file"
+  fi
+  source="$(cat $file)"
+  while IFS='' read -r line || [[ -n "$line" ]]; do
+    data=(${line//,/ })
+    find="{{ ${data[0]} }}"
+    replace="${data[1]}"
+    source="${source/$find/$replace}"
+  done < "$LOBSTER_TMPDIR/twig_vars.csv"
+
+  echo "$source"
 }
