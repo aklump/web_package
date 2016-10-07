@@ -6,7 +6,6 @@ template=${lobster_args[1]};
 # Copy the template folder as .web_package in target
 rsync -a "$LOBSTER_APP_ROOT/install/template/" $LOBSTER_PWD/.web_package/ --exclude=tests
 lobster_echo "For build script examples, take a look at .web_package/examples."
-
 # Make the .gitignore file active by adding '.'
 mv $LOBSTER_PWD/.web_package/gitignore $LOBSTER_PWD/.web_package/.gitignore
 
@@ -23,17 +22,17 @@ fi
 
 conf=$LOBSTER_PWD/.web_package/config
 if [ $template ]; then
-  lobster_echo "template = $template" >> $conf
+  echo "template = $template" >> $conf
 fi
-lobster_echo "master = \"$wp_master\"" >> $conf
-lobster_echo "develop = \"$wp_develop\"" >> $conf
-lobster_echo "remote = $wp_remote" >> $conf
-lobster_echo "create_tags = $wp_create_tags" >> $conf
-lobster_echo "push_tags = $wp_push_tags" >> $conf
-lobster_echo "push_master = $wp_push_master" >> $conf
-lobster_echo "push_develop = $wp_push_develop" >> $conf
-lobster_echo "patch_prefix = $wp_patch_prefix" >> $conf
-lobster_echo "git_root = $PWD" >> $conf
+echo "master = \"$wp_master\"" >> $conf
+echo "develop = \"$wp_develop\"" >> $conf
+echo "remote = $wp_remote" >> $conf
+echo "create_tags = $wp_create_tags" >> $conf
+echo "push_tags = $wp_push_tags" >> $conf
+echo "push_master = $wp_push_master" >> $conf
+echo "push_develop = $wp_push_develop" >> $conf
+echo "patch_prefix = $wp_patch_prefix" >> $conf
+echo "git_root = $PWD" >> $conf
 
 # Restore the defaults
 load_config
@@ -52,7 +51,7 @@ else
   fi
 fi
 
-lobster_echo "info_file = $wp_info_file" >> $conf
+echo "info_file = $wp_info_file" >> $conf
 
 # Create the info file
 get_info_string 'name'
