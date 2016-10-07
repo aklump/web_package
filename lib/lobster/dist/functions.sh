@@ -17,7 +17,7 @@
 function lobster_load_config() {
   base=$1
   if ! test -e "$LOBSTER_APP_ROOT/install/$base"; then
-    lobster_failed "App defaults must be declard in /install/$base";
+    lobster_failed "You must create /install/$base before your app will run.";
   fi
   declare -a cascade=("$LOBSTER_APP_ROOT/install/$base" "$HOME/$base" "$LOBSTER_INSTANCE_ROOT/$base" );
   for file in "${cascade[@]}"; do
@@ -323,6 +323,17 @@ function lobster_exit() {
   exit 0
 }
 
+#
+# This function is called at the end of the route.
+#
+# It may need to be chaned to 'return' for some apps.  See docs for more info
+#
+function lobster_route_end() {
+  lobster_theme 'footer'
+  lobster_include 'shutdown'
+  exit 0
+}
+
 function lobster_show_debug {
   if [ $lobster_debug -eq 1 ]; then
     lobster_include 'debug'
@@ -557,7 +568,7 @@ function lobster_json() {
   for flag in "${lobster_route_extensions[@]}"; do
     snippet=$snippet\"$flag\",
   done
-  json=$json${snippet%,}\],  
+  json=$json${snippet%,}\],
 
   json=$json\"tpl_extensions\"\:\[
   snippet=''
@@ -565,7 +576,7 @@ function lobster_json() {
     snippet=$snippet\"$flag\",
   done
   json=$json${snippet%,}\]
-      
+
   json=$json\},
 
   #
@@ -573,10 +584,13 @@ function lobster_json() {
   # Begin child: app
   #
   json=$json\"app\":{
+  json=$json\"root\"\:\"$LOBSTER_APP_ROOT\",
+  json=$json\"config\"\:\"$LOBSTER_APP_ROOT/$lobster_app_config\",
+  json=$json\"cwd\"\:\"$LOBSTER_CWD\",
   json=$json\"name\"\:\"$lobster_app_name\",
   json=$json\"title\"\:\"$lobster_app_title\",
-  json=$json\"root\"\:\"$LOBSTER_APP_ROOT\",
   json=$json\"op\"\:\"$lobster_op\",
+  json=$json\"route_id\"\:\"$lobster_route_id\",
   json=$json\"route\"\:\"$lobster_route\",
   json=$json\"tpl\"\:\"$lobster_theme_source\",
 
@@ -613,9 +627,28 @@ function lobster_json() {
     fi
   done
   json=$json${snippet%,}\}
+  json=$json\},
 
 
-  json=$json\}\}
+  #
+  #
+  # Begin child: instance
+  #
+  json=$json\"instance\":{
+  json=$json\"root\"\:\"$LOBSTER_INSTANCE_ROOT\",
+  json=$json\"config\"\:\"$LOBSTER_INSTANCE_ROOT/$lobster_app_config\"
+  json=$json\},
+  #
+  #
+  # Begin child: global
+  #
+  json=$json\"global\":{
+  json=$json\"root\"\:\"$HOME\",
+  json=$json\"config\"\:\"$HOME/$lobster_app_config\"
+  json=$json\}
+
+  # Close out the object
+  json=$json\}
   echo $json
 }
 
@@ -774,4 +807,31 @@ function lobster_process_twig() {
   done < "$LOBSTER_TMPDIR/twig_vars.csv"
 
   echo "$source"
+}
+
+function lobster_array_get_shortest_value() {
+  local arrayname=${1:?Array name required} varname=${2:-shortest}
+  local IFS= string e
+
+  eval "array=( \"\${$arrayname[@]}\" )"
+  shortest=${array[0]}
+  for e in "${array[@]}"; do
+    [[ ${#e} -lt ${#shortest} ]] && shortest=$e
+  done
+  [[ "$varname" != shortest ]] && eval "$varname=${shortest}"
+}
+
+#
+# Shift the first element from an array
+#
+# @param string The name of an array; omit the $, your passing a string of the array name, not the array reference!
+#
+# @code
+#   declare -a my_array=( do re mi )
+#   lobster_array_shift my_array
+# @endcode
+# ... my_array === ( re mi )
+function lobster_array_shift() {
+  local arrayname=${1:?Array name required}
+  eval "$arrayname=( \"\${$arrayname[@]:1}\" )"
 }

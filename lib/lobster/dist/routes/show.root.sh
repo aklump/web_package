@@ -1,1 +1,1 @@
-lobster_color_echo "green" "$LOBSTER_PWD_ROOT"
+lobster_color_echo "green" "$LOBSTER_CWD_ROOT"

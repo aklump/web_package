@@ -1,4 +1,4 @@
 name = "Lobster (Shell)"
 description = "A lightweight shell framework."
-version = "2.1.15"
+version = "2.2"
 author = "Aaron Klump <sourcecode@intheloftstudios.com>"

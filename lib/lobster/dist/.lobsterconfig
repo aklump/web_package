@@ -17,6 +17,11 @@ lobster_app_title="A Lobster App Example"
 # This is used for the app's config filename.
 lobster_app_config=".{$lobster_app_name}config"
 
+lobster_app_config_dir=""
+
+# If you wish to use a directory for init and config, enter it's name here, otherwise the configuration will be a single file.
+#lobster_app_config_dir=".{$lobster_app_name}"
+
 # @todo Make this work
 # It can also specific a file within a folder relative to the working directory. But the upfind function does not yet work on this.
 #lobster_app_config=".{$lobster_app_name}/config"
@@ -66,7 +71,7 @@ lobster_tpl_extensions=("twig" "txt")
 #lobster_bash='/bin/bash'
 
 # Path to folder where lobster may write it's logs.  If this is blank then
-# logs will not be written.  If this is not an absolute path it will be in relation to the $LOBSTER_PWD_ROOT.
+# logs will not be written.  If this is not an absolute path it will be in relation to the $LOBSTER_CWD_ROOT.
 lobster_logs=""
 
 # The message to output when lobster_access fails.
