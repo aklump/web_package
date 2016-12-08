@@ -26,6 +26,7 @@ class ComposerStaticInit26a4b428a16b347e3e51c0053974b6a6
 
     public static $fallbackDirsPsr4 = array (
         0 => __DIR__ . '/../..' . '/src',
+        1 => __DIR__ . '/../..' . '/tests',
     );
 
     public static function getInitializer(ClassLoader $loader)
