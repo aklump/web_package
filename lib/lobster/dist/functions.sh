@@ -17,7 +17,7 @@
 function lobster_load_config() {
   base=$1
   if ! test -e "$LOBSTER_APP_ROOT/install/$base"; then
-    lobster_failed "App defaults must be declard in /install/$base";
+    lobster_failed "You must create /install/$base before your app will run.";
   fi
   declare -a cascade=("$LOBSTER_APP_ROOT/install/$base" "$HOME/$base" "$LOBSTER_INSTANCE_ROOT/$base" );
   for file in "${cascade[@]}"; do
@@ -323,6 +323,18 @@ function lobster_exit() {
   exit 0
 }
 
+#
+# This function is called at the end of the route.
+#
+# It may need to be changed to 'return' for some apps.  See docs for more info
+#
+function lobster_route_end() {
+  lobster_set_route_status 0
+  lobster_theme 'footer'
+  lobster_include 'shutdown'
+  exit 0
+}
+
 function lobster_show_debug {
   if [ $lobster_debug -eq 1 ]; then
     lobster_include 'debug'
@@ -347,8 +359,10 @@ function lobster_include() {
 
   # Run the include at the project layer
   if [ -f "$dir/$basename.sh" ]; then
+    lobster_core_verbose "include file: $dir/$basename.sh"
     source "$dir/$basename.sh"
   elif [ -f "$dir/$basename.php" ]; then
+    lobster_core_verbose "include file: $dir/$basename.php"
     $lobster_php "$dir/$basename.php"
   fi
 }
@@ -552,12 +566,34 @@ function lobster_json() {
   json=$json\"bash\"\:\"$lobster_bash\",
   json=$json\"php\"\:\"$lobster_php\",
 
+  # Pass the colors
+  json=$json\"color_settings\"\:\{
+  snippet=''
+  snippet=$snippet\"escape\":\"\\$lobster_escape_char\",
+  snippet=$snippet\"bright\":\"$lobster_color_bright\",
+  snippet=$snippet\"current\":\"$lobster_color_current\",
+  json=$json${snippet%,}\},
+
+  json=$json\"colors\"\:\{
+  snippet=''
+  snippet=$snippet\"default\":\"$lobster_color_default\",
+  snippet=$snippet\"confirm\":\"$lobster_color_confirm\",
+  snippet=$snippet\"input\":\"$lobster_color_input\",
+  snippet=$snippet\"input_suggestion\":\"$lobster_color_input_suggestion\",
+  snippet=$snippet\"verbose\":\"$lobster_color_verbose\",
+  snippet=$snippet\"info\":\"$lobster_color_info\",
+  snippet=$snippet\"notice\":\"$lobster_color_notice\",
+  snippet=$snippet\"warning\":\"$lobster_color_warning\",
+  snippet=$snippet\"error\":\"$lobster_color_error\",
+  snippet=$snippet\"success\":\"$lobster_color_success\",
+  json=$json${snippet%,}\},
+
   json=$json\"route_extensions\"\:\[
   snippet=''
   for flag in "${lobster_route_extensions[@]}"; do
     snippet=$snippet\"$flag\",
   done
-  json=$json${snippet%,}\],  
+  json=$json${snippet%,}\],
 
   json=$json\"tpl_extensions\"\:\[
   snippet=''
@@ -565,7 +601,7 @@ function lobster_json() {
     snippet=$snippet\"$flag\",
   done
   json=$json${snippet%,}\]
-      
+
   json=$json\},
 
   #
@@ -573,10 +609,13 @@ function lobster_json() {
   # Begin child: app
   #
   json=$json\"app\":{
+  json=$json\"root\"\:\"$LOBSTER_APP_ROOT\",
+  json=$json\"config\"\:\"$LOBSTER_APP_ROOT/$lobster_app_config\",
+  json=$json\"cwd\"\:\"$LOBSTER_CWD\",
   json=$json\"name\"\:\"$lobster_app_name\",
   json=$json\"title\"\:\"$lobster_app_title\",
-  json=$json\"root\"\:\"$LOBSTER_APP_ROOT\",
   json=$json\"op\"\:\"$lobster_op\",
+  json=$json\"route_id\"\:\"$lobster_route_id\",
   json=$json\"route\"\:\"$lobster_route\",
   json=$json\"tpl\"\:\"$lobster_theme_source\",
 
@@ -613,9 +652,28 @@ function lobster_json() {
     fi
   done
   json=$json${snippet%,}\}
+  json=$json\},
 
 
-  json=$json\}\}
+  #
+  #
+  # Begin child: instance
+  #
+  json=$json\"instance\":{
+  json=$json\"root\"\:\"$LOBSTER_INSTANCE_ROOT\",
+  json=$json\"config\"\:\"$LOBSTER_INSTANCE_ROOT/$lobster_app_config\"
+  json=$json\},
+  #
+  #
+  # Begin child: global
+  #
+  json=$json\"global\":{
+  json=$json\"root\"\:\"$HOME\",
+  json=$json\"config\"\:\"$HOME/$lobster_app_config\"
+  json=$json\}
+
+  # Close out the object
+  json=$json\}
   echo $json
 }
 
@@ -774,4 +832,52 @@ function lobster_process_twig() {
   done < "$LOBSTER_TMPDIR/twig_vars.csv"
 
   echo "$source"
+}
+
+function lobster_array_get_shortest_value() {
+  local arrayname=${1:?Array name required} varname=${2:-shortest}
+  local IFS= string e
+
+  eval "array=( \"\${$arrayname[@]}\" )"
+  shortest=${array[0]}
+  for e in "${array[@]}"; do
+    [[ ${#e} -lt ${#shortest} ]] && shortest=$e
+  done
+  [[ "$varname" != shortest ]] && eval "$varname=${shortest}"
+}
+
+#
+# Shift the first element from an array
+#
+# @param string The name of an array; omit the dollar sign, your passing a string of the array name, not the array reference!
+#
+# @code
+#   declare -a my_array=( do re mi )
+#   lobster_array_shift my_array
+# @endcode
+# ... my_array === ( re mi )
+function lobster_array_shift() {
+  local arrayname=${1:?Array name required}
+  eval "$arrayname=( \"\${$arrayname[@]:1}\" )"
+}
+
+#
+# Sets the route status
+#
+# @param int $1 Any non zero value means the route failed.
+#
+function lobster_set_route_status() {
+    echo $1 > "$LOBSTER_TMPDIR/route_status"
+}
+
+#
+#
+# @code
+#   if [ $(lobster_get_route_status) -eq 0 ]; then...
+# @endcode
+#
+function lobster_get_route_status() {
+   status=$(cat "$LOBSTER_TMPDIR/route_status")
+
+   return $status
 }

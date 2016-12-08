@@ -8,13 +8,16 @@
             "role": "Developer"
         }
     ],
-    "version": "0.4.10",
+    "version": "0.5.4",
     "autoload": {
         "files": [
             "src\/AKlump\/LoftLib\/Xml\/LoftXmlElement.php"
         ],
         "psr-4": {
-            "": "src\/"
+            "": [
+                "src\/",
+                "tests"
+            ]
         }
     },
     "description": "Miscellaneous PHP library classes from In the Loft Studios.",

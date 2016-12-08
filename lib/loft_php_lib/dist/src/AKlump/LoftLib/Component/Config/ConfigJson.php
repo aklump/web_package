@@ -13,33 +13,39 @@ namespace AKlump\LoftLib\Component\Config;
  * $options for __construct()
  *   - encode @see json_encode.options
  */
-class ConfigJson extends ConfigFileBasedStorage {
+class ConfigJson extends ConfigFileBasedStorage
+{
 
-  const EXTENSION = "json";
+    const EXTENSION = "json";
 
-  protected $defaultOptions = array(
-    'encode' => NULL,
-  );
+    public function _read()
+    {
+        $data = parent::_read();
+        if ($data && !($json = json_decode($data, true))) {
+            throw new \RuntimeException("Invalid JSON in " . $this->getStorage()->value);
+        }
 
-  public function _read() {
-    $data = parent::_read();
-    if ($data && !($json = json_decode($data, TRUE))) {
-      throw new \RuntimeException("Invalid JSON in " . $this->getStorage()->value);
+        return $data ? $json : array();
     }
 
-    return $data ? $json : array();
-  }
+    public function _write($data)
+    {
+        $options = null;
+        if (isset($this->options['encode'])) {
+            $options = $this->options['encode'];
+        }
+        elseif (defined('JSON_PRETTY_PRINT')) {
+            $options = JSON_PRETTY_PRINT;
+        }
+        $data = json_encode($data, $options);
 
-  public function _write($data) {
-    $options = NULL;
-    if (isset($this->options['encode'])) {
-      $options = $this->options['encode'];
+        return parent::_write($data);
     }
-    elseif (defined('JSON_PRETTY_PRINT')) {
-      $options = JSON_PRETTY_PRINT;
-    }
-    $data = json_encode($data, $options);
 
-    return parent::_write($data);
-  }
+    public function defaultOptions()
+    {
+        return array('encode'  => null,
+                     'eof_eol' => false,
+        ) + parent::defaultOptions();
+    }
 }

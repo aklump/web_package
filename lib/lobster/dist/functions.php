@@ -6,20 +6,64 @@
  * @def, in, or addtogroup name Group Name
  */
 
-function lobster_echo($string) {
-  echo $string . PHP_EOL;
+function lobster_echo($string)
+{
+    global $lobster_conf;
+    $color = $lobster_conf->lobster->color_settings->current;
+    $parts = array();
+    if ($color) {
+        $parts[] = lobster_colorize($color, $string);
+    }
+    else {
+        $parts[] = $string;
+    }
+    $parts[] = PHP_EOL;
+
+    echo implode('', $parts);
 }
 
-function lobster_success($string) {
-  echo $string . PHP_EOL;
+function lobster_colorize($color, $string)
+{
+    global $lobster_conf;
+
+    // Expand a symantic color
+    if (!is_numeric(substr($color, 0, 1))) {
+        $color = $lobster_conf->lobster->colors->{$color};
+    }
+
+    $parts = array();
+    $parts[] = $lobster_conf->lobster->color_settings->escape;
+    $parts[] = '[' . $color . 'm';
+    $parts[] = $string;
+    $parts[] = $lobster_conf->lobster->color_settings->escape;
+    $parts[] = '[0m';
+
+    return implode('', $parts);
 }
 
-function lobster_error($string) {
-  echo $string . PHP_EOL;
+
+function lobster_color_echo($color, $output)
+{
+    global $lobster_conf;
+    $stash = $lobster_conf->lobster->color_settings->current;
+    $lobster_conf->lobster->color_settings->current = $lobster_conf->lobster->colors->{$color};
+    lobster_echo($output);
+    $lobster_conf->lobster->color_settings->current = $stash;
 }
 
-function lobster_notice($string) {
-  echo $string . PHP_EOL;
+function lobster_success($string)
+{
+    lobster_color_echo('success', $string);
+}
+
+function lobster_error($string)
+{
+    lobster_color_echo('error', $string);
+}
+
+function lobster_notice($string)
+{
+    lobster_color_echo('notice', $string);
 }
 
 
@@ -30,6 +74,50 @@ function lobster_notice($string) {
 //   lobster_echo($string);
 // }
 
-function lobster_exit() {
-  exit(99);
+function lobster_exit()
+{
+    lobster_set_route_status(99);
+    exit(99);
+}
+
+function lobster_has_flag($flag)
+{
+    global $lobster_conf;
+
+    return in_array($flag, $lobster_conf->app->flags);
+}
+
+function lobster_get_param($param)
+{
+    global $lobster_conf;
+
+    return isset($lobster_conf->app->params[$param]) ? $lobster_conf->app->params[$param] : null;
+}
+
+function lobster_has_param($param)
+{
+    global $lobster_conf;
+
+    return in_array($param, $lobster_conf->app->params);
+}
+
+/**
+ * Sets the route status
+ *
+ * @param int $code Any non zero value means the route failed.
+ *
+ * @return int|false
+ */
+function lobster_set_route_status($code)
+{
+    $file = getenv('LOBSTER_TMPDIR') . '/route_status';
+
+    return file_put_contents($file, $code);
+}
+
+function lobster_get_route_status()
+{
+    $file = getenv('LOBSTER_TMPDIR') . '/route_status';
+
+    return file_get_contents($file);
 }

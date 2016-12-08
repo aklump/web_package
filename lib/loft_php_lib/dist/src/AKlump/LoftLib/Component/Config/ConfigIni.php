@@ -5,8 +5,6 @@
  */
 namespace AKlump\LoftLib\Component\Config;
 
-use Symfony\Component\Yaml\Yaml;
-
 /**
  * Represents a ConfigIni object class.
  *
@@ -16,39 +14,42 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @see   parse_ini_file().
  */
-class ConfigIni extends ConfigFileBasedStorage {
+class ConfigIni extends ConfigFileBasedStorage
+{
 
-  const EXTENSION = "yml";
+    const EXTENSION = "ini";
 
-  protected $defaultOptions = array(
-    'inline' => 3,
-    'indent' => 2,
-  );
-
-  public function _read() {
-    return parse_ini_file($this->getStorage()->value);
-  }
-
-  public function _write($data) {
-    foreach ($data as $key => $elem) {
-      if (is_array($elem)) {
-        for ($i = 0; $i < count($elem); $i++) {
-          $content[] = $key . "[] = \"" . $elem[$i] . "\"";
-        }
-      }
-      else {
-        if ($elem == "") {
-          $content[] = $key . " = ";
-        }
-        else {
-          $content[] = $key . " = \"" . $elem . "\"";
-        }
-      }
+    public function defaultOptions()
+    {
+        return array() + parent::defaultOptions();
     }
-    if ($content) {
-      $content = implode(PHP_EOL, $content);
 
-      return parent::_write($content);
+    public function _read()
+    {
+        return parse_ini_file($this->getStorage()->value);
     }
-  }
+
+    public function _write($data)
+    {
+        foreach ($data as $key => $elem) {
+            if (is_array($elem)) {
+                for ($i = 0; $i < count($elem); $i++) {
+                    $content[] = $key . "[] = \"" . $elem[$i] . "\"";
+                }
+            }
+            else {
+                if ($elem == "") {
+                    $content[] = $key . " = ";
+                }
+                else {
+                    $content[] = $key . " = \"" . $elem . "\"";
+                }
+            }
+        }
+        if ($content) {
+            $content = implode(PHP_EOL, $content);
+
+            return parent::_write($content);
+        }
+    }
 }

@@ -17,11 +17,11 @@ lobster_bash=$(which bash)
 source "$LOBSTER_ROOT/functions.sh"
 
 # Sort out the args, flags and params.
-lobster_get_flags ${@}
+lobster_get_flags "${@}"
 declare -a lobster_flags=("${lobster_get_flags_return[@]}")
-lobster_get_params ${@}
+lobster_get_params "${@}"
 declare -a lobster_params=("${lobster_get_params_return[@]}")
-lobster_get_args ${@}
+lobster_get_args "${@}"
 declare -a lobster_args=("${lobster_get_args_return[@]}")
 
 lobster_core_verbose "Flags: ${lobster_flags[@]}"
@@ -42,14 +42,22 @@ if [ ! "$lobster_app_name" ]; then
 fi
 
 # Capture this in case we need it later.
-LOBSTER_PWD=$PWD
+LOBSTER_CWD=$PWD
 
 # This is the first parent directory containing the app's config file that is
 # above $PWD.
-LOBSTER_INSTANCE_ROOT=$(lobster_upfind "$lobster_app_config" && echo $(dirname "$lobster_upfind_dir"))
+path_to_app_config="$lobster_app_config"
+if [ "$lobster_app_config_dir" ]; then
+  path_to_app_config="$lobster_app_config_dir"
+  lobster_app_config="$lobster_app_config_dir/$lobster_app_config"
+fi
+# @todo move this to a refreshable function.
+LOBSTER_INSTANCE_ROOT=$(lobster_upfind "$path_to_app_config" && echo $(dirname "$lobster_upfind_dir"))
 
-# Here for legacy support.
-LOBSTER_PWD_ROOT="$LOBSTER_INSTANCE_ROOT"
+# Home cannot be used as an instance as it may be the global config
+if [ "$LOBSTER_INSTANCE_ROOT" == "$HOME" ]; then
+  LOBSTER_INSTANCE_ROOT=''
+fi
 
 # Set up the default text colors.
 lobster_color_current=''
@@ -128,23 +136,31 @@ if ! test -e "$LOBSTER_APP_TMPDIR" && ! mkdir "$LOBSTER_APP_TMPDIR"; then
   lobster_failed "Unable to establish a app temporary directory at $LOBSTER_APP_TMPDIR."
 fi
 
+lobster_user=$(whoami)
+
+LOBSTER_CWD_ROOT="$LOBSTER_INSTANCE_ROOT"
+LOBSTER_PWD="$LOBSTER_CWD"
+LOBSTER_PWD_ROOT="$LOBSTER_CWD_ROOT"
+
+# These are active
+export LOBSTER_USER
 export LOBSTER_ROOT
 export LOBSTER_APP
 export LOBSTER_APP_ROOT
-export LOBSTER_PWD
-export LOBSTER_PWD_ROOT
+export LOBSTER_CWD
 export LOBSTER_INSTANCE_ROOT
 export LOBSTER_TMPDIR
 export LOBSTER_APP_TMPDIR
 
+# Legacy vars, will deprecate
+export LOBSTER_PWD
+export LOBSTER_PWD_ROOT
+export LOBSTER_CWD_ROOT
+
 # Run the app's config at the last moment to maximum variable access.
 
-lobster_load_config "$lobster_app_config"
+lobster_load_config "$path_to_app_config"
 
 # Bootstrap the project layer
 lobster_op=${lobster_args[0]}
 lobster_include 'bootstrap'
-
-# Keep this reassign here to allow app bootstrap to modify the arguments before we assign the op.
-lobster_op=${lobster_args[0]}
-lobster_include 'functions'

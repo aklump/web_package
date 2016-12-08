@@ -16,24 +16,30 @@ use Symfony\Component\Yaml\Yaml;
  *   - inline: The level where you switch to inline YAML
  *   - indent: The amount of spaces to use for indentation of nested nodes.
  */
-class ConfigYaml extends ConfigFileBasedStorage {
+class ConfigYaml extends ConfigFileBasedStorage
+{
 
-  const EXTENSION = "yml";
+    const EXTENSION = "yaml";
 
-  protected $defaultOptions = array(
-    'inline' => 3,
-    'indent' => 2,
-  );
+    public function _read()
+    {
+        $data = parent::_read();
 
-  public function _read() {
-    $data = parent::_read();
+        return $data ? Yaml::parse($data) : array();
+    }
 
-    return $data ? Yaml::parse($data) : array();
-  }
+    public function _write($data)
+    {
+        $data = Yaml::dump($data, $this->options['inline'], $this->options['indent']);
 
-  public function _write($data) {
-    $data = Yaml::dump($data, $this->options['inline'], $this->options['indent']);
+        return parent::_write($data);
+    }
 
-    return parent::_write($data);
-  }
+    public function defaultOptions()
+    {
+        return array(
+            'inline' => 3,
+            'indent' => 2,
+        ) + parent::defaultOptions();
+    }
 }

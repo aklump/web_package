@@ -1,1 +1,0 @@
-(mkdir -p dist && rsync -av src/ dist/src/ && rsync -av vendor/ dist/vendor/ && cp web_packge.info dist/ && cp composer.json dist/)
