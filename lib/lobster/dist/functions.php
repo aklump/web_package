@@ -8,9 +8,6 @@
 
 function lobster_echo($string)
 {
-<<<<<<< HEAD
-    echo $string . PHP_EOL;
-=======
     global $lobster_conf;
     $color = $lobster_conf->lobster->color_settings->current;
     $parts = array();
@@ -52,34 +49,21 @@ function lobster_color_echo($color, $output)
     $lobster_conf->lobster->color_settings->current = $lobster_conf->lobster->colors->{$color};
     lobster_echo($output);
     $lobster_conf->lobster->color_settings->current = $stash;
->>>>>>> release
 }
 
 function lobster_success($string)
 {
-<<<<<<< HEAD
-    echo $string . PHP_EOL;
-=======
     lobster_color_echo('success', $string);
->>>>>>> release
 }
 
 function lobster_error($string)
 {
-<<<<<<< HEAD
-    echo $string . PHP_EOL;
-=======
     lobster_color_echo('error', $string);
->>>>>>> release
 }
 
 function lobster_notice($string)
 {
-<<<<<<< HEAD
-    echo $string . PHP_EOL;
-=======
     lobster_color_echo('notice', $string);
->>>>>>> release
 }
 
 
@@ -92,10 +76,7 @@ function lobster_notice($string)
 
 function lobster_exit()
 {
-<<<<<<< HEAD
-=======
     lobster_set_route_status(99);
->>>>>>> release
     exit(99);
 }
 
@@ -108,11 +89,8 @@ function lobster_has_flag($flag)
 
 function lobster_get_param($param)
 {
-<<<<<<< HEAD
-=======
     global $lobster_conf;
 
->>>>>>> release
     return isset($lobster_conf->app->params[$param]) ? $lobster_conf->app->params[$param] : null;
 }
 
@@ -121,8 +99,6 @@ function lobster_has_param($param)
     global $lobster_conf;
 
     return in_array($param, $lobster_conf->app->params);
-<<<<<<< HEAD
-=======
 }
 
 /**
@@ -144,5 +120,4 @@ function lobster_get_route_status()
     $file = getenv('LOBSTER_TMPDIR') . '/route_status';
 
     return file_get_contents($file);
->>>>>>> release
 }

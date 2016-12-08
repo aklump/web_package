@@ -326,16 +326,10 @@ function lobster_exit() {
 #
 # This function is called at the end of the route.
 #
-<<<<<<< HEAD
-# It may need to be chaned to 'return' for some apps.  See docs for more info
-#
-function lobster_route_end() {
-=======
 # It may need to be changed to 'return' for some apps.  See docs for more info
 #
 function lobster_route_end() {
   lobster_set_route_status 0
->>>>>>> release
   lobster_theme 'footer'
   lobster_include 'shutdown'
   exit 0
@@ -659,10 +653,7 @@ function lobster_json() {
   done
   json=$json${snippet%,}\}
   json=$json\},
-<<<<<<< HEAD
-=======
 
->>>>>>> release
 
   #
   #
@@ -681,26 +672,6 @@ function lobster_json() {
   json=$json\"config\"\:\"$HOME/$lobster_app_config\"
   json=$json\}
 
-<<<<<<< HEAD
-  #
-  #
-  # Begin child: instance
-  #
-  json=$json\"instance\":{
-  json=$json\"root\"\:\"$LOBSTER_INSTANCE_ROOT\",
-  json=$json\"config\"\:\"$LOBSTER_INSTANCE_ROOT/$lobster_app_config\"
-  json=$json\},
-  #
-  #
-  # Begin child: global
-  #
-  json=$json\"global\":{
-  json=$json\"root\"\:\"$HOME\",
-  json=$json\"config\"\:\"$HOME/$lobster_app_config\"
-  json=$json\}
-
-=======
->>>>>>> release
   # Close out the object
   json=$json\}
   echo $json
@@ -878,11 +849,7 @@ function lobster_array_get_shortest_value() {
 #
 # Shift the first element from an array
 #
-<<<<<<< HEAD
-# @param string The name of an array; omit the $, your passing a string of the array name, not the array reference!
-=======
 # @param string The name of an array; omit the dollar sign, your passing a string of the array name, not the array reference!
->>>>>>> release
 #
 # @code
 #   declare -a my_array=( do re mi )
@@ -893,8 +860,6 @@ function lobster_array_shift() {
   local arrayname=${1:?Array name required}
   eval "$arrayname=( \"\${$arrayname[@]:1}\" )"
 }
-<<<<<<< HEAD
-=======
 
 #
 # Sets the route status
@@ -916,4 +881,3 @@ function lobster_get_route_status() {
 
    return $status
 }
->>>>>>> release

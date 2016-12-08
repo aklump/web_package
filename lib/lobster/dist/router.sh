@@ -91,16 +91,9 @@ for lobster_route_id in "${lobster_suggestions[@]}"; do
   done
 done
 
-<<<<<<< HEAD
-# Fallback when the op is unknown
-export LOBSTER_JSON=$(lobster_json)      
-lobster_error "Unknown operation: $lobster_op"
-lobster_route_end
-=======
 if ! lobster_get_route_status; then
   # Fallback when the op is unknown
   export LOBSTER_JSON=$(lobster_json)
   lobster_error "Unknown operation: $lobster_op"
   lobster_route_end
 fi
->>>>>>> release

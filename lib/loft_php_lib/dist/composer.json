@@ -8,11 +8,7 @@
             "role": "Developer"
         }
     ],
-<<<<<<< HEAD
-    "version": "0.4.11",
-=======
     "version": "0.5.4",
->>>>>>> release
     "autoload": {
         "files": [
             "src\/AKlump\/LoftLib\/Xml\/LoftXmlElement.php"
