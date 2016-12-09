@@ -1,20 +1,20 @@
 {
     "name": "Web Package",
     "description": "A shell script to help the management of files as a package.",
-    "version": "2.1.12",
+    "version": "2.1.13",
     "authors": [
         {
             "name": "Aaron Klump",
             "email": "sourcecode@intheloftstudios.com"
         }
     ],
-    "homepage": "http://www.intheloftstudios.com/packages/bash/web_package",
+    "homepage": "http:\/\/www.intheloftstudios.com\/packages\/bash\/web_package",
     "require": {
-        "symfony/yaml": "^3.1"
+        "symfony\/yaml": "^3.1"
     },
     "autoload": {
         "psr-4": {
-            "AKlump\\LoftLib\\Component\\Config\\": "lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/"
+            "AKlump\\LoftLib\\Component\\Config\\": "lib\/loft_php_lib\/dist\/src\/AKlump\/LoftLib\/Component\/Config\/"
         }
     }
 }
