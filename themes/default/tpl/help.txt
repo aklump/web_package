@@ -6,7 +6,7 @@ The most commonly used commands are:
 
       init      Initialize the current directory
       bump      Increment the current version
-      info      Show info about the current package
+      info (i)  Show info about the current package
       help      Show this help screen.  Include second argument for more info about a topic, e.g. help init
 
       build     Execute build scripts.
@@ -16,5 +16,6 @@ The most commonly used commands are:
       config    Show configuration
       test      Run tests or test your own
       update    Update the current directory
+      hooklib   Open up the hook library
 
 Calling 'web_package' without a command is equivalent to 'web_package help'

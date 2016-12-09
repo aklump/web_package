@@ -36,8 +36,9 @@ abstract class ConfigFileBasedStorage extends Config
         $this->options = $options + $this->defaultOptions();
 
         if (is_null($basename) && is_file($dir)) {
-            $basename = basename($dir);
-            $dir = dirname($dir);
+            $info = pathinfo($dir);
+            $basename = $info['basename'];
+            $dir = $info['dirname'];
         }
 
         if (empty($dir)) {
@@ -48,9 +49,18 @@ abstract class ConfigFileBasedStorage extends Config
         }
 
         $basename = isset($basename) ? $basename : 'config';
+
+        // Handle a non-standard extension.
+        $extension = pathinfo($basename, PATHINFO_EXTENSION);
+
+        if (($extension) && static::EXTENSION !== $extension) {
+            $this->options['custom_extension'] = $extension;
+        }
+
         // Assure we have the file extension, preserving .yml
-        if ($this->options['auto_extension'] && !preg_match('/\.yml|' . static::EXTENSION . '$/', $basename)) {
-            $basename .= '.' . static::EXTENSION;
+        if (!$extension && $this->options['auto_extension']) {
+            $append = empty($this->options['custom_extension']) ? static::EXTENSION : $this->options['custom_extension'];
+            $basename .= '.' . trim($append, '.');
         }
 
         if (strpos($basename, '/')) {
@@ -74,11 +84,22 @@ abstract class ConfigFileBasedStorage extends Config
         parent::__construct();
     }
 
+    /**
+     * Return the default options.
+     *
+     * @return array
+     *   - custom_extension string|null Set this to use a non-standard file
+     *   extension.
+     *   - auto_extension bool Set this to true to automatically append the
+     *   custom file_extension.
+     *   - eof_eol bool Set to true to append a newline at the end of the file.
+     */
     public function defaultOptions()
     {
         return array(
-            'auto_extension' => true,
-            'eof_eol'        => true,
+            'custom_extension' => null,
+            'auto_extension'   => true,
+            'eof_eol'          => true,
         ) + parent::defaultOptions();
     }
 

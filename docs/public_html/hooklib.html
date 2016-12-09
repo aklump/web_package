@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Hooks Library</title>
+    <link href="search/tipuesearch.css" rel="stylesheet">
+    <style type="text/css" media="all">
+      @import url("style.css");
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="search/tipuesearch_content.js"></script>
+    <script src="search/tipuesearch_set.js"></script>
+    <script src="search/tipuesearch.min.js"></script>
+    <script src="js/core.js"></script>
+
+</head>
+
+<body class="page-hooklib">
+<header>
+<div class="pager">
+  <a href="faq.html" class="prev faq">&laquo;Questions</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="templates.html" class="next templates">Configuration Templates&raquo;</a>
+</div>
+
+</header>
+
+<div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+<h1>Hooks Library</h1>
+<div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+
+<p>The hooks library is a directory of common used hook files.  By default the core hooks library (you should not modify this directory) comes with a number of pre-written scripts that can be copied into your projects.  Access your library of hooks by calling:</p>
+
+<pre><code>bump hookslib
+</code></pre>
+
+<p>You may choose to define your own Hooks Library by doing the following:</p>
+
+<ol>
+<li>Open or create <code>~/.web_packageconfig</code></li>
+<li><p>Add the following line, replacing the value with the path to your own hooks library.</p>
+
+<pre><code>wp_hooklib="$HOME/wp-hooks"
+</code></pre></li>
+</ol>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>  
+</div>
+
+<footer>
+<div class="pager">
+  <a href="faq.html" class="prev faq">&laquo;Questions</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="templates.html" class="next templates">Configuration Templates&raquo;</a>
+</div>
+
+
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 2.1.13 &bull; Last Updated: Fri, 09 Dec 2016 18:45:45 -0800</p>
+  </div>
+</footer>
+
+<script>
+$(document).ready(function() {
+  $('#tipue_search_input').tipuesearch();
+});
+</script>
+
+</body>
+</html>
+

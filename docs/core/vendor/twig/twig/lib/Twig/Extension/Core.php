@@ -213,11 +213,11 @@ class Twig_Extension_Core extends Twig_Extension
             new Twig_SimpleTest('even', null, array('node_class' => 'Twig_Node_Expression_Test_Even')),
             new Twig_SimpleTest('odd', null, array('node_class' => 'Twig_Node_Expression_Test_Odd')),
             new Twig_SimpleTest('defined', null, array('node_class' => 'Twig_Node_Expression_Test_Defined')),
-            new Twig_SimpleTest('sameas', null, array('node_class' => 'Twig_Node_Expression_Test_Sameas', 'deprecated' => true, 'alternative' => 'same as')),
+            new Twig_SimpleTest('sameas', null, array('node_class' => 'Twig_Node_Expression_Test_Sameas', 'deprecated' => '1.21', 'alternative' => 'same as')),
             new Twig_SimpleTest('same as', null, array('node_class' => 'Twig_Node_Expression_Test_Sameas')),
             new Twig_SimpleTest('none', null, array('node_class' => 'Twig_Node_Expression_Test_Null')),
             new Twig_SimpleTest('null', null, array('node_class' => 'Twig_Node_Expression_Test_Null')),
-            new Twig_SimpleTest('divisibleby', null, array('node_class' => 'Twig_Node_Expression_Test_Divisibleby', 'deprecated' => true, 'alternative' => 'divisible by')),
+            new Twig_SimpleTest('divisibleby', null, array('node_class' => 'Twig_Node_Expression_Test_Divisibleby', 'deprecated' => '1.21', 'alternative' => 'divisible by')),
             new Twig_SimpleTest('divisible by', null, array('node_class' => 'Twig_Node_Expression_Test_Divisibleby')),
             new Twig_SimpleTest('constant', null, array('node_class' => 'Twig_Node_Expression_Test_Constant')),
             new Twig_SimpleTest('empty', 'twig_test_empty'),
@@ -258,76 +258,12 @@ class Twig_Extension_Core extends Twig_Extension
                 '/' => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Div', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '//' => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_FloorDiv', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '%' => array('precedence' => 60, 'class' => 'Twig_Node_Expression_Binary_Mod', 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
-                'is' => array('precedence' => 100, 'callable' => array($this, 'parseTestExpression'), 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
-                'is not' => array('precedence' => 100, 'callable' => array($this, 'parseNotTestExpression'), 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                'is' => array('precedence' => 100, 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
+                'is not' => array('precedence' => 100, 'associativity' => Twig_ExpressionParser::OPERATOR_LEFT),
                 '**' => array('precedence' => 200, 'class' => 'Twig_Node_Expression_Binary_Power', 'associativity' => Twig_ExpressionParser::OPERATOR_RIGHT),
+                '??' => array('precedence' => 300, 'class' => 'Twig_Node_Expression_NullCoalesce', 'associativity' => Twig_ExpressionParser::OPERATOR_RIGHT),
             ),
         );
-    }
-
-    public function parseNotTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
-    {
-        return new Twig_Node_Expression_Unary_Not($this->parseTestExpression($parser, $node), $parser->getCurrentToken()->getLine());
-    }
-
-    public function parseTestExpression(Twig_Parser $parser, Twig_NodeInterface $node)
-    {
-        $stream = $parser->getStream();
-        list($name, $test) = $this->getTest($parser, $node->getLine());
-
-        if ($test instanceof Twig_SimpleTest && $test->isDeprecated()) {
-            $message = sprintf('Twig Test "%s" is deprecated', $name);
-            if ($test->getAlternative()) {
-                $message .= sprintf('. Use "%s" instead', $test->getAlternative());
-            }
-            $message .= sprintf(' in %s at line %d.', $stream->getFilename(), $stream->getCurrent()->getLine());
-
-            @trigger_error($message, E_USER_DEPRECATED);
-        }
-
-        $class = $this->getTestNodeClass($parser, $test);
-        $arguments = null;
-        if ($stream->test(Twig_Token::PUNCTUATION_TYPE, '(')) {
-            $arguments = $parser->getExpressionParser()->parseArguments(true);
-        }
-
-        return new $class($node, $name, $arguments, $parser->getCurrentToken()->getLine());
-    }
-
-    protected function getTest(Twig_Parser $parser, $line)
-    {
-        $stream = $parser->getStream();
-        $name = $stream->expect(Twig_Token::NAME_TYPE)->getValue();
-        $env = $parser->getEnvironment();
-
-        if ($test = $env->getTest($name)) {
-            return array($name, $test);
-        }
-
-        if ($stream->test(Twig_Token::NAME_TYPE)) {
-            // try 2-words tests
-            $name = $name.' '.$parser->getCurrentToken()->getValue();
-
-            if ($test = $env->getTest($name)) {
-                $parser->getStream()->next();
-
-                return array($name, $test);
-            }
-        }
-
-        $e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.', $name), $line, $parser->getFilename());
-        $e->addSuggestions($name, array_keys($env->getTests()));
-
-        throw $e;
-    }
-
-    protected function getTestNodeClass(Twig_Parser $parser, $test)
-    {
-        if ($test instanceof Twig_SimpleTest) {
-            return $test->getNodeClass();
-        }
-
-        return $test instanceof Twig_Test_Node ? $test->getClass() : 'Twig_Node_Expression_Test';
     }
 
     public function getName()
@@ -383,7 +319,7 @@ function twig_random(Twig_Environment $env, $values = null)
             return '';
         }
         if (null !== $charset = $env->getCharset()) {
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $values = twig_convert_encoding($values, 'UTF-8', $charset);
             }
 
@@ -391,7 +327,7 @@ function twig_random(Twig_Environment $env, $values = null)
             // split at all positions, but not after the start and not before the end
             $values = preg_split('/(?<!^)(?!$)/u', $values);
 
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 foreach ($values as $i => $value) {
                     $values[$i] = twig_convert_encoding($value, $charset, 'UTF-8');
                 }
@@ -429,7 +365,7 @@ function twig_random(Twig_Environment $env, $values = null)
 function twig_date_format_filter(Twig_Environment $env, $date, $format = null, $timezone = null)
 {
     if (null === $format) {
-        $formats = $env->getExtension('core')->getDateFormat();
+        $formats = $env->getExtension('Twig_Extension_Core')->getDateFormat();
         $format = $date instanceof DateInterval ? $formats[1] : $formats[0];
     }
 
@@ -484,7 +420,7 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
     // determine the timezone
     if (false !== $timezone) {
         if (null === $timezone) {
-            $timezone = $env->getExtension('core')->getTimezone();
+            $timezone = $env->getExtension('Twig_Extension_Core')->getTimezone();
         } elseif (!$timezone instanceof DateTimeZone) {
             $timezone = new DateTimeZone($timezone);
         }
@@ -505,14 +441,14 @@ function twig_date_converter(Twig_Environment $env, $date = null, $timezone = nu
     }
 
     if (null === $date || 'now' === $date) {
-        return new DateTime($date, false !== $timezone ? $timezone : $env->getExtension('core')->getTimezone());
+        return new DateTime($date, false !== $timezone ? $timezone : $env->getExtension('Twig_Extension_Core')->getTimezone());
     }
 
     $asString = (string) $date;
     if (ctype_digit($asString) || (!empty($asString) && '-' === $asString[0] && ctype_digit(substr($asString, 1)))) {
         $date = new DateTime('@'.$date);
     } else {
-        $date = new DateTime($date, $env->getExtension('core')->getTimezone());
+        $date = new DateTime($date, $env->getExtension('Twig_Extension_Core')->getTimezone());
     }
 
     if (false !== $timezone) {
@@ -536,11 +472,11 @@ function twig_replace_filter($str, $from, $to = null)
     if ($from instanceof Traversable) {
         $from = iterator_to_array($from);
     } elseif (is_string($from) && is_string($to)) {
-        @trigger_error('Using "replace" with character by character replacement is deprecated and will be removed in Twig 2.0', E_USER_DEPRECATED);
+        @trigger_error('Using "replace" with character by character replacement is deprecated since version 1.22 and will be removed in Twig 2.0', E_USER_DEPRECATED);
 
         return strtr($str, $from, $to);
     } elseif (!is_array($from)) {
-        throw new Twig_Error_Runtime(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".',is_object($from) ? get_class($from) : gettype($from)));
+        throw new Twig_Error_Runtime(sprintf('The "replace" filter expects an array or "Traversable" as replace values, got "%s".', is_object($from) ? get_class($from) : gettype($from)));
     }
 
     return strtr($str, $from);
@@ -585,7 +521,7 @@ function twig_round($value, $precision = 0, $method = 'common')
  */
 function twig_number_format_filter(Twig_Environment $env, $number, $decimal = null, $decimalPoint = null, $thousandSep = null)
 {
-    $defaults = $env->getExtension('core')->getNumberFormat();
+    $defaults = $env->getExtension('Twig_Extension_Core')->getNumberFormat();
     if (null === $decimal) {
         $decimal = $defaults[0];
     }
@@ -916,7 +852,7 @@ function twig_reverse_filter(Twig_Environment $env, $item, $preserveKeys = false
     if (null !== $charset = $env->getCharset()) {
         $string = (string) $item;
 
-        if ('UTF-8' != $charset) {
+        if ('UTF-8' !== $charset) {
             $item = twig_convert_encoding($string, 'UTF-8', $charset);
         }
 
@@ -924,7 +860,7 @@ function twig_reverse_filter(Twig_Environment $env, $item, $preserveKeys = false
 
         $string = implode('', array_reverse($matches[0]));
 
-        if ('UTF-8' != $charset) {
+        if ('UTF-8' !== $charset) {
             $string = twig_convert_encoding($string, $charset, 'UTF-8');
         }
 
@@ -974,7 +910,7 @@ function twig_in_filter($value, $compare)
  * Escapes a string.
  *
  * @param Twig_Environment $env        A Twig_Environment instance
- * @param string           $string     The value to be escaped
+ * @param mixed            $string     The value to be escaped
  * @param string           $strategy   The escaping strategy
  * @param string           $charset    The charset
  * @param bool             $autoescape Whether the function is called by the auto-escaping feature (true) or by the developer (false)
@@ -1050,7 +986,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
         case 'js':
             // escape all non-alphanumeric characters
             // into their \xHH or \uHHHH representations
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = twig_convert_encoding($string, 'UTF-8', $charset);
             }
 
@@ -1060,14 +996,14 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 
             $string = preg_replace_callback('#[^a-zA-Z0-9,\._]#Su', '_twig_escape_js_callback', $string);
 
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = twig_convert_encoding($string, $charset, 'UTF-8');
             }
 
             return $string;
 
         case 'css':
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = twig_convert_encoding($string, 'UTF-8', $charset);
             }
 
@@ -1077,14 +1013,14 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 
             $string = preg_replace_callback('#[^a-zA-Z0-9]#Su', '_twig_escape_css_callback', $string);
 
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = twig_convert_encoding($string, $charset, 'UTF-8');
             }
 
             return $string;
 
         case 'html_attr':
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = twig_convert_encoding($string, 'UTF-8', $charset);
             }
 
@@ -1094,7 +1030,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
 
             $string = preg_replace_callback('#[^a-zA-Z0-9,\.\-_]#Su', '_twig_escape_html_attr_callback', $string);
 
-            if ('UTF-8' != $charset) {
+            if ('UTF-8' !== $charset) {
                 $string = twig_convert_encoding($string, $charset, 'UTF-8');
             }
 
@@ -1111,7 +1047,7 @@ function twig_escape_filter(Twig_Environment $env, $string, $strategy = 'html', 
             static $escapers;
 
             if (null === $escapers) {
-                $escapers = $env->getExtension('core')->getEscapers();
+                $escapers = $env->getExtension('Twig_Extension_Core')->getEscapers();
             }
 
             if (isset($escapers[$strategy])) {
@@ -1272,7 +1208,7 @@ if (function_exists('mb_get_info')) {
      */
     function twig_upper_filter(Twig_Environment $env, $string)
     {
-        if (null !== ($charset = $env->getCharset())) {
+        if (null !== $charset = $env->getCharset()) {
             return mb_strtoupper($string, $charset);
         }
 
@@ -1289,7 +1225,7 @@ if (function_exists('mb_get_info')) {
      */
     function twig_lower_filter(Twig_Environment $env, $string)
     {
-        if (null !== ($charset = $env->getCharset())) {
+        if (null !== $charset = $env->getCharset()) {
             return mb_strtolower($string, $charset);
         }
 
@@ -1306,7 +1242,7 @@ if (function_exists('mb_get_info')) {
      */
     function twig_title_string_filter(Twig_Environment $env, $string)
     {
-        if (null !== ($charset = $env->getCharset())) {
+        if (null !== $charset = $env->getCharset()) {
             return mb_convert_case($string, MB_CASE_TITLE, $charset);
         }
 
@@ -1447,8 +1383,8 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
         $variables = array_merge($context, $variables);
     }
 
-    if ($isSandboxed = $sandboxed && $env->hasExtension('sandbox')) {
-        $sandbox = $env->getExtension('sandbox');
+    if ($isSandboxed = $sandboxed && $env->hasExtension('Twig_Extension_Sandbox')) {
+        $sandbox = $env->getExtension('Twig_Extension_Sandbox');
         if (!$alreadySandboxed = $sandbox->isSandboxed()) {
             $sandbox->enableSandbox();
         }
@@ -1485,8 +1421,13 @@ function twig_include(Twig_Environment $env, $context, $template, $variables = a
  */
 function twig_source(Twig_Environment $env, $name, $ignoreMissing = false)
 {
+    $loader = $env->getLoader();
     try {
-        return $env->getLoader()->getSource($name);
+        if (!$loader instanceof Twig_SourceContextLoaderInterface) {
+            return $loader->getSource($name);
+        } else {
+            return $loader->getSourceContext($name)->getCode();
+        }
     } catch (Twig_Error_Loader $e) {
         if (!$ignoreMissing) {
             throw $e;

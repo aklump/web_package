@@ -1,4 +1,4 @@
 name = "Loft Docs"
 description = "A convenient system for documenting projects using markdown."
-version = "0.6.4"
-author = Aaron Klump <sourcecode@intheloftstudios.com>
+version = "0.8.15"
+author = "Aaron Klump <sourcecode@intheloftstudios.com>"

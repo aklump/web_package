@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # Writes a file called built.txt to a build directory `built/test/built.txt`
 # with the contents "Hello World"
 mkdir -p $7/dist/bash/test && echo "Hello World" > $7/dist/bash/test/built.txt

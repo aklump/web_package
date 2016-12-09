@@ -3,8 +3,6 @@
 # @file
 # Default configuration file specific to your app; copied during the core init route.
 
-wp_git=$(which git)
-
 ##
  # The name of the git remote
  #
@@ -92,3 +90,9 @@ wp_bash=$(which bash)
 
 # Which plugin should be used to parse the configuration files
 wp_plugin_parse="basic"
+
+# Path to the Hooks library, used by route: hooklib
+wp_hooklib="$LOBSTER_APP_ROOT/install/template/examples"
+
+# Action to take on the directory, e.g. open
+wp_hooklib_action="open"

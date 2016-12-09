@@ -1,0 +1,118 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Drupal Modules/Themes</title>
+    <link href="search/tipuesearch.css" rel="stylesheet">
+    <style type="text/css" media="all">
+      @import url("style.css");
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="search/tipuesearch_content.js"></script>
+    <script src="search/tipuesearch_set.js"></script>
+    <script src="search/tipuesearch.min.js"></script>
+    <script src="js/core.js"></script>
+
+</head>
+
+<body class="page-drupal">
+<header>
+<div class="pager">
+  <a href="config.html" class="prev config">&laquo;Configuration</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="faq.html" class="next faq">Questions&raquo;</a>
+</div>
+
+</header>
+
+<div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+<h1>Drupal Modules/Themes</h1>
+<div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+
+<p>When I use this with my Drupal modules, the workflow is a bit different.  For starters, there is no master branch.  Actually the master and development branches are one in the same, but we have one branch for each major version of Drupal.  The tags become really important as the release packages are built from them.  Observe <code>git br -l</code></p>
+
+<pre><code>* 7.x-1.x
+  6.x-1.x
+  5.x-1.x
+</code></pre>
+
+<p>Here's how to modify the config file for a Drupal project.  Change the appropriate lines in <code>.web_config/config</code> to look like this, assuming that you are maintaining your module for Drupal versions 6-8…</p>
+
+<pre><code>master = "8.x-1.x 7.x-1.x 6.x-1.x"
+develop = "8.x-1.x 7.x-1.x 6.x-1.x"
+create_tags = yes
+push_tags = ask    
+</code></pre>
+
+<p>In summary what you are saying is this: <strong>I have three master branches, which are one in the same with my develop branches.</strong>  This has the benefit of letting you <code>bump hotfix</code> and <code>bump release</code> off of the same branch.  Your workflow would then resemble this:</p>
+
+<pre><code>$ mkdir drupal_module
+$ cd drupal_module
+$ git init
+Initialized empty Git repository in /Volumes/Data/Users/aklump/Repos/git/drupal_module/.git/
+$ bump init
+Enter package name: Drupal Module
+Enter package description: Drupal module example
+
+A new web_package "Drupal Module" has been created. Please set the initial version now.
+
+$ bump major
+Version bumped:  0.0.0 ---&gt; 1.0
+$ bump i
+name = Drupal Module
+description = Drupal module example
+version = 1.0
+$ git add .
+$ git cim 'initial commit'
+[master (root-commit) 7194384] initial import
+ 1 file changed, 3 insertions(+)
+ create mode 100644 web_package.info
+$ git br -m 6.x-1.x
+$ git checkout -b 7.x-1.x
+$ git checkout -b 8.x-1.x
+Switched to a new branch '6.x-1.x'
+$ git br -l
+  6.x-1.x
+  7.x-1.x
+* 8.x-1.x  
+</code></pre>
+
+<p>At this point the workflow is pretty much the same, although as noted you will be able to choose <code>bump hotfix</code> or <code>bump release</code> from each major Drupal version branch.  You get to decide which is best.</p>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>  
+</div>
+
+<footer>
+<div class="pager">
+  <a href="config.html" class="prev config">&laquo;Configuration</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="faq.html" class="next faq">Questions&raquo;</a>
+</div>
+
+
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 2.1.13 &bull; Last Updated: Fri, 09 Dec 2016 18:45:45 -0800</p>
+  </div>
+</footer>
+
+<script>
+$(document).ready(function() {
+  $('#tipue_search_input').tipuesearch();
+});
+</script>
+
+</body>
+</html>
+

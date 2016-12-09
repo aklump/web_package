@@ -1,6 +1,7 @@
 Show all package info, or specific by arg
 
 usage: web_package info [<key>]
+       web_package i [<key>]
 
 For some keys you may omit the 'info' as the first argument as a shorthand method.
 

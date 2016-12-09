@@ -8,7 +8,7 @@ done
 CORE="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
 # Remove all pattern dirs
-for dir in $(find $CORE/patterns/*  -type d -maxdepth 0 ! -name "source" ); do
+for dir in $(find $CORE/install/patterns/*  -type d -maxdepth 0 ! -name "source" ); do
   dir="${dir##*/}"
   if [[ -d "$dir" ]]; then
     rm -rv "$dir"

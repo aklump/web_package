@@ -6,4 +6,8 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'Webuni\\FrontMatter\\' => array($vendorDir . '/webuni/front-matter/src'),
+    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
+    'Piwik\\Ini\\' => array($vendorDir . '/piwik/ini/src'),
+    'AKlump\\Data\\' => array($vendorDir . '/aklump/data'),
 );

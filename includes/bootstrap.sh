@@ -15,7 +15,7 @@ source $LOBSTER_APP_ROOT/includes/functions.sh
 #fi
 
 # Detect if 'info' is implied as the operation
-declare -a array=("${lobster_args[0]}" "name" "version" "v")
+declare -a array=("${lobster_args[0]}" "name" "version" "v" "i")
 if lobster_in_array ${array[@]}; then
   lobster_args=("info" "${lobster_args[@]}")
 fi

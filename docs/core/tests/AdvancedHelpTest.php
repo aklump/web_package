@@ -9,10 +9,12 @@
 require_once dirname(__FILE__) . '/../vendor/autoload.php';
 require_once dirname(__FILE__) . '/LoftPHPUnit_Framework_TestCase.php';
 
-class advancedHelpTest extends LoftPHPUnit_Framework_TestCase {
+class advancedHelpTest extends LoftPHPUnit_Framework_TestCase
+{
 
-  public function testImages() {
-    $subject = <<<EOD
+    public function testImages()
+    {
+        $subject = <<<EOD
 <img src="http://www.petsfoto.com/wp-content/uploads/2010/08/Cat82.jpg" />
 <img src="/2010/08/Cat82.jpg" />
 <img src="Cat82.jpg" />
@@ -22,9 +24,9 @@ class advancedHelpTest extends LoftPHPUnit_Framework_TestCase {
 <img alt="A cat image" src="&path&Cat82.jpg" class="animals" />
 <img alt="A cat image" src="&base_url&sites/default/files/images/Cat82.jpg" class="animals" />
 EOD;
-    $path = $this->writeFile($subject, 'source.html');
+        $path = $this->writeFile($subject, 'source.html');
 
-    $control = <<<EOD
+        $control = <<<EOD
 <img src="http://www.petsfoto.com/wp-content/uploads/2010/08/Cat82.jpg" />
 <img src="&path&2010/08/Cat82.jpg" />
 <img src="&path&Cat82.jpg" />
@@ -35,13 +37,14 @@ EOD;
 <img alt="A cat image" src="&base_url&sites/default/files/images/Cat82.jpg" class="animals" />
 EOD;
 
-    $return = $this->includeCLI('../advanced_help.php', $path);
+        $return = $this->includeCLI(dirname(__FILE__) . '/../advanced_help.php', $path);
 
-    $this->assertEquals($control, $return);
-  }
+        $this->assertEquals($control, $return);
+    }
 
-  public function testHelpLinks() {
-    $subject = <<<EOD
+    public function testHelpLinks()
+    {
+        $subject = <<<EOD
 <a href="&base_url&admin/settings/site-configuration">
 <a href="http://drupal.org/admin/settings/site-configuration">
 <a href="/help_page.html">
@@ -49,9 +52,9 @@ EOD;
 <a href="/dir/help_page.html">
 <a href="dir/help_page.html">
 EOD;
-    $path = $this->writeFile($subject, 'source.html');
+        $path = $this->writeFile($subject, 'source.html');
 
-    $control = <<<EOD
+        $control = <<<EOD
 <a href="&base_url&admin/settings/site-configuration">
 <a href="http://drupal.org/admin/settings/site-configuration">
 <a href="&topic:cool_module/help_page&">
@@ -60,29 +63,30 @@ EOD;
 <a href="&topic:cool_module/dir/help_page&">
 EOD;
 
-    $return = $this->includeCLI('../advanced_help.php', $path, 'cool_module');
+        $return = $this->includeCLI(dirname(__FILE__) . '/../advanced_help.php', $path, 'cool_module');
 
-    $this->assertEquals($control, $return);
-  }
+        $this->assertEquals($control, $return);
+    }
 
-  public function testRemoveH1Tag() {
-    $subject = <<<EOD
+    public function testRemoveH1Tag()
+    {
+        $subject = <<<EOD
 <h1>My page title</h1>
 <h2>My page subtitle</h2>
 <h1 class="page-title">My page title</h1>
 <h2>My page subtitle</h2>
 EOD;
-    $path = $this->writeFile($subject, 'source.html');
+        $path = $this->writeFile($subject, 'source.html');
 
-    $control = <<<EOD
+        $control = <<<EOD
 <h2>My page subtitle</h2>
 <h2>My page subtitle</h2>
 EOD;
 
-    $return = $this->includeCLI('../advanced_help.php', $path, 'cool_module');
+        $return = $this->includeCLI(dirname(__FILE__) . '/../advanced_help.php', $path, 'cool_module');
 
-    $this->assertEquals($control, $return);
-  }
+        $this->assertEquals($control, $return);
+    }
 }
 
 /** @} */ //end of group: loft_docs

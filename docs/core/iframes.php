@@ -15,50 +15,51 @@ $errors = array();
 
 if (isset($argv[1])
     && ($output = file_get_contents(getcwd() . '/' . $argv[1]))
-    && (preg_match_all('/<iframe\s+src="([^"]+)".*?<\/iframe>/', $output, $iframes))) {
+    && (preg_match_all('/<iframe\s+src="([^"]+)".*?<\/iframe>/', $output, $iframes))
+) {
 
-  $data = array(
-    'name' => $login->user,
-    'pass' => $login->pass,
-    'form_id' => 'user_login',
-    'op' => 'Log in',
-  );
-  $cookie_file  = tempnam($temp_dir, 'cookie');
-  $url = $login->scheme . "://" . $login->host . $login->path;
-  $ch = curl_init($url);
-  curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-  //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_POST, 1);
-  curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-  $contents = curl_exec($ch);
-  curl_close ($ch);
-
-  foreach (array_keys($iframes[0]) as $key) {
-    $url = $iframes[1][$key];
+    $data = array(
+        'name'    => $login->user,
+        'pass'    => $login->pass,
+        'form_id' => 'user_login',
+        'op'      => 'Log in',
+    );
+    $cookie_file = tempnam($temp_dir, 'cookie');
+    $url = $login->scheme . "://" . $login->host . $login->path;
     $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
+    curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
+    //curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-    //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
+    curl_setopt($ch, CURLOPT_POST, 1);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
     $contents = curl_exec($ch);
     curl_close($ch);
-    if (empty($contents)) {
-      $errors[] = "Could not convert iframe content at: $url";
-    }
-    else {
-      $output = str_replace($iframes[0][$key], $contents, $output);
-    }
-  }
 
-  // Remove the session cookie
-  unlink($cookie_file);
+    foreach (array_keys($iframes[0]) as $key) {
+        $url = $iframes[1][$key];
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_file);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HEADER, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+        //curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_file);
+        $contents = curl_exec($ch);
+        curl_close($ch);
+        if (empty($contents)) {
+            $errors[] = "Could not convert iframe content at: $url";
+        }
+        else {
+            $output = str_replace($iframes[0][$key], $contents, $output);
+        }
+    }
+
+    // Remove the session cookie
+    unlink($cookie_file);
 }
-if ($errors) {
-  print '*** ' . implode("\n*** ", $errors) ."\n\n\n";
-}
+//if ($errors) {
+//    print '*** ' . implode("\n*** ", $errors) . "\n\n\n";
+//}
 print $output;
 
 /** @} */ //end of group: loft_docs

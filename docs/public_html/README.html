@@ -4,33 +4,32 @@
 <html>
 <head>
     <title>README</title>
+    <link href="search/tipuesearch.css" rel="stylesheet">
     <style type="text/css" media="all">
       @import url("style.css");
     </style>
-    <link href="search/tipuesearch.css" rel="stylesheet">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
     <script src="search/tipuesearch_content.js"></script>
-    <link href="search/tipuesearch.css" rel="stylesheet">
     <script src="search/tipuesearch_set.js"></script>
     <script src="search/tipuesearch.min.js"></script>
+    <script src="js/core.js"></script>
 
 </head>
 
 <body class="page-readme">
 <header>
 <div class="pager">
-  <a href="index.html" class="prev index" >&laquo;Index</a>
+  <a href="index.html" class="prev index">&laquo;Index</a>
   <a href="index.html" class="index">Index</a>
-  <a href="index.html" class="next index">Index&raquo;</a>
+  <a href="build-scripts.html" class="next build-scripts">Timesaving hooks: build, unbuild, dev&raquo;</a>
 </div>
 
 </header>
 
 <div class="search__wrapper">
   <form action="search--results.html">
-    <input type="text" name="q" id="tipue_search_input" autocomplete="off" required>
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
   </form>
 </div>
 
@@ -184,126 +183,6 @@ version = 0.0.1
 author = Aaron Klump &lt;sourcecode@intheloftstudios.com&gt;
 </code></pre>
 
-<h2>Timesaving hooks: build, unbuild, dev</h2>
-
-<p>There are three commands that are important to know about.  On their own, that is without special implementation, they do nothing.  However they can be configured to help your process out and save time and reduce errors</p>
-
-<h3><code>bump build</code></h3>
-
-<p>Scripts added to <code>.web_package/hooks/build</code> are run.  By design, these scripts should serve the purpose of building the package and making it ready for a release.  Such as create a <code>dist</code> directory and copy over distribution files, etc.  **Of the three, this is the only command that is automatically called by calling <code>bump done</code>.</p>
-
-<h3><code>bump unbuild</code></h3>
-
-<p>Scripts added to <code>.web_package/hooks/unbuild</code> are run.  You may delete files as necessary to reverse the build step.  May not be that useful for most.</p>
-
-<h3><code>bump dev</code></h3>
-
-<p>Scripts added to <code>.web_package/hooks/dev</code> are run.  The intention here is to set up the project to be developed.  I use this to symlink dependencies during development.  These symlinks get reversed in my build scripts.</p>
-
-<h2>Build Scripts</h2>
-
-<p>You may add php or shell scripts to <code>.web_package/hooks/build</code> and they will be run each time the version increments.  You may also trigger a build by calling <code>bump build</code>.</p>
-
-<p>You can also trigger a single file by passing it's filename; you would want to do this if you need to trigger this one script from an external program, while preserving the callback arguments.  Here is an example (this also works for unbuild and dev):</p>
-
-<pre><code>    bump build only_this_script.sh
-</code></pre>
-
-<p>Any file ending in <code>.php</code> or <code>.sh</code> found in the build script folder will be called during version bumping.  Refer to the parameter chart below for script arguments:</p>
-
-<p>One example of using a build script, say with a jQuery plugin, is when you want to embed the version string <em>inside</em> the <code>jquery.pluging_name.js</code> file.  In such a case the  <code>.info</code> file strategy doesn't meet your needs.  For such a scenario you would use a build script.</p>
-
-<h3>Callback Arguments</h3>
-
-<table>
-<thead>
-<tr>
-  <th>data</th>
-  <th>build.php</th>
-  <th>build.sh</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td>prev version</td>
-  <td>$argv[1]</td>
-  <td>$1</td>
-</tr>
-<tr>
-  <td>new version</td>
-  <td>$argv[2]</td>
-  <td>$2</td>
-</tr>
-<tr>
-  <td>package name</td>
-  <td>$argv[3]</td>
-  <td>$3</td>
-</tr>
-<tr>
-  <td>description</td>
-  <td>$argv[4]</td>
-  <td>$4</td>
-</tr>
-<tr>
-  <td>homepage</td>
-  <td>$argv[5]</td>
-  <td>$5</td>
-</tr>
-<tr>
-  <td>author</td>
-  <td>$argv[6]</td>
-  <td>$6</td>
-</tr>
-<tr>
-  <td>path to root</td>
-  <td>$argv[7]</td>
-  <td>$7</td>
-</tr>
-<tr>
-  <td>date/time</td>
-  <td>$argv[8]</td>
-  <td>$8</td>
-</tr>
-<tr>
-  <td>path to info file</td>
-  <td>$argv[9]</td>
-  <td>$9</td>
-</tr>
-<tr>
-  <td>dir of the script</td>
-  <td>$argv[10]</td>
-  <td>${10}</td>
-</tr>
-<tr>
-  <td>dir of functions.php/.sh</td>
-  <td>$argv[11]</td>
-  <td>${11}</td>
-</tr>
-<tr>
-  <td>root dir of web_package</td>
-  <td>$argv[12]</td>
-  <td>${12}</td>
-</tr>
-<tr>
-  <td>path to hooks dir</td>
-  <td>$argv[13]</td>
-  <td>${13}</td>
-</tr>
-</tbody>
-</table>
-
-<ul>
-<li>Your script should print/echo details as to what it did; this will be output to the console.</li>
-<li>Be sure to use <em>path to root</em> in your scripts when you reference any files in your project.</li>
-<li><p>If you need to source another script, e.g. <code>config</code> that sits in your scripts directory, use <code>dir of the script</code>, here's a shell example...  Notice that without the <code>.sh</code> extension, the file will not automatically get called, which is a good way to do a shared config script.</p>
-
-<pre><code>#!/bin/bash
-source "${10}/config"
-source "${11}/functions.sh"
-...
-</code></pre></li>
-</ul>
-
 <h2>Beginning A New Project</h2>
 
 <ol>
@@ -345,7 +224,7 @@ $
 
 <ol>
 <li>In this example you make your changes to the develop branch (see <a href="http://nvie.com/posts/a-successful-git-branching-model">gitflow</a>) and then commit as normal. You could have also done things on feature branches and merged then back into develop.</li>
-<li>When all your work is done and you're ready for the release then type <code>bump release</code>; this is shorthand for <code>bump minor release</code>. If you only want a patch release then type <code>bump patch release</code>.  Consequently if you want a major release type <code>bump major release</code>. </li>
+<li>When all your work is done and you're ready for the release then type <code>bump release</code>; this is shorthand for <code>bump minor release</code>. If you only want a patch release then type <code>bump patch release</code>.  Consequently if you want a major release type <code>bump major release</code>.</li>
 <li><p>Immediately thereafter (unless you know what you're doing), type <code>bump done</code></p>
 
 <pre><code>$ git checkout -b develop
@@ -474,194 +353,6 @@ version = 0.2.1
 <li>You can go directly to beta or to rc, but not the other direction, e.g. if your version is <code>2.3</code> you can <code>bump rc</code> and it becomes <code>2.4-rc1</code>.</li>
 </ol>
 
-<h2>Configuration</h2>
-
-<p>The configuration file is created during <code>bump init</code> and is located at <code>.web_package/config</code>.  Default contents look like this:</p>
-
-<pre><code>master = "master"
-develop = "develop"
-git_remote = origin
-create_tags = yes
-push_tags = ask
-push_master = ask
-push_develop = ask
-</code></pre>
-
-<p>The entire <code>.web_package</code> directory should not be included in source control.  <strong>To modify the configurations simply edit <code>.web_package/config</code> directly.</strong>  Make sure to have spaces surrounding your equal signs as <code>create_tags=yes</code> is not the same as <code>create_tags = yes</code>.  <strong>Also you must have a line break at the end of the file!</strong></p>
-
-<h3>master: <code>(string)</code></h3>
-
-<p>The name of the branch you consider master.  If you have more than one branch you consider a master then list them all, separated by spaces, e.g. <code>"master1 master2"</code> For more insight into this feature, see the <a href="#drupal">Drupal Modules/Themes section</a> below.</p>
-
-<h3>develop: <code>(string)</code></h3>
-
-<p>The name of the branch you consider develop.  If you have more than one branch you consider a develop branch then list them all, separated by spaces, e.g. <code>"develop1 develop2"</code>.  <strong>In the case of multiples: Make sure that you list them in the exact order as the master list, as the correlation of master to develop is imperative.</strong></p>
-
-<h3>remote: <code>(string)</code></h3>
-
-<p>The name of the git remote to be used with <code>git push [git_remote] release-1.0</code></p>
-
-<h3>create_tags: <code>major</code>, <code>minor</code>, <code>patch</code> or <code>no</code></h3>
-
-<p>When executing <code>bump done</code>, determine what severity level will create a git tag.  Set to <code>no</code> to never create a tag.</p>
-
-<h3>push_tags: <code>no</code>, <code>ask</code> or <code>auto</code></h3>
-
-<p>If tags should be pushed to <code>git_remote</code>.  Set to <code>auto</code> and you will not be prompted first.</p>
-
-<h3>push_master: <code>no</code>, <code>ask</code> or <code>auto</code></h3>
-
-<p>If master branches should be pushed to <code>git_remote</code>.  Set to <code>auto</code> and you will not be prompted first.</p>
-
-<h3>push_develop: <code>no</code>, <code>ask</code> or <code>auto</code></h3>
-
-<p>If develop branches should be pushed to <code>git_remote</code>.  Set to <code>auto</code> and you will not be prompted first.</p>
-
-<h3>info_file: <code>(string)</code></h3>
-
-<p>(Optional) If you have more than one .info file and you need to force Web Package to use the correct one then add this option. The name of the file containing the version info.</p>
-
-<h3>author: <code>"(string)"</code></h3>
-
-<p>(Optional) This one needs to be wrapped in quotes if you have spaces like this example… "Aaron Klump \<a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#111;:&#x73;&#111;&#117;&#x72;&#x63;&#101;c&#x6f;&#100;&#101;&#x40;&#x69;&#110;&#116;&#x68;&#x65;&#108;&#x6f;&#x66;&#116;&#115;&#x74;&#x75;&#100;i&#x6f;&#115;&#46;&#x63;&#x6f;&#109;">&#x73;&#111;&#117;&#x72;&#x63;&#101;c&#x6f;&#100;&#101;&#x40;&#x69;&#110;&#116;&#x68;&#x65;&#108;&#x6f;&#x66;&#116;&#115;&#x74;&#x75;&#100;i&#x6f;&#115;&#46;&#x63;&#x6f;&#109;</a>".  This will get written to <code>web_package.info</code> file during the init process.</p>
-
-<h3>init_version: <code>"(string)"</code></h3>
-
-<p>(Optional)  This is used during <code>bump init</code> to set the default version of a package.</p>
-
-<h3>patch_prefix: <code>"(string)"</code></h3>
-
-<p>(Optional)  This is used as the default patch_prefix.</p>
-
-<h3>php: <code>"(string)"</code></h3>
-
-<p>(Optional)  The path to the php to use for PHP build scripts.</p>
-
-<h3>bash: <code>"(string)"</code></h3>
-
-<p>(Optional)  The path to bash to use for shell build scripts.</p>
-
-<h3>pause: <code>"(int)"</code></h3>
-
-<p>(Optional)  Enter a number of seconds to pause before git creates a branch and adds files.  This is here in case you need to allow time for file processing after the version file has been updated. If you want to be prompted before git does it's thing enter a -1 here.</p>
-
-<h2>Global Configuration</h2>
-
-<p>A global configuration file may be created at <code>~/.web_package/config</code>, the contents of which will be used as defaults for new projects or existing projects without said parameter.  This is most useful for the <code>author</code> and <code>info_file</code> parameters.  **Note: if a global config parameter is set, but the project does not override it, the global will apply for that project, even after <code>bump init</code>.</p>
-
-<h2>Configuration Templates</h2>
-
-<p>Let's take the use case of a Drupal module, which has a different configuration setup than a website project.  For our module we want the following configuration:</p>
-
-<pre><code>master = 8.x-1.x 7.x-1.x 6.x-1.x
-develop = 8.x-1.x 7.x-1.x 6.x-1.x
-remote = origin
-create_tags = patch
-push_tags = ask
-push_develop = no
-push_master = ask
-info_file = web_package.info
-patch_prefix = -rc
-</code></pre>
-
-<p>Wouldn't it be nice to not have to retype that for every new Drupal module?  Well you don't have to if you use a Global Template.</p>
-
-<h3>Defining a Global Template</h3>
-
-<p>For a template called <code>drupal</code>, create a file at <code>~/.web_package/config_drupal</code>, containing the configuration you wish to use for that class of projects.  So the pattern is <code>~/.web_package/config_[template name]</code>.</p>
-
-<h3>Implementing a Global Template</h3>
-
-<p>When creating a new project, use the command <code>bump init drupal</code> and your template will automatically be used as the default configuration.</p>
-
-<pre><code>$ mkdir new_drupal
-$ cd new_drupal
-$ bump init drupal
-Template drupal used.
-Enter package name: Drupal Module
-Enter package description: a good one.
-
-A new web_package "Drupal Module" (version: 7.x-1.0-alpha1) has been created.
-
-$ bump config
-master = 8.x-1.x 7.x-1.x 6.x-1.x
-develop = 8.x-1.x 7.x-1.x 6.x-1.x
-remote = origin
-create_tags = patch
-push_tags = ask
-push_develop = no
-push_master = ask
-info_file = web_package.info
-patch_prefix = -rc
-$
-</code></pre>
-
-<h2><a href="id:drupal">Drupal Modules/Themes</a></h2>
-
-<p>When I use this with my Drupal modules, the workflow is a bit different.  For starters, there is no master branch.  Actually the master and development branches are one in the same, but we have one branch for each major version of Drupal.  The tags become really important as the release packages are built from them.  Observe <code>git br -l</code></p>
-
-<pre><code>* 7.x-1.x
-  6.x-1.x
-  5.x-1.x
-</code></pre>
-
-<p>Here's how to modify the config file for a Drupal project.  Change the appropriate lines in <code>.web_config/config</code> to look like this, assuming that you are maintaining your module for Drupal versions 6-8…</p>
-
-<pre><code>master = "8.x-1.x 7.x-1.x 6.x-1.x"
-develop = "8.x-1.x 7.x-1.x 6.x-1.x"
-create_tags = yes
-push_tags = ask    
-</code></pre>
-
-<p>In summary what you are saying is this: <strong>I have three master branches, which are one in the same with my develop branches.</strong>  This has the benefit of letting you <code>bump hotfix</code> and <code>bump release</code> off of the same branch.  Your workflow would then resemble this:</p>
-
-<pre><code>$ mkdir drupal_module
-$ cd drupal_module
-$ git init
-Initialized empty Git repository in /Volumes/Data/Users/aklump/Repos/git/drupal_module/.git/
-$ bump init
-Enter package name: Drupal Module
-Enter package description: Drupal module example
-
-A new web_package "Drupal Module" has been created. Please set the initial version now.
-
-$ bump major
-Version bumped:  0.0.0 ---&gt; 1.0
-$ bump i
-name = Drupal Module
-description = Drupal module example
-version = 1.0
-$ git add .
-$ git cim 'initial commit'
-[master (root-commit) 7194384] initial import
- 1 file changed, 3 insertions(+)
- create mode 100644 web_package.info
-$ git br -m 6.x-1.x
-$ git checkout -b 7.x-1.x
-$ git checkout -b 8.x-1.x
-Switched to a new branch '6.x-1.x'
-$ git br -l
-  6.x-1.x
-  7.x-1.x
-* 8.x-1.x  
-</code></pre>
-
-<p>At this point the workflow is pretty much the same, although as noted you will be able to choose <code>bump hotfix</code> or <code>bump release</code> from each major Drupal version branch.  You get to decide which is best.</p>
-
-<h2>Questions</h2>
-
-<h3>When should I use 'bump hotfix'?</h3>
-
-<p>When you need to make an immediate change to the production state (master branch) of the project, you will use <code>bump hotfix</code>.  A hotfix is unique in that the release number gets bumped <em>before</em> the work is done.</p>
-
-<h3>When should I use 'bump release'?</h3>
-
-<p>When you have finished work on the development branch and you want to release it to the production-ready state of the project, you will use <code>bump release</code>.  A release is different from a hotfix, in that the version is bumped <em>after</em> the work is done.</p>
-
-<h3>When should I use 'bump major', 'bump minor', or 'bump patch'?</h3>
-
-<p>These three commands are unique in that they do not interact with git in any way, they simply modify <code>web_package.info</code>.  The choice of which of the three to use is based on the severity of the changes and your versioning mandates.  However, <em>why</em> you would use one of these three can be answered thus: <strong>Any time that you will need to step away from the development branch for an extended period of time, but cannot release the package.</strong>  This way you can be certain that no implementation of your web_package thinks it has the most recent version.  I would argue it's best practice to <code>bump_patch</code> at the end of each work session, if you have multiple projects underway.</p>
-
 <h2>Contact</h2>
 
 <p><strong>In the Loft Studios</strong><br />
@@ -678,14 +369,14 @@ skype: intheloftstudios<br />
 
 <footer>
 <div class="pager">
-  <a href="index.html" class="prev index" >&laquo;Index</a>
+  <a href="index.html" class="prev index">&laquo;Index</a>
   <a href="index.html" class="index">Index</a>
-  <a href="index.html" class="next index">Index&raquo;</a>
+  <a href="build-scripts.html" class="next build-scripts">Timesaving hooks: build, unbuild, dev&raquo;</a>
 </div>
 
 
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 1.0 &bull; Last Updated: Thu, 08 Dec 2016 16:24:29 -0800</p>
+    <p class="legaleeze center">Version: 2.1.13 &bull; Last Updated: Fri, 09 Dec 2016 18:45:44 -0800</p>
   </div>
 </footer>
 

@@ -13,6 +13,9 @@ if [ "$lobster_op" == 'info' ]; then
   if [ "${lobster_args[1]}" == 'v' ]; then
     lobster_args[1]='version'
   fi
+  if [ "${lobster_args[1]}" == 'i' ]; then
+    lobster_args[1]=${lobster_args[2]}
+  fi
 fi
 
 if [ "$wp_git_root" ] && ! test -e $wp_git_root/.git; then
