@@ -7,5 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
-    'AKlump\\LoftLib\\' => array($baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib'),
+    'AKlump\\LoftLib\\Component\\Config\\' => array($baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config'),
 );

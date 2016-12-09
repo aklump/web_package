@@ -4,7 +4,7 @@
  */
 namespace AKlump\LoftLib\Component\Config;
 
-require_once getenv('LOBSTER_ROOT') . '/bootstrap.php';
+require_once getenv('LOBSTER_ROOT') . '/lobster.php';
 
 $dir = dirname($argv[1]);
 $file = basename($argv[1]);
