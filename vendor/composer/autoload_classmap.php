@@ -8,6 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'AKlump\\LoftLib\\Component\\Config\\Config' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/Config.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigBash' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigBash.php',
+    'AKlump\\LoftLib\\Component\\Config\\ConfigDrupalInfo' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigDrupalInfo.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigFileBasedStorage' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigFileBasedStorage.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigIni' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigIni.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigInterface' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigInterface.php',

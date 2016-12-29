@@ -43,15 +43,15 @@ lynx = $(which lynx)
 #
 # This MUST be a directory relative to the directory containing core-config.sh
 #
-#README = '../../README.txt ../../README.md'
+#README = '../README.txt ../README.md'
 
 ##
  # The file path to an extra CHANGELOG.txt file; when CHANGELOG.md is compiled and
  # this variable is set, the .txt version will be copied to this location.
  #
-#README = 'CHANGELOG.txt CHANGELOG.md'
+#CHANGELOG = '../CHANGELOG.txt ../CHANGELOG.md'
 
-#root_dir      = ""
+#root_dir = ""
 
 #
 # Defines pre/post hooks, shell or php scripts to call, space separated.  These must be placed in a directory called 'hooks' one level above source.

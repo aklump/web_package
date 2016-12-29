@@ -126,7 +126,7 @@ abstract class ConfigFileBasedStorage extends Config
     protected function _write($data)
     {
         $data = $this->getFileHeader() . $data;
-        $data = $this->getFileFooter() . $data;
+        $data .= $this->getFileFooter();
         if ($this->options['eof_eol']) {
             $data = rtrim($data, PHP_EOL) . PHP_EOL;
         }

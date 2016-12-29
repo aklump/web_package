@@ -15,8 +15,10 @@ $ext = pathinfo($file, PATHINFO_EXTENSION);
 $options = array('install' => TRUE);
 switch ($ext) {
   case 'ini':
+      $conf = new ConfigIni($dir, $file, $options);
+      break;
   case 'info':
-    $conf = new ConfigIni($dir, $file, $options);
+    $conf = new ConfigDrupalInfo($dir, $file, $options);
     break;
   case 'json':
     $conf = new ConfigJson($dir, $file, $options);

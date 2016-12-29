@@ -1,7 +1,7 @@
 <?php
 /**
  * @file
- * Use this class to use JSON based configuration files.
+ * Use this class to use BASH based configuration files.
  */
 namespace AKlump\LoftLib\Component\Config;
 
