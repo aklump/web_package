@@ -1,7 +1,7 @@
 {
     "name": "Web Package",
     "description": "A shell script to help the management of files as a package.",
-    "version": "2.1.15",
+    "version": "2.1.16",
     "authors": [
         {
             "name": "Aaron Klump",
