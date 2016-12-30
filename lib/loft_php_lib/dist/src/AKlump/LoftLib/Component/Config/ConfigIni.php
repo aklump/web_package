@@ -42,12 +42,7 @@ class ConfigIni extends ConfigFileBasedStorage
                 $content = array_merge($content, $this->arrayHandler($elem, $key));
             }
             else {
-                if ($elem == "") {
-                    $content[] = $key . " = ";
-                }
-                else {
-                    $content[] = $key . " = \"" . trim($elem) . "\"";
-                }
+                $content[] = $this->scalarHandler($elem, $key);
             }
         }
         $content = array_merge($content, $this->cache->comments);
@@ -56,6 +51,25 @@ class ConfigIni extends ConfigFileBasedStorage
 
             return parent::_write($content);
         }
+    }
+
+    protected function scalarHandler($value, $key)
+    {
+        if (is_string($value)) {
+            $value = trim($value);
+
+            // Decide what strings get wrapped in double quotes.
+            if (empty($value) || preg_match('/[=]/i', $value)) {
+                $value = '"' . $value . '"';
+            }
+        }
+        else {
+            $value = var_export($value, true);
+        }
+
+        $content = $key . " = " . $value;
+
+        return $content;
     }
 
     /**
@@ -81,7 +95,8 @@ class ConfigIni extends ConfigFileBasedStorage
                 $this->arrayHandler($array[$key], $parent, $result);
             }
             else {
-                $result .= $parent . ' = "' . trim($array[$key]) . '"' . PHP_EOL;
+                $result .= $this->scalarHandler($array[$key], $parent) . PHP_EOL;
+                //                $result .= $parent . ' = "' . trim($array[$key]) . '"' . PHP_EOL;
                 $parent = $base;
             }
         }
