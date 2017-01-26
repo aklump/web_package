@@ -59,9 +59,7 @@ class ConfigIni extends ConfigFileBasedStorage
             $value = trim($value);
 
             // Decide what strings get wrapped in double quotes.
-            // If a value in the ini file contains any non-alphanumeric characters it needs to be enclosed in double-quotes (").
-            // http://php.net/manual/en/function.parse-ini-file.php
-            if (empty($value) || preg_match('/[^a-z0-9 ]/i', $value)) {
+            if (empty($value) || preg_match('/[=]/i', $value)) {
                 $value = '"' . $value . '"';
             }
         }

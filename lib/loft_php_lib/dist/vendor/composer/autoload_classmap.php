@@ -6,6 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AKlump\\LoftLib\\Code\\EncryptionInterface' => $baseDir . '/src/AKlump/LoftLib/Code/EncryptionInterface.obf.php',
+    'AKlump\\LoftLib\\Code\\EncryptionPassThru' => $baseDir . '/src/AKlump/LoftLib/Code/EncryptionPassThru.obf.php',
+    'AKlump\\LoftLib\\Code\\EncryptionPublic' => $baseDir . '/src/AKlump/LoftLib/Code/EncryptionPublic.obf.php',
     'AKlump\\LoftLib\\Code\\EncryptionTest' => $baseDir . '/tests/AKlump/LoftLib/Code/EncryptionTest.php',
     'AKlump\\LoftLib\\Code\\Exposer' => $baseDir . '/src/AKlump/LoftLib/Code/Exposer.php',
     'AKlump\\LoftLib\\Code\\ExposerTest' => $baseDir . '/tests/AKlump/LoftLib/Code/ExposerTest.php',
