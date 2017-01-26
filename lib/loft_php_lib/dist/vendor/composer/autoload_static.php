@@ -30,9 +30,6 @@ class ComposerStaticInit26a4b428a16b347e3e51c0053974b6a6
     );
 
     public static $classMap = array (
-        'AKlump\\LoftLib\\Code\\EncryptionInterface' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/EncryptionInterface.obf.php',
-        'AKlump\\LoftLib\\Code\\EncryptionPassThru' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/EncryptionPassThru.obf.php',
-        'AKlump\\LoftLib\\Code\\EncryptionPublic' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/EncryptionPublic.obf.php',
         'AKlump\\LoftLib\\Code\\EncryptionTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/EncryptionTest.php',
         'AKlump\\LoftLib\\Code\\Exposer' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/Exposer.php',
         'AKlump\\LoftLib\\Code\\ExposerTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/ExposerTest.php',

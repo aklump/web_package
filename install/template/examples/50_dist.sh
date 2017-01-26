@@ -8,7 +8,7 @@
 sleep 3
 
 # First, wipe out the dist folder for a clean slate.
-(cd "$7" && (test -d dist && rm -r dist) && mkdir dist)
+cd "$7" && (! test -e dist || rm -r dist) && mkdir dist
 
 # Now copy of the necessary folders; don't check first because we want a loud failure.
 rsync -a "$7/sass/" "$7/dist/sass/"

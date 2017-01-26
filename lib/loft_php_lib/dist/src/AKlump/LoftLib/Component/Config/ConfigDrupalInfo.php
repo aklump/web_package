@@ -124,4 +124,25 @@ class ConfigDrupalInfo extends ConfigIni
 
         return $info;
     }
+
+    protected function scalarHandler($value, $key)
+    {
+        if (is_string($value)) {
+            $value = trim($value);
+
+            // Decide what strings get wrapped in double quotes.
+            // If a value in the ini file contains any non-alphanumeric characters it needs to be enclosed in double-quotes (").
+            // http://php.net/manual/en/function.parse-ini-file.php
+            if (empty($value) || preg_match('/[=\']/i', $value)) {
+                $value = '"' . $value . '"';
+            }
+        }
+        else {
+            $value = var_export($value, true);
+        }
+
+        $content = $key . " = " . $value;
+
+        return $content;
+    }
 }
