@@ -5,7 +5,10 @@
 #
 grab=$(type grab >/dev/null 2>&1 && which grab)
 if [ "$grab" ]; then
-  cd ./lib
+  cd "$7/web/modules/contrib"
+  grab -f users_export --lang=d8
+  grab -f loft_data_grids --lang=d8
+  cd "$7/lib"
   grab -f loft_php_lib
   grab -f lobster
 fi

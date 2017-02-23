@@ -8,11 +8,13 @@ $baseDir = dirname($vendorDir);
 return array(
     'AKlump\\LoftLib\\Component\\Config\\Config' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/Config.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigBash' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigBash.php',
+    'AKlump\\LoftLib\\Component\\Config\\ConfigCookieJar' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigCookieJar.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigDrupalInfo' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigDrupalInfo.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigFileBasedStorage' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigFileBasedStorage.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigIni' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigIni.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigInterface' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigInterface.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigJson' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigJson.php',
+    'AKlump\\LoftLib\\Component\\Config\\ConfigPdfMetadata' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigPdfMetadata.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigYaml' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigYaml.php',
     'Symfony\\Component\\Yaml\\Dumper' => $vendorDir . '/symfony/yaml/Dumper.php',
     'Symfony\\Component\\Yaml\\Escaper' => $vendorDir . '/symfony/yaml/Escaper.php',

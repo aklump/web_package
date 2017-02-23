@@ -10,8 +10,7 @@ namespace AKlump\LoftLib\Component\Config;
  *
  * @brief Handles configuration in a Json file.
  */
-abstract class ConfigFileBasedStorage extends Config
-{
+abstract class ConfigFileBasedStorage extends Config {
 
     protected $options = array();
 
@@ -25,11 +24,14 @@ abstract class ConfigFileBasedStorage extends Config
      *                         the basename as $basename automatically for
      *                         you--$basename must be null in this case.
      * @param string $basename The config file basename.  Optional
-     * @param array  $options  Defaults to expanded.
+     * @param array  $options  Defaults to expanded.  See child classes for
+     *                         more info.
      *                         - install boolean Set this to true and $dir will
      *                         be created (and config file) if it doesn't
      *                         already exist.
-     *                         - encode @see json_encode.options
+     *                         - custom_extension
+     *                         - auto_extension
+     *                         - eof_eol
      */
     public function __construct($dir, $basename = null, $options = array())
     {
@@ -70,7 +72,6 @@ abstract class ConfigFileBasedStorage extends Config
         $this->getStorage()->type = 'file';
         $this->getStorage()->value = $dir . '/' . $basename;
 
-
         // Do we want to install the directory?
         $install = !empty($this->options['install']);
         if ($install) {
@@ -97,30 +98,17 @@ abstract class ConfigFileBasedStorage extends Config
     public function defaultOptions()
     {
         return array(
-            'custom_extension' => null,
-            'auto_extension'   => true,
-            'eof_eol'          => true,
-        ) + parent::defaultOptions();
-    }
-
-    protected function init_file()
-    {
-        $path = $this->getStorage()->value;
-        $dir = dirname($path);
-        if (!is_dir($dir)) {
-            mkdir($dir);
-        }
-        if (!file_exists($path)) {
-            touch($path);
-        }
-        if (!is_readable($path)) {
-            throw new \RuntimeException("Could not initialize $path for storage.");
-        }
+                'custom_extension' => null,
+                'auto_extension'   => true,
+                'eof_eol'          => true,
+            ) + parent::defaultOptions();
     }
 
     protected function _read()
     {
-        return file_get_contents($this->getStorage()->value);
+        $path = $this->getStorage()->value;
+
+        return file_exists($path) ? file_get_contents($path) : '';
     }
 
     protected function _write($data)
@@ -142,5 +130,49 @@ abstract class ConfigFileBasedStorage extends Config
     protected function getFileFooter()
     {
         return '';
+    }
+
+    /**
+     * Initialize a file.
+     *
+     * @param mixed $template Ideally, you should pass a callable that would
+     *                        return the default template for the file, unless
+     *                        the template is trivial, in which case you can
+     *                        pass a string.  But if you're loading a file for
+     *                        it's contents, then put that in a callable, as
+     *                        the file would only be loaded if it needed to be
+     *                        accessed.  This will save on memory.
+     *
+     * @return int
+     *   - 0 if nothing was installed.
+     *   - 1 if the file was created.
+     *
+     * An example of how to implement this in your child class.
+     * @code
+     *   protected function init_file() {
+     *     return parent::init_file(function() {
+     *         return file_get_contents(PATH_TO_USER . '/template--report.xml');
+     *     });
+     *   }
+     * @endcode
+     */
+    protected function init_file($template = null)
+    {
+        $result = 0;
+        $path = $this->getStorage()->value;
+        $dir = dirname($path);
+        if (!is_dir($dir)) {
+            mkdir($dir);
+        }
+        if (!file_exists($path)) {
+            $contents = is_callable($template) ? $template() : $template;
+            $contents ? file_put_contents($path, $contents) : touch($path);
+            $result = 1;
+        }
+        if (!is_readable($path)) {
+            throw new \RuntimeException("Could not initialize $path for storage.");
+        }
+
+        return $result;
     }
 }

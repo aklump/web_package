@@ -31,11 +31,13 @@ class ComposerStaticInit08edf3cc32e556d1b4fcab6c4b77a06a
     public static $classMap = array (
         'AKlump\\LoftLib\\Component\\Config\\Config' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/Config.php',
         'AKlump\\LoftLib\\Component\\Config\\ConfigBash' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigBash.php',
+        'AKlump\\LoftLib\\Component\\Config\\ConfigCookieJar' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigCookieJar.php',
         'AKlump\\LoftLib\\Component\\Config\\ConfigDrupalInfo' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigDrupalInfo.php',
         'AKlump\\LoftLib\\Component\\Config\\ConfigFileBasedStorage' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigFileBasedStorage.php',
         'AKlump\\LoftLib\\Component\\Config\\ConfigIni' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigIni.php',
         'AKlump\\LoftLib\\Component\\Config\\ConfigInterface' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigInterface.php',
         'AKlump\\LoftLib\\Component\\Config\\ConfigJson' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigJson.php',
+        'AKlump\\LoftLib\\Component\\Config\\ConfigPdfMetadata' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigPdfMetadata.php',
         'AKlump\\LoftLib\\Component\\Config\\ConfigYaml' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigYaml.php',
         'Symfony\\Component\\Yaml\\Dumper' => __DIR__ . '/..' . '/symfony/yaml/Dumper.php',
         'Symfony\\Component\\Yaml\\Escaper' => __DIR__ . '/..' . '/symfony/yaml/Escaper.php',
