@@ -16,6 +16,7 @@ return array(
     'AKlump\\LoftLib\\Component\\Config\\ConfigJson' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigJson.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigPdfMetadata' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigPdfMetadata.php',
     'AKlump\\LoftLib\\Component\\Config\\ConfigYaml' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigYaml.php',
+    'AKlump\\LoftLib\\Component\\Config\\ConfigYamlFrontMatter' => $baseDir . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigYamlFrontMatter.php',
     'Symfony\\Component\\Yaml\\Dumper' => $vendorDir . '/symfony/yaml/Dumper.php',
     'Symfony\\Component\\Yaml\\Escaper' => $vendorDir . '/symfony/yaml/Escaper.php',
     'Symfony\\Component\\Yaml\\Exception\\DumpException' => $vendorDir . '/symfony/yaml/Exception/DumpException.php',
