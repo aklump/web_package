@@ -7,5 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
+    'Mimey\\' => array($vendorDir . '/ralouphie/mimey/src'),
+    'AKlump\\LoftDataGrids\\' => array($vendorDir . '/aklump/loft_data_grids/src/AKlump/LoftDataGrids'),
     '' => array($baseDir . '/src', $baseDir . '/tests'),
 );

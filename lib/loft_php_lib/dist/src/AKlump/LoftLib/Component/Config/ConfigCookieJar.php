@@ -14,8 +14,7 @@ namespace AKlump\LoftLib\Component\Config;
  * $options for __construct()
  *   - encode @see json_encode.options
  */
-class ConfigCookieJar extends ConfigFileBasedStorage
-{
+class ConfigCookieJar extends ConfigFileBasedStorage {
 
     const EXTENSION = "";
 
@@ -90,10 +89,17 @@ class ConfigCookieJar extends ConfigFileBasedStorage
      */
     public function getSession()
     {
+        $session = array(null, null);
         foreach ($this->readAll() as $cookie) {
-            if (strpos($cookie['name'], 'SESS') === 0) {
-                return array($cookie['name'], $cookie['value']);
+            // Check for http || https
+            if (strpos($cookie['name'], 'SESS') === 0
+                || strpos($cookie['name'], 'SSESS') === 0
+            ) {
+                $session = array($cookie['name'], $cookie['value']);
+                break;
             }
         }
+
+        return $session;
     }
 }

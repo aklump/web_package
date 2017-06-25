@@ -1,23 +1,23 @@
 [
     {
         "name": "symfony/yaml",
-        "version": "v2.8.15",
-        "version_normalized": "2.8.15.0",
+        "version": "v2.8.18",
+        "version_normalized": "2.8.18.0",
         "source": {
             "type": "git",
             "url": "https://github.com/symfony/yaml.git",
-            "reference": "befb26a3713c97af90d25dd12e75621ef14d91ff"
+            "reference": "2a7bab3c16f6f452c47818fdd08f3b1e49ffcf7d"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/symfony/yaml/zipball/befb26a3713c97af90d25dd12e75621ef14d91ff",
-            "reference": "befb26a3713c97af90d25dd12e75621ef14d91ff",
+            "url": "https://api.github.com/repos/symfony/yaml/zipball/2a7bab3c16f6f452c47818fdd08f3b1e49ffcf7d",
+            "reference": "2a7bab3c16f6f452c47818fdd08f3b1e49ffcf7d",
             "shasum": ""
         },
         "require": {
             "php": ">=5.3.9"
         },
-        "time": "2016-11-14 16:15:57",
+        "time": "2017-03-01 18:13:50",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -49,5 +49,155 @@
         ],
         "description": "Symfony Yaml Component",
         "homepage": "https://symfony.com"
+    },
+    {
+        "name": "ralouphie/mimey",
+        "version": "1.0.8",
+        "version_normalized": "1.0.8.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ralouphie/mimey.git",
+            "reference": "d69688d4856daa13a9124c819d148ccc2235dea2"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ralouphie/mimey/zipball/d69688d4856daa13a9124c819d148ccc2235dea2",
+            "reference": "d69688d4856daa13a9124c819d148ccc2235dea2",
+            "shasum": ""
+        },
+        "require": {
+            "php": "^5.3|^7.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~3.7.0",
+            "satooshi/php-coveralls": ">=1.0"
+        },
+        "time": "2017-01-27 20:57:22",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "Mimey\\": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Ralph Khattar",
+                "email": "ralph.khattar@gmail.com"
+            }
+        ],
+        "description": "PHP package for converting file extensions to MIME types and vice versa."
+    },
+    {
+        "name": "phpoffice/phpexcel",
+        "version": "1.8.1",
+        "version_normalized": "1.8.1.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/PHPOffice/PHPExcel.git",
+            "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/PHPOffice/PHPExcel/zipball/372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+            "reference": "372c7cbb695a6f6f1e62649381aeaa37e7e70b32",
+            "shasum": ""
+        },
+        "require": {
+            "ext-xml": "*",
+            "ext-xmlwriter": "*",
+            "php": ">=5.2.0"
+        },
+        "time": "2015-05-01 07:00:55",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "PHPExcel": "Classes/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "LGPL"
+        ],
+        "authors": [
+            {
+                "name": "Maarten Balliauw",
+                "homepage": "http://blog.maartenballiauw.be"
+            },
+            {
+                "name": "Mark Baker"
+            },
+            {
+                "name": "Franck Lefevre",
+                "homepage": "http://blog.rootslabs.net"
+            },
+            {
+                "name": "Erik Tilt"
+            }
+        ],
+        "description": "PHPExcel - OpenXML - Read, Create and Write Spreadsheet documents in PHP - Spreadsheet engine",
+        "homepage": "http://phpexcel.codeplex.com",
+        "keywords": [
+            "OpenXML",
+            "excel",
+            "php",
+            "spreadsheet",
+            "xls",
+            "xlsx"
+        ]
+    },
+    {
+        "name": "aklump/loft_data_grids",
+        "version": "0.4.30",
+        "version_normalized": "0.4.30.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/aklump/loft_data_grids.git",
+            "reference": "8d4763e4f2b1985350b83951d5169b41fd982cb0"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/aklump/loft_data_grids/zipball/8d4763e4f2b1985350b83951d5169b41fd982cb0",
+            "reference": "8d4763e4f2b1985350b83951d5169b41fd982cb0",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.3.5",
+            "phpoffice/phpexcel": "~1.8",
+            "symfony/yaml": "2.*"
+        },
+        "time": "2017-03-27 18:16:28",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "AKlump\\LoftDataGrids\\": "src/AKlump/LoftDataGrids"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "BSD-3-Clause"
+        ],
+        "authors": [
+            {
+                "name": "Aaron Klump",
+                "email": "sourcecode@intheloftstudios.com",
+                "homepage": "http://www.intheloftstudios.com",
+                "role": "Developer"
+            }
+        ],
+        "description": "PHP Classes to allow data placement in a grid structure and exporting in various data formats.",
+        "homepage": "http://github.com/aklump/loft_data_grids",
+        "keywords": [
+            "csv",
+            "excel",
+            "export",
+            "spreadsheet"
+        ]
     }
 ]
