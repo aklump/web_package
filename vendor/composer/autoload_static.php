@@ -39,6 +39,7 @@ class ComposerStaticInit08edf3cc32e556d1b4fcab6c4b77a06a
         'AKlump\\LoftLib\\Component\\Config\\ConfigJson' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigJson.php',
         'AKlump\\LoftLib\\Component\\Config\\ConfigPdfMetadata' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigPdfMetadata.php',
         'AKlump\\LoftLib\\Component\\Config\\ConfigYaml' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigYaml.php',
+        'AKlump\\LoftLib\\Component\\Config\\ConfigYamlFrontMatter' => __DIR__ . '/../..' . '/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/ConfigYamlFrontMatter.php',
         'Symfony\\Component\\Yaml\\Dumper' => __DIR__ . '/..' . '/symfony/yaml/Dumper.php',
         'Symfony\\Component\\Yaml\\Escaper' => __DIR__ . '/..' . '/symfony/yaml/Escaper.php',
         'Symfony\\Component\\Yaml\\Exception\\DumpException' => __DIR__ . '/..' . '/symfony/yaml/Exception/DumpException.php',
