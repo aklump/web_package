@@ -32,7 +32,7 @@ echo "push_tags = $wp_push_tags" >> $conf
 echo "push_master = $wp_push_master" >> $conf
 echo "push_develop = $wp_push_develop" >> $conf
 echo "patch_prefix = $wp_patch_prefix" >> $conf
-echo "git_root = $PWD" >> $conf
+echo "git_root = ." >> $conf
 
 # Restore the defaults
 load_config
