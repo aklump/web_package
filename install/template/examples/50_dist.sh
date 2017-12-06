@@ -7,9 +7,7 @@
 #
 
 # Allow time for all CodeKit to minify.
-while [ ! -f "$7/LoftImages.min.js" ]; do
-  sleep 1
-done
+wp_wait_for_exists "$7/LoftImages.min.js"
 
 test -h "$7/dist" && rm "$7/dist"
 test -d "$7/dist" || mkdir -p "$7/dist"

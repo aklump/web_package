@@ -21,13 +21,7 @@ if lobster_in_array ${array[@]}; then
 fi
 
 # Detect if 'bump' is implied as the operation
-declare -a array=("${lobster_args[0]}" "major" "minor" "patch" "alpha" "beta" "rc" "hotfix")
-if lobster_in_array ${array[@]}; then
-  lobster_args=("bump" "${lobster_args[@]}" --no-hooks)
-fi
-
-# Releases should not exclude the hooks.
-declare -a array=("${lobster_args[0]}" "release")
+declare -a array=("${lobster_args[0]}" "major" "minor" "patch" "alpha" "beta" "rc" "hotfix" "release")
 if lobster_in_array ${array[@]}; then
   lobster_args=("bump" "${lobster_args[@]}")
 fi

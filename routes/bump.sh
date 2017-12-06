@@ -2,6 +2,11 @@
 lobster_access is_initialized
 lobster_access bump_access
 
+# All release_types except release should exclude hooks by default.
+if ! lobster_has_param 'hooks' && ! lobster_has_param 'no-hooks' && [[ "$release_type" != 'release' ]]; then
+  lobster_params=("${lobster_params[@]}" "no-hooks")
+fi
+
 get_version
 version=$get_version_return
 previous=$version
@@ -21,7 +26,7 @@ else
 
   # Look for build scripts and call
   lobster_has_param 'no-hooks' && lobster_notice "Skipping all hooks due to --no-hooks"
-  if !lobster_has_param 'no-hooks' && do_scripts $wp_build $previous $version; then
+  if ! lobster_has_param 'no-hooks' && do_scripts $wp_build $previous $version; then
     # Pause to allow for processing
     if [[ "$wp_pause" -lt 0 ]]; then
       read -n1 -p "`tput setaf 3`Press any key to proceed...`tput op`"

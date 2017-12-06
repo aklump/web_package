@@ -57,3 +57,14 @@ function wp_duplicate_if_not_exists() {
 
   return 1
 }
+
+#
+# Wait for a file or folder to exist
+#
+# @param string Full path to a file or folder
+#
+function wp_wait_for_exists() {
+    while [ ! -e "$1" ]; do
+      sleep 1
+    done
+}
