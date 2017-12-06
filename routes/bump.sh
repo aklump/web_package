@@ -20,7 +20,8 @@ else
   put_info_string 'version' "$version"
 
   # Look for build scripts and call
-  if do_scripts $wp_build $previous $version; then
+  lobster_has_param 'no-hooks' && lobster_notice "Skipping all hooks due to --no-hooks"
+  if !lobster_has_param 'no-hooks' && do_scripts $wp_build $previous $version; then
     # Pause to allow for processing
     if [[ "$wp_pause" -lt 0 ]]; then
       read -n1 -p "`tput setaf 3`Press any key to proceed...`tput op`"

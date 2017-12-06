@@ -140,9 +140,16 @@ function do_scripts() {
       target_scripts="$dir/$4"
     fi
     for file in ${target_scripts[@]}; do
+
+        local basename=$(basename $file)
+
       if ! test -e "$file"; then
         echo "`tty -s && tput setaf 1`wp error: $dir`tty -s && tput op`"
         echo "`tty -s && tput setaf 1`detected hook file: '$file' doesn't exist!`tty -s && tput op`"
+
+      #skip files that begin with underscore
+      elif [[ $basename == _* ]]; then
+        lobster_warning "Skipping \"$basename\" because filename starts with _"
       else
         local cmd=''
         if [[ ${file##*.} == 'php' ]]; then
@@ -154,7 +161,7 @@ function do_scripts() {
           local script=$(basename $file)
           lobster_notice "Executing callback: $script..."
           output="$($cmd $file "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file" "$dir" "$project_root/.web_package" "$LOBSTER_APP_ROOT" "$project_root/.web_package/hooks")"
-          lobster_echo "$output"
+          [[ "$output" ]] && lobster_echo "$output"
         fi
       fi
     done

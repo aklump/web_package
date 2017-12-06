@@ -16,6 +16,9 @@ The <type> arguments are:
       hotfix
       release
 
+Params
+      use --no-hooks to avoid any hooks being triggered
+
 Workflow with Git:
 1. web_package bump hotfix || web_package bump release
 2. make the changes to your package and commit them
