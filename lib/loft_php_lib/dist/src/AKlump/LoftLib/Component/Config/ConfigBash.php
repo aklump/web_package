@@ -3,6 +3,7 @@
  * @file
  * Use this class to use BASH based configuration files.
  */
+
 namespace AKlump\LoftLib\Component\Config;
 
 /**
@@ -13,8 +14,7 @@ namespace AKlump\LoftLib\Component\Config;
  * $options for __construct()
  *   - encode @see json_encode.options
  */
-class ConfigBash extends ConfigFileBasedStorage
-{
+class ConfigBash extends ConfigFileBasedStorage {
 
     const EXTENSION = "sh";
 
@@ -41,8 +41,7 @@ class ConfigBash extends ConfigFileBasedStorage
         return $data ? $translated : array();
     }
 
-    public
-    function _write($data
+    public function _write($data
     ) {
         $options = null;
         $body = array();
@@ -73,8 +72,7 @@ class ConfigBash extends ConfigFileBasedStorage
         return parent::_write($data);
     }
 
-    protected
-    function getFileHeader()
+    protected function getFileHeader()
     {
         return '#!/bin/bash' . PHP_EOL;
     }

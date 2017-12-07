@@ -38,10 +38,22 @@
             "sort": 5
         },
         {
+            "id": "hooks",
+            "title": "Hooks",
+            "file": "hooks.md",
+            "sort": 6
+        },
+        {
+            "id": "releases",
+            "title": "Release Types",
+            "file": "releases.md",
+            "sort": 7
+        },
+        {
             "id": "templates",
             "title": "Configuration Templates",
             "file": "templates.md",
-            "sort": 6
+            "sort": 8
         }
     ],
     "settings": {

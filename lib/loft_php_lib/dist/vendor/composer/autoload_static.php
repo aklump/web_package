@@ -7,6 +7,7 @@ namespace Composer\Autoload;
 class ComposerStaticInit26a4b428a16b347e3e51c0053974b6a6
 {
     public static $files = array (
+        '3b5531f8bb4716e1b6014ad7e734f545' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/helpers.php',
         '3a20cf7b16b25178e2d366da94685852' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Xml/LoftXmlElement.php',
     );
 
@@ -22,6 +23,7 @@ class ComposerStaticInit26a4b428a16b347e3e51c0053974b6a6
         'A' => 
         array (
             'AKlump\\LoftDataGrids\\' => 21,
+            'AKlump\\Data\\' => 12,
         ),
     );
 
@@ -38,6 +40,10 @@ class ComposerStaticInit26a4b428a16b347e3e51c0053974b6a6
         array (
             0 => __DIR__ . '/..' . '/aklump/loft_data_grids/src/AKlump/LoftDataGrids',
         ),
+        'AKlump\\Data\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/aklump/data',
+        ),
     );
 
     public static $fallbackDirsPsr4 = array (
@@ -53,9 +59,20 @@ class ComposerStaticInit26a4b428a16b347e3e51c0053974b6a6
                 0 => __DIR__ . '/..' . '/phpoffice/phpexcel/Classes',
             ),
         ),
+        'I' => 
+        array (
+            'Illuminate\\Support' => 
+            array (
+                0 => __DIR__ . '/..' . '/illuminate/support',
+            ),
+        ),
     );
 
     public static $classMap = array (
+        'AKlump\\Data\\CallTestObject' => __DIR__ . '/..' . '/aklump/data/Tests/DataTest.php',
+        'AKlump\\Data\\Data' => __DIR__ . '/..' . '/aklump/data/Data.php',
+        'AKlump\\Data\\DataInterface' => __DIR__ . '/..' . '/aklump/data/DataInterface.php',
+        'AKlump\\Data\\DataTest' => __DIR__ . '/..' . '/aklump/data/Tests/DataTest.php',
         'AKlump\\LoftDataGrids\\ArrayExporter' => __DIR__ . '/..' . '/aklump/loft_data_grids/src/AKlump/LoftDataGrids/ArrayExporter.php',
         'AKlump\\LoftDataGrids\\BootstrapHTMLExporter' => __DIR__ . '/..' . '/aklump/loft_data_grids/src/AKlump/LoftDataGrids/BootstrapHTMLExporter.php',
         'AKlump\\LoftDataGrids\\CSVExporter' => __DIR__ . '/..' . '/aklump/loft_data_grids/src/AKlump/LoftDataGrids/CSVExporter.php',
@@ -84,6 +101,14 @@ class ComposerStaticInit26a4b428a16b347e3e51c0053974b6a6
         'AKlump\\LoftDataGrids\\YAMLFrontMatterImporter' => __DIR__ . '/..' . '/aklump/loft_data_grids/src/AKlump/LoftDataGrids/YAMLFrontMatterImporter.php',
         'AKlump\\LoftLib\\Code\\Arrays' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/Arrays.php',
         'AKlump\\LoftLib\\Code\\ArraysTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/ArraysTest.php',
+        'AKlump\\LoftLib\\Code\\Dataset' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/Dataset.php',
+        'AKlump\\LoftLib\\Code\\DatasetAlpha' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/DatasetAlpha.php',
+        'AKlump\\LoftLib\\Code\\DatasetAlphaTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/DatasetAlphaTest.php',
+        'AKlump\\LoftLib\\Code\\DatasetBravo' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/DatasetBravo.php',
+        'AKlump\\LoftLib\\Code\\DatasetBravoTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/DatasetBravoTest.php',
+        'AKlump\\LoftLib\\Code\\DatasetInterface' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/DatasetInterface.php',
+        'AKlump\\LoftLib\\Code\\Dates' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/Dates.php',
+        'AKlump\\LoftLib\\Code\\DatesTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/DatesTest.php',
         'AKlump\\LoftLib\\Code\\EncryptionInterface' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/EncryptionInterface.obf.php',
         'AKlump\\LoftLib\\Code\\EncryptionPassThru' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/EncryptionPassThru.obf.php',
         'AKlump\\LoftLib\\Code\\EncryptionPublic' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/EncryptionPublic.obf.php',
@@ -93,13 +118,21 @@ class ComposerStaticInit26a4b428a16b347e3e51c0053974b6a6
         'AKlump\\LoftLib\\Code\\Grammar' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/Grammar.php',
         'AKlump\\LoftLib\\Code\\GrammarTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/GrammarTest.php',
         'AKlump\\LoftLib\\Code\\Liar' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/ExposerTest.php',
+        'AKlump\\LoftLib\\Code\\Markdown' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/Markdown.php',
+        'AKlump\\LoftLib\\Code\\MarkdownTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/MarkdownTest.php',
+        'AKlump\\LoftLib\\Code\\ObjectCacheTrait' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/ObjectCacheTrait.php',
         'AKlump\\LoftLib\\Code\\PhpDocBlock' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/PhpDocBlock.php',
         'AKlump\\LoftLib\\Code\\PhpDocBlockTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/PhpDocBlockTest.php',
+        'AKlump\\LoftLib\\Code\\StandardPhpErrorException' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/StandardPhpErrorException.php',
         'AKlump\\LoftLib\\Code\\String' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/String.php',
         'AKlump\\LoftLib\\Code\\Strings' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/Strings.php',
+        'AKlump\\LoftLib\\Code\\ThrowableErrorsTrait' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Code/ThrowableErrorsTrait.php',
         'AKlump\\LoftLib\\Code\\TransformTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Code/StringTest.php',
         'AKlump\\LoftLib\\Component\\Bash\\Bash' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Component/Bash/Bash.php',
+        'AKlump\\LoftLib\\Component\\Bash\\BashCode' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Component/Bash/BashCode.php',
         'AKlump\\LoftLib\\Component\\Bash\\BashTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Component/Bash/BashTest.php',
+        'AKlump\\LoftLib\\Component\\Bash\\Color' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Component/Bash/Color.php',
+        'AKlump\\LoftLib\\Component\\Bash\\FailedExecException' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Component/Bash/FailedExecException.php',
         'AKlump\\LoftLib\\Component\\Config\\Config' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Component/Config/Config.php',
         'AKlump\\LoftLib\\Component\\Config\\ConfigBash' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Component/Config/ConfigBash.php',
         'AKlump\\LoftLib\\Component\\Config\\ConfigBashTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Component/Config/ConfigBashTest.php',
@@ -150,6 +183,7 @@ class ComposerStaticInit26a4b428a16b347e3e51c0053974b6a6
         'AKlump\\LoftLib\\Component\\Pdf\\PdfTkMetadata' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Component/Pdf/PdfTkMetadata.php',
         'AKlump\\LoftLib\\Component\\Pdf\\PdfTkMetadataTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Component/Pdf/PdfTkMetadataTest.php',
         'AKlump\\LoftLib\\Component\\Storage\\FilePath' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Component/Storage/FilePath.php',
+        'AKlump\\LoftLib\\Component\\Storage\\FilePathCollection' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Component/Storage/FilePathCollection.php',
         'AKlump\\LoftLib\\Component\\Storage\\FilePathTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Component/Storage/FilePathTest.php',
         'AKlump\\LoftLib\\Component\\Storage\\PersistentInterface' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Component/Storage/PersistentInterface.php',
         'AKlump\\LoftLib\\Component\\Storage\\Records' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Component/Storage/Records.php',
@@ -162,8 +196,62 @@ class ComposerStaticInit26a4b428a16b347e3e51c0053974b6a6
         'AKlump\\LoftLib\\Messenger\\MessengerInterface' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Messenger/MessengerInterface.php',
         'AKlump\\LoftLib\\Messenger\\MessengerShell' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Messenger/MessengerShell.php',
         'AKlump\\LoftLib\\Messenger\\MessengerShellTestTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Messenger/MessengerShellTest.php',
+        'AKlump\\LoftLib\\Testing\\DatasetTestBase' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Testing/DatasetTestBase.php',
+        'AKlump\\LoftLib\\Testing\\Mockable' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Testing/PhpUnitTestCase.php',
         'AKlump\\LoftLib\\Testing\\PhpUnitTestCase' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Testing/PhpUnitTestCase.php',
         'AKlump\\LoftLib\\Utils\\Blocking' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Utils/Blocking.php',
+        'Illuminate\\Support\\Arr' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Arr.php',
+        'Illuminate\\Support\\ClassLoader' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/ClassLoader.php',
+        'Illuminate\\Support\\Collection' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Collection.php',
+        'Illuminate\\Support\\Contracts\\ArrayableInterface' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Contracts/ArrayableInterface.php',
+        'Illuminate\\Support\\Contracts\\JsonableInterface' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Contracts/JsonableInterface.php',
+        'Illuminate\\Support\\Contracts\\MessageProviderInterface' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Contracts/MessageProviderInterface.php',
+        'Illuminate\\Support\\Contracts\\RenderableInterface' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Contracts/RenderableInterface.php',
+        'Illuminate\\Support\\Contracts\\ResponsePreparerInterface' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Contracts/ResponsePreparerInterface.php',
+        'Illuminate\\Support\\Facades\\App' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/App.php',
+        'Illuminate\\Support\\Facades\\Artisan' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Artisan.php',
+        'Illuminate\\Support\\Facades\\Auth' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Auth.php',
+        'Illuminate\\Support\\Facades\\Blade' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Blade.php',
+        'Illuminate\\Support\\Facades\\Cache' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Cache.php',
+        'Illuminate\\Support\\Facades\\Config' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Config.php',
+        'Illuminate\\Support\\Facades\\Cookie' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Cookie.php',
+        'Illuminate\\Support\\Facades\\Crypt' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Crypt.php',
+        'Illuminate\\Support\\Facades\\DB' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/DB.php',
+        'Illuminate\\Support\\Facades\\Event' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Event.php',
+        'Illuminate\\Support\\Facades\\Facade' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Facade.php',
+        'Illuminate\\Support\\Facades\\File' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/File.php',
+        'Illuminate\\Support\\Facades\\Form' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Form.php',
+        'Illuminate\\Support\\Facades\\HTML' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/HTML.php',
+        'Illuminate\\Support\\Facades\\Hash' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Hash.php',
+        'Illuminate\\Support\\Facades\\Input' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Input.php',
+        'Illuminate\\Support\\Facades\\Lang' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Lang.php',
+        'Illuminate\\Support\\Facades\\Log' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Log.php',
+        'Illuminate\\Support\\Facades\\Mail' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Mail.php',
+        'Illuminate\\Support\\Facades\\Paginator' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Paginator.php',
+        'Illuminate\\Support\\Facades\\Password' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Password.php',
+        'Illuminate\\Support\\Facades\\Queue' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Queue.php',
+        'Illuminate\\Support\\Facades\\Redirect' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Redirect.php',
+        'Illuminate\\Support\\Facades\\Redis' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Redis.php',
+        'Illuminate\\Support\\Facades\\Request' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Request.php',
+        'Illuminate\\Support\\Facades\\Response' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Response.php',
+        'Illuminate\\Support\\Facades\\Route' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Route.php',
+        'Illuminate\\Support\\Facades\\SSH' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/SSH.php',
+        'Illuminate\\Support\\Facades\\Schema' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Schema.php',
+        'Illuminate\\Support\\Facades\\Session' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Session.php',
+        'Illuminate\\Support\\Facades\\URL' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/URL.php',
+        'Illuminate\\Support\\Facades\\Validator' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/Validator.php',
+        'Illuminate\\Support\\Facades\\View' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Facades/View.php',
+        'Illuminate\\Support\\Fluent' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Fluent.php',
+        'Illuminate\\Support\\Manager' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Manager.php',
+        'Illuminate\\Support\\MessageBag' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/MessageBag.php',
+        'Illuminate\\Support\\NamespacedItemResolver' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/NamespacedItemResolver.php',
+        'Illuminate\\Support\\Pluralizer' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Pluralizer.php',
+        'Illuminate\\Support\\SerializableClosure' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/SerializableClosure.php',
+        'Illuminate\\Support\\ServiceProvider' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/ServiceProvider.php',
+        'Illuminate\\Support\\Str' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Str.php',
+        'Illuminate\\Support\\Traits\\CapsuleManagerTrait' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Traits/CapsuleManagerTrait.php',
+        'Illuminate\\Support\\Traits\\MacroableTrait' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/Traits/MacroableTrait.php',
+        'Illuminate\\Support\\ViewErrorBag' => __DIR__ . '/..' . '/illuminate/support/Illuminate/Support/ViewErrorBag.php',
         'LoftXmlElement' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Xml/LoftXmlElement.php',
         'LoftXmlElementTest' => __DIR__ . '/../..' . '/tests/AKlump/LoftLib/Xml/LoftXmlElementTest.php',
         'Mimey\\MimeMappingBuilder' => __DIR__ . '/..' . '/ralouphie/mimey/src/MimeMappingBuilder.php',
@@ -380,6 +468,7 @@ class ComposerStaticInit26a4b428a16b347e3e51c0053974b6a6
         'Symfony\\Component\\Yaml\\Parser' => __DIR__ . '/..' . '/symfony/yaml/Parser.php',
         'Symfony\\Component\\Yaml\\Unescaper' => __DIR__ . '/..' . '/symfony/yaml/Unescaper.php',
         'Symfony\\Component\\Yaml\\Yaml' => __DIR__ . '/..' . '/symfony/yaml/Yaml.php',
+        '__NAmespace\\__CLassNameTest' => __DIR__ . '/../..' . '/src/AKlump/LoftLib/Testing/DatasetTestTemplate.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
