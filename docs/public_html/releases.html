@@ -1,0 +1,80 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Release Types</title>
+    <link href="search/tipuesearch.css" rel="stylesheet">
+    <style type="text/css" media="all">
+      @import url("style.css");
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="search/tipuesearch_content.js"></script>
+    <script src="search/tipuesearch_set.js"></script>
+    <script src="search/tipuesearch.min.js"></script>
+    <script src="js/core.js"></script>
+
+</head>
+
+<body class="page-releases">
+<header>
+<div class="pager">
+  <a href="hooks.html" class="prev hooks">&laquo;Hooks</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="templates.html" class="next templates">Configuration Templates&raquo;</a>
+</div>
+
+</header>
+
+<div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+<h1>Release Types</h1>
+<div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+
+<h2>Hotfix</h2>
+
+<ul>
+<li>hooks are not fired unless you pass <code>--hooks</code> param.</li>
+</ul>
+
+<h2>Release</h2>
+
+<ul>
+<li>hooks are fired unless you pass <code>--no-hooks</code> param.</li>
+</ul>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>  
+</div>
+
+<footer>
+<div class="pager">
+  <a href="hooks.html" class="prev hooks">&laquo;Hooks</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="templates.html" class="next templates">Configuration Templates&raquo;</a>
+</div>
+
+
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 2.1.22 &bull; Last Updated: Wed, 06 Dec 2017 16:06:41 -0800</p>
+  </div>
+</footer>
+
+<script>
+$(document).ready(function() {
+  $('#tipue_search_input').tipuesearch();
+});
+</script>
+
+</body>
+</html>
+

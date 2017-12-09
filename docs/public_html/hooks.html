@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Hooks</title>
+    <link href="search/tipuesearch.css" rel="stylesheet">
+    <style type="text/css" media="all">
+      @import url("style.css");
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="search/tipuesearch_content.js"></script>
+    <script src="search/tipuesearch_set.js"></script>
+    <script src="search/tipuesearch.min.js"></script>
+    <script src="js/core.js"></script>
+
+</head>
+
+<body class="page-hooks">
+<header>
+<div class="pager">
+  <a href="hooklib.html" class="prev hooklib">&laquo;Hooks Library</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="releases.html" class="next releases">Release Types&raquo;</a>
+</div>
+
+</header>
+
+<div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+<h1>Hooks</h1>
+<div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section>
+
+
+<ul>
+<li>Any hook file can be temporarily disabled by renaming the file to begin with a single underscore</li>
+<li>All hooks will be skipped if you pass <code>--no-hooks</code> in the command.</li>
+<li>All hooks will be fired if you pass <code>--hooks</code> in the command.</li>
+</ul>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>  
+</div>
+
+<footer>
+<div class="pager">
+  <a href="hooklib.html" class="prev hooklib">&laquo;Hooks Library</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="releases.html" class="next releases">Release Types&raquo;</a>
+</div>
+
+
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 2.1.22 &bull; Last Updated: Wed, 06 Dec 2017 16:06:41 -0800</p>
+  </div>
+</footer>
+
+<script>
+$(document).ready(function() {
+  $('#tipue_search_input').tipuesearch();
+});
+</script>
+
+</body>
+</html>
+
