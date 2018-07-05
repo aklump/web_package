@@ -91,7 +91,7 @@ if [ "$wp_author" ]; then
   put_info_string 'author' "$wp_author"
 fi
 
-
+(cd $LOBSTER_CWD && $LOBSTER_APP update -f --lobster-nowrap)
 
 get_name
 get_version
