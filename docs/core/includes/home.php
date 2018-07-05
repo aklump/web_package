@@ -25,9 +25,7 @@ foreach ($index->getData() as $key => $value) {
 $tpl_dir = $argv[2];
 $list = implode("</li>\n<li>", $list);
 $output = <<<EOD
-<!-- @include ../$tpl_dir/header.kit -->
 <ul class="index"><li>{$list}</li></ul>
-<!-- @include ../$tpl_dir/footer.kit -->
 EOD;
 
 print $output;

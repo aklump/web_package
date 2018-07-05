@@ -6,8 +6,8 @@
 ##
 # An array of output formats to disable, if any
 #
-#disabled = "website drupal html text mediawiki doxygene"
-#disabled = "drupal html text mediawiki doxygene"
+#disabled = "website drupal html text mediawiki"
+#disabled = "drupal html text mediawiki"
 
 ##
 # File path to the php you want to use for compiling
@@ -66,9 +66,13 @@ lynx = $(which lynx)
 
 #
 # These paths are relative to the directory containing core-config.sh.
-#doxygene_dir = 'doxygene'
 #website_dir = 'public_html'
 #html_dir = 'html'
 #mediawiki_dir = 'mediawiki'
 #text_dir = 'text'
 #drupal_dir = 'advanced_help'
+
+#
+# This controls which file extensions are run through the markdown parser and wrapped with the header/footer tpls.
+#partial_extension = '.md'
+

@@ -100,11 +100,11 @@ cd "$ROOT"
 # Update the core files
 docs_update="$ROOT/tmp/loft_docs-master/"
 
-cp "$docs_update/README.md" "$ROOT/"
+cp "$docs_update/README$docs_markdown_extension" "$ROOT/"
 cp "$docs_update/core-version.info" "$ROOT/"
 
 # Update all of core
-rsync -a --delete "$docs_update/core/" "$ROOT/core/" --exclude=Markdown.pl
+rsync -a --delete "$docs_update/core/" "$ROOT/core/"
 
 ## By putting this after rsync, we will retrieve the new version
 get_version

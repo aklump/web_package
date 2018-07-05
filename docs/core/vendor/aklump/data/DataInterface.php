@@ -15,7 +15,11 @@ interface DataInterface
      * @param Callable     $valueCallback Defaults to null. Optional callback
      *                                    if the value does not match
      *                                    $defaultValue, receives the
-     *                                    arguments: $value, $defaultValue.
+     *                                    arguments: $value, $defaultValue,
+     *                                    $pathExists.  $pathExists will be
+     *                                    false if the $defaultValue was used;
+     *                                    true if the value came from the
+     *                                    $path.
      *
      * @return mixed
      *
@@ -24,11 +28,47 @@ interface DataInterface
     public function get($subject, $path, $defaultValue = null, $valueCallback = null);
 
     /**
+     * Return the intval() of a value.
+     *
+     * This is a shortcut for using a callback function on ::get().
+     *
+     * @param mixed        $subject
+     * @param string|array $path
+     * @param int          $defaultValue Optional.  Defaults to 0.  You may
+     *                                   pass a non-integer value as default,
+     *                                   it will be passed through if the value
+     *                                   is determined to be null; IT WILL NOT
+     *                                   BE CONVERTED TO AN INTEGER.
+     *
+     * @return mixed
+     */
+    public function getInt($subject, $path, $defaultValue = 0);
+
+    /**
+     * Get a value and return the object for chaining.
+     *
+     * Use value() to retrieve the value.
+     *
+     * @param mixed        $subject
+     * @param string|array $path
+     * @param mixed        $defaultValue  Defaults to null.
+     * @param Callable     $valueCallback Defaults to null. Optional callback
+     *                                    if the value does not match
+     *                                    $defaultValue, receives the
+     *                                    arguments: $value, $defaultValue.
+     *
+     * @return $this
+     */
+    public function getThen($subject, $path, $defaultValue = null, $valueCallback = null);
+
+    /**
      * Set a value on $subject, including parents as needed.
      *
      * @param array|object $subject       The base subject.
      * @param string       $path
-     * @param mixed        $value         The value to set.
+     * @param mixed        $value         The value to set.  This can only be
+     *                                    omitted if a conditional method is
+     *                                    chained before this.
      * @param null|mixed   $childTemplate If an child element must be created
      *                                    to
      *                                    establish $path, you may pass the
@@ -46,7 +86,7 @@ interface DataInterface
      *
      * @return $this|\AKlump\Data\Data
      */
-    public function set(&$subject, $path, $value, $childTemplate = null);
+    public function set(&$subject, $path, $value = null, $childTemplate = null);
 
     /**
      * Ensure that a variable path exists, by creating a default value at $path
@@ -55,7 +95,9 @@ interface DataInterface
      * @param array|object $subject       The base subject.
      * @param string       $path
      * @param mixed        $default       The value to set, if the item doesn't
-     *                                    already exist.
+     *                                    already exist. This can only be
+     *                                    omitted if a conditional method is
+     *                                    chained before this.
      * @param null|mixed   $childTemplate If an child element must be created
      *                                    to
      *                                    establish $path, you may pass the
@@ -73,7 +115,7 @@ interface DataInterface
      *
      * @return $this
      */
-    public function ensure(&$subject, $path, $default, $childTemplate = null);
+    public function ensure(&$subject, $path, $default = null, $childTemplate = null);
 
     /**
      *
@@ -110,18 +152,94 @@ interface DataInterface
      *      array_key_exists() or property_exists.
      *
      * callable:
-     *      You may pass a callable, which receives ($currentValue, $value,
-     *      $exists) must also return true to affect a replacement.
-     *      $currentValue is based on $subject and $path.  $exists will be true
-     *      if the final key or property of the path exists.
+     *      You may pass a callable, which receives ($oldValue, $pathExists,
+     *      $newValue) must also return true to affect a replacement.
+     *      $oldValue is based on $subject and $path.  $pathExists will be true
+     *      if the final key or property of the $path exists.  $newValue is the
+     *      value that will replace $oldValue, if $test passes.
      *
      * @param array|object $subject The base subject.
      * @param string       $path
-     * @param mixed        $value   The value to set.
+     * @param mixed        $value   The value to set. This can only be omitted
+     *                              if a conditional method is chained before
+     *                              this.
      * @param mixed        $test    See notes above.
      * @param null         $childTemplate
      *
      * @return $this
      */
-    public function fill(&$subject, $path, $value, $test = null, $childTemplate = null);
+    public function fill(&$subject, $path, $value = null, $test = null, $childTemplate = null);
+
+    /**
+     * Apply a conditional test and carry the value if not empty
+     *
+     * @param mixed        $subject
+     * @param string|array $path
+     * @param callable     $test A function that takes the value as it's
+     *                           argument and returns true if the value should
+     *                           be used.
+     *
+     * @return $this
+     * @code
+     *   $o = new Data;
+     *   $data = ['id' => 1];
+     *   $output = [];
+     *   $o->onlyIf($data, 'id')->set($other, 'id);
+     * @endcode
+     */
+    public function onlyIf($subject, $path, $test = null);
+
+    /**
+     * Conditional tests for null value when chaining.
+     *
+     * Only carries the value if the value at $path is not null.
+     *
+     * @param $subject
+     * @param $path
+     *
+     * @return $this
+     */
+    public function onlyIfNull($subject, $path);
+
+
+    /**
+     * Conditional tests for the existence of path when chaining.
+     *
+     * Only carries the value if the $path exists.
+     *
+     * @param $subject
+     * @param $path
+     *
+     * @return $this
+     */
+    public function onlyIfHas($subject, $path);
+
+    /**
+     * Call a function with carry value.
+     *
+     * @param string $function_name A function name that takes $value as it's
+     *                              first argument, e.g. intval, strval,
+     *                              array_filter, etc.
+     *
+     * @return $this
+     */
+    public function call($function_name);
+
+    /**
+     * Leverage PHP's filter_var function on carry values.
+     *
+     * @param $filter      List of available filters can be found at
+     *                     http://php.net/manual/en/filter.filters.php.
+     * @param $options     Optional. Defaults to null.
+     *
+     * @return $this
+     */
+    public function filter($filter, $options = null);
+
+    /**
+     * Return the value at the end of a set of chained methods.
+     *
+     * @return mixed
+     */
+    public function value();
 }

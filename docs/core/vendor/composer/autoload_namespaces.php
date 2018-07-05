@@ -8,5 +8,7 @@ $baseDir = dirname($vendorDir);
 return array(
     'Twig_' => array($vendorDir . '/twig/twig/lib'),
     'Michelf' => array($vendorDir . '/michelf/php-markdown'),
+    'JasonLewis\\ResourceWatcher' => array($vendorDir . '/jasonlewis/resource-watcher/src'),
+    'Doctrine\\Common\\Inflector\\' => array($vendorDir . '/doctrine/inflector/lib'),
     'AKlump\\LoftDocs\\' => array($baseDir . '/src'),
 );

@@ -18,7 +18,7 @@ echo_purple "Compiling your documentation..."
 do_pre_hooks
 
 # These dirs need to be created
-declare -a dirs=("$docs_html_dir" "$docs_mediawiki_dir" "$docs_website_dir" "$docs_text_dir" "$docs_drupal_dir" "$docs_kit_dir" "$docs_tmp_dir" "$docs_source_dir" "$docs_doxygene_dir");
+declare -a dirs=("$docs_html_dir" "$docs_mediawiki_dir" "$docs_website_dir" "$docs_text_dir" "$docs_drupal_dir" "$docs_kit_dir" "$docs_tmp_dir" "$docs_source_dir");
 
 # These dirs need to be emptied before we start
 declare -a dirs_to_empty=("$docs_html_dir" "$docs_mediawiki_dir" "$docs_website_dir" "$docs_text_dir" "$docs_drupal_dir" "$docs_kit_dir" "$docs_tmp_dir");
@@ -42,13 +42,19 @@ for dir in "${dirs_to_empty[@]}"; do
   fi
 done
 
+LOFT_DOCS_CORE="$CORE"
+export LOFT_DOCS_CORE
+LOFT_DOCS_CACHE_DIR="$docs_cache_dir"
+export LOFT_DOCS_CACHE_DIR
+LOFT_DOCS_TMP_DIR="$docs_tmp_dir"
+export LOFT_DOCS_TMP_DIR
+
 # If no dirs, copy the patterns into place from the patterns dir.  This is important after --clean
 test -e "$docs_root_dir/$docs_website_dir" || rsync -a  "$CORE/install/patterns/public_html/" "$docs_root_dir/$docs_website_dir"
 test -e "$docs_root_dir/$docs_html_dir" || rsync -a "$CORE/install/patterns/html/" "$docs_root_dir/$docs_html_dir"
 test -e "$docs_root_dir/$docs_mediawiki_dir" || rsync -a    "$CORE/install/patterns/mediawiki/" "$docs_root_dir/$docs_mediawiki_dir"
 test -e "$docs_root_dir/$docs_text_dir" || rsync -a "$CORE/install/patterns/text/" "$docs_root_dir/$docs_text_dir"
 test -e "$docs_root_dir/$docs_drupal_dir" || rsync -a   "$CORE/install/patterns/advanced_help/"
-test -e "$docs_root_dir/$docs_doxygene_dir" || rsync -a "$CORE/install/patterns/doxygene/" "$docs_root_dir/$docs_doxygene_dir"
 
 # Assert dir exists if not create it and parents
 for path in "${dirs[@]}"; do
@@ -60,35 +66,52 @@ for path in "${dirs[@]}"; do
   test -d "$path" || mkdir -p "$path"
 done
 
+# Copy of any dirs in the (instance) compile directory to the compiled output dirs.
+if test -e "$docs_root_dir/compile"; then
+    for dir in "$docs_root_dir/compile/*/"; do
+        basename=${dir##*/}
+        if [ "$basename" != . ] && [ "$basename" != .. ] && test -e "$docs_root_dir/$basename"; then
+            rsync -a "$docs_root_dir/compile/$basename/" "$docs_root_dir/$basename/"
+        fi
+    done
+fi
+
 # Delete the text directory if no lynx
 if [ "$docs_text_enabled" -eq 0 ]; then
-  rmdir $docs_text_dir
+  dirs_to_delete=("${dirs_to_delete[@]}" "$docs_text_dir")
 fi
 
 get_version
 
-# Build index.html from home.php
-echo '' > "$docs_kit_dir/index.kit"
-$docs_php "$CORE/includes/page_vars.php" "$docs_outline_file" "index" "$get_version_return" >> "$docs_kit_dir/index.kit"
-$docs_php "$CORE/includes/home.php" "$docs_outline_file" "$docs_tpl_dir" >> "$docs_kit_dir/index.kit"
-_check_file "$docs_kit_dir/index.kit"
+do_plugin_handler $docs_plugins_tpl pre
+
+# Get all the files in the source directory.
+declare -a files=("$docs_source_dir"/*)
+
+# Then add in all files we created.
+declare -a generated=("$docs_cache_dir/source"/*)
+files=("${generated[@]}" "${files[@]}")
 
 # Copy over files in the tmp directory, but compile anything with a .md
 # extension as it goes over; this is our baseline html that we will further
 # process for the intended audience.
-for file in $docs_source_dir/*; do
+for file in ${files[@]}; do
   if [ -f "$file" ]; then
     basename=${file##*/}
+    extension=".${file##*.}"
+    filename="${basename%%.*}"
 
-    # Process .md files and output as .html
-
-    if echo "$file" | grep -q '.md$'; then
-      basename=$(echo $basename | sed 's/\.md$//g').html
-      
-      $docs_php "$CORE/markdown.php" "$file" "$docs_tmp_dir/$basename"
+    # Process partial files and output as .html, converting markdown as needed.
+    if [ "$extension" == "$docs_partial_extension" ]; then
+        if [ "$docs_partial_extension" == "$docs_markdown_extension" ]; then
+            $docs_php "$CORE/markdown.php" "$file" "$docs_tmp_dir/$filename.html"
+        else
+            $docs_php "$CORE/includes/cp_no_frontmatter.php" $file $docs_tmp_dir/$filename.html
+        fi
 
     # Css files pass through to the website and html dir
-    elif echo "$file" | grep -q '.css$'; then
+    elif [ "$extension" == ".css" ]; then
+#    elif echo "$file" | grep -q '.css$'; then
       cp $file $docs_html_dir/$basename
       _check_file "$docs_html_dir/$basename"
       cp $file $docs_website_dir/$basename
@@ -140,9 +163,9 @@ for file in $docs_source_dir/*; do
   fi
 done
 
-# Iterate over all html files and send to CodeKit; then iterate over all html
+# Iterate over all html files and implement theme; then iterate over all html
 # files and send to drupal and website
-for file in $docs_tmp_dir/*.html; do
+for file in "$docs_tmp_dir"/*.html; do
   if [ -f "$file" ]; then
     basename=${file##*/}
     basename=$(echo $basename | sed 's/\.html$//g')
@@ -173,20 +196,13 @@ for file in $docs_tmp_dir/*.html; do
       $docs_php "$CORE/mediawiki.php"  "$docs_tmp_dir/$html_file" > "$docs_mediawiki_dir/$txt_file"
     fi
 
-    # Convert to offline .html
-    echo '' > "$docs_kit_dir/$tmp_file"
-    $docs_php "$CORE/includes/page_vars.php" "$docs_outline_file" "$basename"  "$get_version_return" >> "$docs_kit_dir/$tmp_file"
-    echo '<!-- @include ../'$docs_tpl_dir'/header.kit -->' >> "$docs_kit_dir/$tmp_file"
-    cat $file >> "$docs_kit_dir/$tmp_file"
-    echo '<!-- @include ../'$docs_tpl_dir'/footer.kit -->' >> "$docs_kit_dir/$tmp_file"
-
-    $docs_php "$CORE/iframes.php" "$docs_kit_dir/$tmp_file" "$docs_credentials" > "$docs_kit_dir/$kit_file"
-    rm "$docs_kit_dir/$tmp_file"
-    _check_file "$docs_kit_dir/$kit_file"
+    # Wrap with with tpl files
+    # handlers.file
+    do_plugin_handler $docs_plugins_tpl file
   fi
 done
 
-# Get all stylesheets
+# Get all stylesheets from the tpl dir.
 for file in $docs_tpl_dir/*.css; do
   if [ -f "$file" ]; then
     basename=${file##*/}
@@ -200,6 +216,7 @@ done
 # files.
 if [ "$docs_README" ]; then
   destinations=($docs_README)
+  
   for output in "${destinations[@]}"; do
     output=$(realpath "$docs_root_dir/$output");
     readme_file=${output##*/}
@@ -207,10 +224,12 @@ if [ "$docs_README" ]; then
     test -d "$readme_dir" || mkdir -p "$readme_dir"
     if echo "$readme_file" | grep -q '.txt$'; then
         readme_source="$docs_text_dir/$readme_file"
-        cp "$readme_source" "$output"
-        _check_file "$output"
-    elif echo "$readme_file" | grep -q '.md$'; then
-        $docs_php "$CORE/includes/cp_markdown_nofm.php" "$docs_source_dir/$readme_file" "$output"
+        if test -e "$readme_source"; then
+            cp "$readme_source" "$output"
+            _check_file "$output"
+        fi
+    elif echo "$readme_file" | grep -q $docs_markdown_extension$; then
+        $docs_php "$CORE/includes/cp_no_frontmatter.php" "$docs_source_dir/$readme_file" "$output"
         _check_file "$output"
     fi
 
@@ -227,24 +246,21 @@ if [ "$docs_CHANGELOG" ]; then
     test -d "$changelog_dir" || mkdir -p "$changelog_dir"
     if echo "$changelog_file" | grep -q '.txt$'; then
         changelog_source="$docs_text_dir/$changelog_file"
-        cp "$changelog_source" "$output"
-        _check_file "$output"
-    elif echo "$changelog_file" | grep -q '.md$'; then
-        $docs_php "$CORE/includes/cp_markdown_nofm.php" "$docs_source_dir/$changelog_file" "$output"
+        if test -e "$changelog_source"; then
+            cp "$changelog_source" "$output"
+            _check_file "$output"
+        fi
+    elif echo "$changelog_file" | grep -q $docs_markdown_extension$; then
+        $docs_php "$CORE/includes/cp_no_frontmatter.php" "$docs_source_dir/$changelog_file" "$output"
         _check_file "$output"
     fi
-
   done
 fi
 
-# Now process our CodeKit directory and produce our website
-$docs_php "$CORE/webpage.php" "$docs_root_dir/$docs_kit_dir" "$docs_root_dir/$docs_website_dir" "$docs_outline_file" "$CORE"
+do_plugin_handler $docs_plugins_tpl post
 
 # Provide search support
 $docs_php "$CORE/includes/search.inc" "$docs_outline_file" "$CORE" "$docs_root_dir" "$docs_root_dir/$docs_website_dir" "$docs_root_dir/$docs_source_dir"
-
-# Doxygene implementation
-echo 'Not yet implemented' > "$docs_doxygene_dir/README.md"
 
 # Cleanup dirs that are not enabled or were temp
 for var in "${dirs_to_delete[@]}"; do

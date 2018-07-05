@@ -57,9 +57,5 @@ if (isset($argv[1])
     // Remove the session cookie
     unlink($cookie_file);
 }
-//if ($errors) {
-//    print '*** ' . implode("\n*** ", $errors) . "\n\n\n";
-//}
-print $output;
 
-/** @} */ //end of group: loft_docs
+print $output;

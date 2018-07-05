@@ -6,5 +6,5 @@ push_tags = auto
 push_master = auto
 push_develop = no
 patch_prefix = .
-git_root = .
+git_root = /Volumes/Data/Users/aklump/Code/Packages/php/data
 info_file = composer.json
