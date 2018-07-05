@@ -43,13 +43,13 @@ lynx = $(which lynx)
 
 # This would also copy README.md as well as README.txt to the directory one
 # level above /source
-README = '../README.txt ../README.md'
+README = '../README.md'
 
 #root_dir      = ""
 
 #
 # Defines pre/post hooks, shell or php scripts to call, space separated.
-# 
+#
 #pre_hooks = "pre_compile.sh pre_compile.php"
 #post_hooks = "post_compile.sh post_compile.php"
 
