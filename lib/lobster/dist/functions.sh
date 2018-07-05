@@ -1,17 +1,17 @@
 #!/bin/bash
-# 
+#
 # @file
 # Defines Lobster core functions.
 
 #
 # Load the configuration cascade by name
-# 
+#
 # Given 1='my_app' the files will load in this order
-# 
+#
 # 2. $LOBSTER_APP_ROOT/.my_appconfig
 # 3. ~/.my_appconfig
 # 5. The first file found in parent dirs, if found.
-# 
+#
 # @param string app name, e.g. 'my_app'
 #
 function lobster_load_config() {
@@ -41,16 +41,16 @@ function lobster_verbose() {
 }
 
 function lobster_core_verbose() {
-  if [ ! "$lobster_core_verbose" ] || [ $lobster_core_verbose -eq 1 ]; then 
+  if [ ! "$lobster_core_verbose" ] || [ $lobster_core_verbose -eq 1 ]; then
     lobster_verbose ${@}
   fi
 }
 
 ##
  # Recursive search for file in parent dirs
- # 
+ #
  # @param string This may only be  filename, not a dir/name
- #  
+ #
  # usage
  #   path=$(lobster_upfind $base && echo "$lobster_upfind_dir")
  #
@@ -102,7 +102,7 @@ function lobster_notice() {
 # Sets the output color.
 #
 # @param int|string  One of a color name or semantic string or a color 0-7.
-# 
+#
 # You can also set the color to null and lobster_echo will not print the tty
 # commands.
 #
@@ -111,7 +111,7 @@ function lobster_color() {
   lobster_color_current=$1
 
   case $1 in
-    
+
     # Color names
     'grey' )
       lobster_color_current="$lobster_color_bright;30"
@@ -127,7 +127,7 @@ function lobster_color() {
       ;;
     'blue' )
       lobster_color_current="$lobster_color_bright;34"
-      ;;                  
+      ;;
     'magenta' )
       lobster_color_current="$lobster_color_bright;35"
       ;;
@@ -145,22 +145,22 @@ function lobster_color() {
     'notice' )
       lobster_color $lobster_color_notice
       ;;
-    
+
     'warning' )
       lobster_color $lobster_color_warning
       ;;
-    
+
     'error' )
       lobster_color $lobster_color_error
       ;;
 
     'success' )
       lobster_color $lobster_color_success
-      ;;            
+      ;;
 
     'confirm' )
       lobster_color $lobster_color_confirm
-      ;;   
+      ;;
 
     'verbose' )
       lobster_color $lobster_color_verbose
@@ -176,7 +176,7 @@ function lobster_color() {
 # Prints one or more messages in the current color.
 #
 # @param string|array $arg
-# 
+#
 # @todo Support for background colors.
 #
 function lobster_echo() {
@@ -229,12 +229,12 @@ function lobster_strong() {
 function lobster_underline() {
   esc=$lobster_escape_char
   line=${@}
-  echo -e "$esc[4m$line$esc[0m" 
+  echo -e "$esc[4m$line$esc[0m"
 }
 
 #
 # Prints one or more lines in a color, but does not change the color setting.
-# 
+#
 # @param string|int The argument to pass to lobster_color
 # @param string|array $lines Will be passed to lobster_echo.
 #
@@ -276,11 +276,11 @@ function lobster_theme() {
   if [ -f "$processor" ]; then
     source "$processor"
   fi
-  
+
   # Load the file content.
   if [ -f "$source" ]; then
     lobster_theme_source="$source"
-    output=$(cat "$source")
+    output=$(test -e $source && cat "$source")
     if [ "$output" ]; then
       lobster_echo "$output"
     fi
@@ -338,12 +338,12 @@ function lobster_route_end() {
 function lobster_show_debug {
   if [ $lobster_debug -eq 1 ]; then
     lobster_include 'debug'
-  fi  
+  fi
 }
 
 #
 # Includes a script cascade by basename
-# 
+#
 # If the argument is not a path, it will be assumed to be located in
 # $LOBSTER_APP_ROOT/includes.  Scripts may be of type .sh or .php. .sh scripts are executed
 # before .php scripts if ever the basename is the same.
@@ -371,14 +371,14 @@ function lobster_include() {
 # Checks for a value in a an array
 #
 # @param array  The first element will be shifted off and used as the needle
-# 
+#
 # @code
 #   declare -a array=("e" "do" "re" "e")
 #   if lobster_in_array ${array[@]}; then
 #     echo "found"
 #   fi
 # @endcode
-# 
+#
 # @code
 #   needle="do"
 #   haystack=("do" "re" "e")
@@ -395,15 +395,15 @@ function lobster_in_array() {
       return 0
     fi
   done
-  return 1  
+  return 1
 }
 
 
 #
 # Extracts all flags (values beginning with a single -) from an array
-# 
+#
 # @param array
-# 
+#
 # @code
 #   lobster_get_flags ${@}
 #   declare -a lobster_flags=("${lobster_get_flags_return[@]}")
@@ -422,7 +422,7 @@ function lobster_get_flags() {
 
 #
 # Extracts all flags (values beginning with a single -) from an array
-# 
+#
 # @param array
 #
 declare -a lobster_get_params_return=();
@@ -436,7 +436,7 @@ function lobster_get_params() {
 
 #
 # Extracts all flags (values beginning with a single -) from an array
-# 
+#
 # @param array
 #
 declare -a lobster_get_args_return=();
@@ -633,7 +633,7 @@ function lobster_json() {
   for flag in "${lobster_args[@]}"; do
     snippet=$snippet\"$flag\",
   done
-  json=$json${snippet%,}\],  
+  json=$json${snippet%,}\],
 
   # Add in the flags
   json=$json\"flags\"\:\[
@@ -642,7 +642,7 @@ function lobster_json() {
     snippet=$snippet\"$flag\",
   done
   json=$json${snippet%,}\],
-  
+
   # Add in the params
   json=$json\"parameters\"\:\{
   snippet=''
@@ -681,7 +681,7 @@ function lobster_json() {
 # Trim whitespace from a string
 #
 # @param string $string
-# 
+#
 # result=$(lobster_trim arg)
 #
 function  lobster_trim() {
@@ -823,7 +823,7 @@ function lobster_process_twig() {
   if ! test -e $file; then
     lobster_error "Cannot process non-existent twig file: $file"
   fi
-  source="$(cat $file)"
+  source="$(test -e $file && cat $file)"
   while IFS='' read -r line || [[ -n "$line" ]]; do
     data=(${line//,/ })
     find="{{ ${data[0]} }}"

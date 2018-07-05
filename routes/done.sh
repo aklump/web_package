@@ -40,14 +40,14 @@ fi
 # Tag the new release if we are supposed to for this severity
 storage severity
 do_tag=false;
-if [ $wp_create_tags == 'patch' ]; then
+if [ "$wp_create_tags" == 'patch' ]; then
   do_tag=true
 fi
-if [ $wp_create_tags == 'major' ] && [ $storage_return == 'major' ]; then
+if [ "$wp_create_tags" == 'major' ] && [ "$storage_return" == 'major' ]; then
   do_tag=true
 fi
-if [ $wp_create_tags == 'minor' ]; then
-  if [ $storage_return == 'major' ] || [ $storage_return == 'minor' ]; then
+if [ "$wp_create_tags" == 'minor' ]; then
+  if [ "$storage_return" == 'major' ] || [ "$storage_return" == 'minor' ]; then
     do_tag=true
   fi
 fi
@@ -89,4 +89,6 @@ if [ "$get_branch_return" != "$original_branch" ]; then
   $wp_git checkout $original_branch
 fi
 
-lobster_success "Welcome back to $original_branch!"
+if [ "$original_branch" ]; then
+    lobster_success "Welcome back to $original_branch!"
+fi

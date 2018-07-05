@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+#
 # @file
 # Provide functions to be used by example_app.  This file is
 # auto-loaded every time example_app.sh is called, but after
@@ -671,11 +671,11 @@ function get_name() {
 storage_return='';
 function storage() {
   file=".web_package/tmp/$1"
-  if [ "$2" ]
-  then
-    echo $2 > $file
+  if [ "$2" ]; then
+    echo $2 > "$file"
   fi
-  storage_return=`cat $file`
+  storage_return=$(test -e "$file" && cat "$file")
+
 }
 
 function has_info_file () {
