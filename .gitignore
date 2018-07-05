@@ -6,3 +6,4 @@
 !/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component
 /lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/*
 !/lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config
+/vendor
