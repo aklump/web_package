@@ -7,6 +7,7 @@ A shell script to help the management of files as a package through easy version
 The web_package scripts need to be installed on your system once to make the tool available.  Don't confuse this with intializing a project which comes later.
 
 1. Download [this package](http://www.intheloftstudios.com/packages/bash/web_package/download) somewhere on your computer, e.g., `~/lib/web_package-master`.
+1. Run `composer install` to download dependencies.
 1. Make sure that `~/bin` is in your `$PATH` variable of BASH.  To verify type `echo $PATH` in a shell window and look for the path `~/bin`; **note that it will probably appear as the expanded home directory, not `~`**.
 1. Create a symlink to `web_package.sh` as `bump` as seen in the following snippet. (In all examples the symlink is called `bump` but that is not functionally necessary; you may rename as desired.)  For this snippet we're assuming that the package has been saved to `~/lib/web_package-master`
     
