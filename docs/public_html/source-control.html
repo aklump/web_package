@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>What to Commit to Source Control?</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--source-control">
+<header>
+  <div class="pager">
+  <a href="releases.html" class="prev releases">&laquo;Release Types</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="templates.html" class="next templates">Configuration Templates&raquo;</a>
+</div>
+</header>
+
+  <div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+
+  <h1>What to Commit to Source Control?</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<section><h2>title: Source Control</h2>
+
+
+<ul>
+<li>The project installs a sane <em>.gitignore</em> file in <em>.web_package</em> on <code>init</code>, which should take care of most cases.</li>
+<li>If you want to use some of the functionality in the <em>.web_package/functions.php</em> or <em>.web_package/functions.sh</em> files, you will need to remove the <code>*</code> from <em>.web_package/.gitignore</em> as necessary for the scope of usage.</li>
+</ul>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer>
+  <div class="pager">
+  <a href="releases.html" class="prev releases">&laquo;Release Types</a>
+  <a href="index.html" class="index">Index</a>
+  <a href="templates.html" class="next templates">Configuration Templates&raquo;</a>
+</div>
+  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version: 2.1.23 &bull; Last Updated: Thu, 05 Jul 2018 12:34:09 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
+</body>
+</html>
+

@@ -1,9 +1,10 @@
 <?php
+
 namespace AKlump\Data;
 
 
-class Data implements DataInterface
-{
+class Data implements DataInterface {
+
     /**
      * Extend this class and alter the default value of $pathSeparator if want
      * to use a different separator for your path strings.
@@ -18,13 +19,13 @@ class Data implements DataInterface
      * @var array
      */
     protected $cache = array(
-        'set'      => array(),
-        'get'      => array(),
+        'set' => array(),
+        'get' => array(),
         'validate' => array(),
-        'carry'    => array(
+        'carry' => array(
             'value' => null,
-            'path'  => null,
-            'set'   => false,
+            'path' => null,
+            'set' => false,
             'abort' => false,
         ),
     );
@@ -90,7 +91,7 @@ class Data implements DataInterface
         $pathExists = false;
 
         if (is_array($base)) {
-            if (isset($base[$key])) {
+            if (array_key_exists($key, $base)) {
                 $base = $base[$key];
                 $pathExists = true;
             }
@@ -101,7 +102,7 @@ class Data implements DataInterface
         }
         elseif (is_object($base)) {
             $base = clone $base;
-            if (isset($base->{$key})) {
+            if (property_exists($base, $key)) {
                 $base = $base->{$key};
                 $pathExists = true;
             }
@@ -194,7 +195,9 @@ class Data implements DataInterface
         $this->writeArgHandler(func_num_args());
         $this->useCarry($path, $default);
 
-        $value = $this->get($subject, $path, $default);
+        $value = $this->get($subject, $path, $default, function ($value, $default) {
+            return is_null($value) ? $default : $value;
+        });
         $this->set($subject, $path, $value, $childTemplate);
 
         return $this;
@@ -460,6 +463,20 @@ class Data implements DataInterface
         $path = $type === 'string' ? implode($this->pathSeparator, $path) : $path;
 
         return $return;
+    }
+
+    /**
+     * Removes $count elements from $path, right to left
+     *
+     * @param string|array &$path
+     *
+     * @return mixed
+     */
+    protected function pathExplode($path)
+    {
+        $this->validate(__FUNCTION__, $path);
+
+        return $path;
     }
 
     protected function cacheSet($op)
