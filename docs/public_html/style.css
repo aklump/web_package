@@ -335,10 +335,10 @@ sup {
 body {
   line-height: 1.6; }
 
-body.page-index a.index, body.page-index .breadcrumb {
+body.page--index a.index, body.page--index .breadcrumb {
   display: none; }
 
-body.page-index ul.index {
+body.page--index ul.index {
   font-size: 1.4rem;
   margin-bottom: 50px; }
 

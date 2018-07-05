@@ -1,76 +1,70 @@
-
 <!DOCTYPE html>
 
 <html>
 <head>
-    <title>Index</title>
-    <link href="search/tipuesearch.css" rel="stylesheet">
-    <style type="text/css" media="all">
-      @import url("style.css");
-    </style>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="search/tipuesearch_content.js"></script>
-    <script src="search/tipuesearch_set.js"></script>
-    <script src="search/tipuesearch.min.js"></script>
-    <script src="js/core.js"></script>
-
+  <title></title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="page-index">
+<body class="page--index">
 <header>
-<div class="pager">
-  <a href="templates.html" class="prev templates">&laquo;Configuration Templates</a>
+  <div class="pager">
+  <a href="_tasklist.html" class="prev _tasklist">&laquo; Tasklist</a>
   <a href="index.html" class="index">Index</a>
-  <a href="README.html" class="next README">README&raquo;</a>
+  <a href="README.html" class="next readme">README&raquo;</a>
 </div>
-
 </header>
 
-<div class="search__wrapper">
+  <div class="search__wrapper">
   <form action="search--results.html">
     <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
   </form>
 </div>
 
-<h1>Index</h1>
-<div class="breadcrumb"><a href="index.html">Index</a></div>
+  <h1>Index</h1>
 
-<section>
-
-<ul class="index"><li><a href="README.html">README</a></li>
-<li><a href="build-scripts.html">Timesaving hooks: build, unbuild, dev</a></li>
-<li><a href="config.html">Configuration</a></li>
-<li><a href="drupal.html">Drupal Modules/Themes</a></li>
-<li><a href="faq.html">Questions</a></li>
-<li><a href="hooklib.html">Hooks Library</a></li>
-<li><a href="hooks.html">Hooks</a></li>
-<li><a href="releases.html">Release Types</a></li>
-<li><a href="templates.html">Configuration Templates</a></li></ul>
+<section><ul class="index">
+      <li><a href="README.html">README</a></li>
+      <li><a href="build-scripts.html">Timesaving hooks: build, unbuild, dev</a></li>
+      <li><a href="config.html">Configuration</a></li>
+      <li><a href="drupal.html">Drupal Modules/Themes</a></li>
+      <li><a href="faq.html">Questions</a></li>
+      <li><a href="hooklib.html">Hooks Library</a></li>
+      <li><a href="hooks.html">Hooks</a></li>
+      <li><a href="releases.html">Release Types</a></li>
+      <li><a href="source-control.html">What to Commit to Source Control?</a></li>
+      <li><a href="templates.html">Configuration Templates</a></li>
+      <li><a href="_tasklist.html"> Tasklist</a></li>
+  </ul>
 </section>
 
 <div class="search__results">
-  <div id="tipue_search_content"></div>  
+  <div id="tipue_search_content"></div>
 </div>
 
 <footer>
-<div class="pager">
-  <a href="templates.html" class="prev templates">&laquo;Configuration Templates</a>
+  <div class="pager">
+  <a href="_tasklist.html" class="prev _tasklist">&laquo; Tasklist</a>
   <a href="index.html" class="index">Index</a>
-  <a href="README.html" class="next README">README&raquo;</a>
+  <a href="README.html" class="next readme">README&raquo;</a>
 </div>
-
-
+  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 2.1.23 &bull; Last Updated: Sat, 09 Dec 2017 07:16:06 -0800</p>
+    <p class="legaleeze center">Version: 2.1.23 &bull; Last Updated: Thu, 05 Jul 2018 13:02:45 -0700</p>
   </div>
 </footer>
 
-<script>
-$(document).ready(function() {
-  $('#tipue_search_input').tipuesearch();
-});
-</script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
 </body>
 </html>
+

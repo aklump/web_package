@@ -1,43 +1,31 @@
-
 <!DOCTYPE html>
 
 <html>
 <head>
-    <title>Configuration Templates</title>
-    <link href="search/tipuesearch.css" rel="stylesheet">
-    <style type="text/css" media="all">
-      @import url("style.css");
-    </style>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="search/tipuesearch_content.js"></script>
-    <script src="search/tipuesearch_set.js"></script>
-    <script src="search/tipuesearch.min.js"></script>
-    <script src="js/core.js"></script>
-
+  <title>Configuration Templates</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="page-templates">
+<body class="page--templates">
 <header>
-<div class="pager">
-  <a href="releases.html" class="prev releases">&laquo;Release Types</a>
+  <div class="pager">
+  <a href="source-control.html" class="prev source-control">&laquo;What to Commit to Source Control?</a>
   <a href="index.html" class="index">Index</a>
-  <a href="index.html" class="next index">Index&raquo;</a>
+  <a href="_tasklist.html" class="next _tasklist"> Tasklist&raquo;</a>
 </div>
-
 </header>
 
-<div class="search__wrapper">
+  <div class="search__wrapper">
   <form action="search--results.html">
     <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
   </form>
 </div>
 
-<h1>Configuration Templates</h1>
-<div class="breadcrumb"><a href="index.html">Index</a></div>
+  <h1>Configuration Templates</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section>
-
 
 <p>Let's take the use case of a Drupal module, which has a different configuration setup than a website project.  For our module we want the following configuration:</p>
 
@@ -86,28 +74,31 @@ $
 </section>
 
 <div class="search__results">
-  <div id="tipue_search_content"></div>  
+  <div id="tipue_search_content"></div>
 </div>
 
 <footer>
-<div class="pager">
-  <a href="releases.html" class="prev releases">&laquo;Release Types</a>
+  <div class="pager">
+  <a href="source-control.html" class="prev source-control">&laquo;What to Commit to Source Control?</a>
   <a href="index.html" class="index">Index</a>
-  <a href="index.html" class="next index">Index&raquo;</a>
+  <a href="_tasklist.html" class="next _tasklist"> Tasklist&raquo;</a>
 </div>
-
-
+  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 2.1.23 &bull; Last Updated: Sat, 09 Dec 2017 07:16:08 -0800</p>
+    <p class="legaleeze center">Version: 2.1.23 &bull; Last Updated: Thu, 05 Jul 2018 13:02:45 -0700</p>
   </div>
 </footer>
 
-<script>
-$(document).ready(function() {
-  $('#tipue_search_input').tipuesearch();
-});
-</script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
 </body>
 </html>
 

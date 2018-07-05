@@ -1,43 +1,31 @@
-
 <!DOCTYPE html>
 
 <html>
 <head>
-    <title>Questions</title>
-    <link href="search/tipuesearch.css" rel="stylesheet">
-    <style type="text/css" media="all">
-      @import url("style.css");
-    </style>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="search/tipuesearch_content.js"></script>
-    <script src="search/tipuesearch_set.js"></script>
-    <script src="search/tipuesearch.min.js"></script>
-    <script src="js/core.js"></script>
-
+  <title>Questions</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="page-faq">
+<body class="page--faq">
 <header>
-<div class="pager">
+  <div class="pager">
   <a href="drupal.html" class="prev drupal">&laquo;Drupal Modules/Themes</a>
   <a href="index.html" class="index">Index</a>
   <a href="hooklib.html" class="next hooklib">Hooks Library&raquo;</a>
 </div>
-
 </header>
 
-<div class="search__wrapper">
+  <div class="search__wrapper">
   <form action="search--results.html">
     <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
   </form>
 </div>
 
-<h1>Questions</h1>
-<div class="breadcrumb"><a href="index.html">Index</a></div>
+  <h1>Questions</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section>
-
 
 <h2>When should I use 'bump hotfix'?</h2>
 
@@ -53,28 +41,31 @@
 </section>
 
 <div class="search__results">
-  <div id="tipue_search_content"></div>  
+  <div id="tipue_search_content"></div>
 </div>
 
 <footer>
-<div class="pager">
+  <div class="pager">
   <a href="drupal.html" class="prev drupal">&laquo;Drupal Modules/Themes</a>
   <a href="index.html" class="index">Index</a>
   <a href="hooklib.html" class="next hooklib">Hooks Library&raquo;</a>
 </div>
-
-
+  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 2.1.23 &bull; Last Updated: Sat, 09 Dec 2017 07:16:07 -0800</p>
+    <p class="legaleeze center">Version: 2.1.23 &bull; Last Updated: Thu, 05 Jul 2018 13:02:44 -0700</p>
   </div>
 </footer>
 
-<script>
-$(document).ready(function() {
-  $('#tipue_search_input').tipuesearch();
-});
-</script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
 </body>
 </html>
 

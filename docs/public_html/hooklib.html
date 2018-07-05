@@ -1,43 +1,31 @@
-
 <!DOCTYPE html>
 
 <html>
 <head>
-    <title>Hooks Library</title>
-    <link href="search/tipuesearch.css" rel="stylesheet">
-    <style type="text/css" media="all">
-      @import url("style.css");
-    </style>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="search/tipuesearch_content.js"></script>
-    <script src="search/tipuesearch_set.js"></script>
-    <script src="search/tipuesearch.min.js"></script>
-    <script src="js/core.js"></script>
-
+  <title>Hooks Library</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="page-hooklib">
+<body class="page--hooklib">
 <header>
-<div class="pager">
+  <div class="pager">
   <a href="faq.html" class="prev faq">&laquo;Questions</a>
   <a href="index.html" class="index">Index</a>
   <a href="hooks.html" class="next hooks">Hooks&raquo;</a>
 </div>
-
 </header>
 
-<div class="search__wrapper">
+  <div class="search__wrapper">
   <form action="search--results.html">
     <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
   </form>
 </div>
 
-<h1>Hooks Library</h1>
-<div class="breadcrumb"><a href="index.html">Index</a></div>
+  <h1>Hooks Library</h1>
+  <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section>
-
 
 <p>The hooks library is a directory of common used hook files.  By default the core hooks library (you should not modify this directory) comes with a number of pre-written scripts that can be copied into your projects.  Access your library of hooks by calling:</p>
 
@@ -61,28 +49,31 @@
 </section>
 
 <div class="search__results">
-  <div id="tipue_search_content"></div>  
+  <div id="tipue_search_content"></div>
 </div>
 
 <footer>
-<div class="pager">
+  <div class="pager">
   <a href="faq.html" class="prev faq">&laquo;Questions</a>
   <a href="index.html" class="index">Index</a>
   <a href="hooks.html" class="next hooks">Hooks&raquo;</a>
 </div>
-
-
+  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 2.1.23 &bull; Last Updated: Sat, 09 Dec 2017 07:16:08 -0800</p>
+    <p class="legaleeze center">Version: 2.1.23 &bull; Last Updated: Thu, 05 Jul 2018 13:02:44 -0700</p>
   </div>
 </footer>
 
-<script>
-$(document).ready(function() {
-  $('#tipue_search_input').tipuesearch();
-});
-</script>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function () {
+      $('#tipue_search_input').tipuesearch();
+    });
+  </script>
+<script src="js/core.js"></script>
 </body>
 </html>
 

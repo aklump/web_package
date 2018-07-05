@@ -1,48 +1,34 @@
-# Loft Php Library
+# Loft PHP Library
 
-A collection of Php Classes by In the Loft Studios.
+A collection of PHP Classes by In the Loft Studios.
 
-To ensure all necessary dependencies are loaded you should add this to your _composer.json_ file.
+To ensure all necessary dependencies are loaded you may add this to your _composer.json_ file.
 
     {
         "autoload": {
             "files": ["lib/loft_php_lib/dist/vendor/autoload.php"],
         }
     }
+    
+Or you could add this, instead if you will provide the dependencies manually.
 
-
-
-Include this in your module like this:
-
+    "autoload": {
+        "psr-4": {
+            "AKlump\\LoftLib\\": "lib/loft_php_lib/dist/src/AKlump/LoftLib"
+        }
+    }
 
 ## Sample `.gitignore` to include everything but the encryption
 
-By default you should add this to your project using Loft Php Lib
-    
-    lib/loft_php_lib/*
-    !lib/loft_php_lib/dist
-    lib/loft_php_lib/dist/vendor
-    lib/loft_php_lib/dist/src/AKlump/LoftLib/*
-    !lib/loft_php_lib/dist/src/AKlump/LoftLib/Code
-    lib/loft_php_lib/dist/src/AKlump/LoftLib/Code/*
-    !lib/loft_php_lib/dist/src/AKlump/LoftLib/Code/Strings*
-    !lib/loft_php_lib/dist/src/AKlump/LoftLib/Code/Encryption*
+Quick start, all but the encryption library
 
+    /lib/loft_php_lib/*
+    !/lib/loft_php_lib/dist
+    !/lib/loft_php_lib/dist/composer*
+    !/lib/loft_php_lib/dist/src
+    /lib/loft_php_lib/dist/vendor
+    /lib/loft_php_lib/dist/src/AKlump/LoftLib/Code/Encryption*
 
-## Sample `.gitignore` to just use the Xml library
+For other configurations, see _ignore.php_.  When you want to use a class, type the following, and the .gitignore snippet will generate for you.
 
-    lib/loft_php_lib/*
-    !lib/loft_php_lib/dist
-    # Excludes all src files
-    lib/loft_php_lib/dist/src/AKlump/LoftLib/*
-    
-    # Except these...
-    !lib/loft_php_lib/dist/src/AKlump/LoftLib/Code
-    !lib/loft_php_lib/dist/src/AKlump/LoftLib/Xml
-    
-    lib/loft_php_lib/dist/src/AKlump/LoftLib/Code/*
-    !lib/loft_php_lib/dist/src/AKlump/LoftLib/Code/String.php
-    !lib/loft_php_lib/dist/src/AKlump/LoftLib/Code/Grammar.php
-    
-    lib/loft_php_lib/dist/src/AKlump/LoftLib/Xml/*
-    !lib/loft_php_lib/dist/src/AKlump/LoftLib/Xml/LoftXmlElement.php
+    php ignore.php AKlump/LoftLib/Code/Arrays.php
