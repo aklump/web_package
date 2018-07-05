@@ -7,8 +7,8 @@ tmp="$project_root/.web_package/tmp"
 
 # Check for the tmp folder which indicates older file structure.
 if [[ ! -d $tmp ]]; then
-  lobster_echo "Creating tmp and moving storage files."
-  mkdir -v $tmp
+  lobster_verbose "Creating tmp and moving storage files."
+  mkdir $tmp
 
   # Move persistent storage into tmp folder
   for i in $(find "$wp_root" -name '*.txt' -type f); do
