@@ -2,7 +2,10 @@
 
 #
 # @file
-# Automatically add certain generated files to git during build
+# Automatically add certain generated files to git during build.
+# Web Package will add files changed during build, which were previously added,
+# however it will not add new files never added.  Therefore this can be used to
+# add the website folder of generated docs, for example.
 #
 git=$(type git >/dev/null 2>&1 && which git)
 if [ "$git" ]; then
