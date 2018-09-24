@@ -162,7 +162,7 @@ abstract class ConfigFileBasedStorage extends Config {
         $path = $this->getStorage()->value;
         $dir = dirname($path);
         if (!is_dir($dir)) {
-            mkdir($dir);
+            mkdir($dir, 0755, true);
         }
         if (!file_exists($path)) {
             $contents = is_callable($template) ? $template() : $template;

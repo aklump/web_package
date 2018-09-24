@@ -64,7 +64,7 @@ class ConfigPdfMetadata extends ConfigFileBasedStorage {
 
     public function _write($data)
     {
-        $output = '';
+        $output = [];
         $currentGroup = null;
         foreach ($data as $key => $value) {
 
