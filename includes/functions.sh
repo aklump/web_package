@@ -133,15 +133,16 @@ function do_scripts() {
     local author=$get_info_string_return
     local date=$(date)
 
-    local target_scripts="$(find "$dir")"
+    local target_scripts=($(ls "$dir"))
+
     # Check to see if a scriptname has been provided, instead.
     if [[ "$4" ]]; then
       lobster_echo "Looking for provided file: '$4'"
       target_scripts="$dir/$4"
     fi
-    for file in ${target_scripts[@]}; do
+    for basename in ${target_scripts[@]}; do
 
-        local basename=$(basename $file)
+      local file="$dir/$basename"
 
       if ! test -e "$file"; then
         echo "`tty -s && tput setaf 1`wp error: $dir`tty -s && tput op`"
