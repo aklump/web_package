@@ -9,6 +9,7 @@
 
 use AKlump\LoftLib\Bash\Color;
 use AKlump\LoftLib\Bash\Output;
+use AKlump\LoftLib\Storage\FilePath;
 use AKlump\WebPackage\BuildFailException;
 use AKlump\WebPackage\HookException;
 use AKlump\WebPackage\HookService;
@@ -18,10 +19,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
 try {
   $exit_status = 0;
   $output = [];
-  $path_to_hook = $argv[1];
-
-  // TODO This does nothing yet; we may want to do something, e.g. convert from the global functions?  convert to a DataObject?
-  $hook_service = new HookService(
+  $path_to_hook = realpath($argv[1]);
+  array_splice($argv, 1, 1);
+  $build = new HookService(
+    FilePath::create($argv[9]),
+    $argv[7],
     $argv[3],
     $argv[4],
     $argv[2],
@@ -35,7 +37,7 @@ try {
   require_once __DIR__ . '/wp_functions.php';
 
   // Include a bootstrap file defined in the project using WP.
-  $local_include = $argv[12] . '/hooks/bootstrap.php';
+  $local_include = $argv[13] . '/bootstrap.php';
   if (file_exists($local_include)) {
     require_once $local_include;
   }
@@ -54,7 +56,7 @@ catch (BuildFailException $exception) {
   $exit_status = 1;
 }
 catch (\Error $exception) {
-  $output[] = Color::wrap("red", $exception->getMessage());
+  $output[] = Color::wrap("red", (string) $exception);
   $exit_status = 1;
 }
 echo Output::tree($output);

@@ -29,3 +29,38 @@ Here is an example stub for a PHP build script:
 * Use `echo` or `print` to write to the screen.  Output may be split on `\n` and itemized.
 * The file _.web_package/hooks/bootstrap.php_, if it exists, will be included automatically.  You may use it for shared functions across scripts, for example.
 * Web Package provides some PHP functions which are autoloaded as well; review the file _includes/wp_functions.php_ for those functions.
+
+## Using the `$build` object
+
+You may want to leverage the `$build` instance in your PHP hook files as it contains a growing amount of common use case functionality.  Refer to _\AKlump\WebPackage\HookService_ for more info.
+
+* You should always call `displayMessages()` as the last chained method (see example below). 
+* Relative paths are considered relative to the directory that contains _.web_package_.
+
+Add configuration to `$build` inside of _bootstrap.php_, which will apply to every PHP hook file thereafter, e.g.,
+
+    <?php
+    
+    /**
+     * @file
+     * Loaded before running PHP hooks.
+     */
+     
+    $build->setDistributionDir('dist');
+
+Then inside your hook file do something with it, e.g.,
+
+    <?php
+    
+    /**
+     * @file
+     * Load a source file, replace tokens and save to dist folder.
+     */
+    
+    namespace AKlump\WebPackage;
+    
+    $build
+      ->load('src/smart-images.js')
+      ->replace()
+      ->saveToDist()
+      ->displayMessages();
