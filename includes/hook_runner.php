@@ -90,7 +90,8 @@ catch (\Error $exception) {
   echo Color::wrap("red", (string) $exception);
   $exit_status = 1;
 }
-$output = explode(PHP_EOL, trim(ob_get_contents()));
+$output = array_filter(explode(PHP_EOL, trim(ob_get_contents())));
 ob_end_clean();
+$output = empty($output) ? ['OK'] : $output;
 echo Output::tree($output);
 exit($exit_status);

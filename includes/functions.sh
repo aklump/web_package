@@ -120,10 +120,15 @@ load_config
 # @return 0 if build occurred, 1 otherwise
 #
 function do_scripts() {
-  local dir=$1
-  if [ "$dir" ] && [[ -d "$dir" ]]; then
+    local dir=$1
     local prev=$2
     local version=$3
+    local script_filter=$4
+
+    if [[ -z "$dir" ]] || [[ ! -d "$dir" ]]; then
+        return 1
+    fi
+
     get_name
     get_info_string 'description'
     local description=$get_info_string_return
@@ -133,17 +138,14 @@ function do_scripts() {
     local author=$get_info_string_return
     local date=$(date)
 
-    local target_scripts=($(ls "$dir"))
-
     # Check to see if a scriptname has been provided, instead.
     if [[ "$4" ]]; then
-      lobster_echo "Looking for provided file: '$4'"
-      target_scripts="$dir/$4"
+        lobster_echo "Looking for provided file: '$4'"
+        target_scripts=$(ls "$dir/"*"$4"*)
+    else
+        local target_scripts=($(ls "$dir/"*))
     fi
-    for basename in ${target_scripts[@]}; do
-
-      local file="$dir/$basename"
-
+    for file in ${target_scripts[@]}; do
       if ! test -e "$file"; then
         echo "`tty -s && tput setaf 1`wp error: $dir`tty -s && tput op`"
         echo "`tty -s && tput setaf 1`detected hook file: '$file' doesn't exist!`tty -s && tput op`"
@@ -163,9 +165,6 @@ function do_scripts() {
       fi
     done
     return 0
-  fi
-
-  return 1
 }
 
 function needs_update() {

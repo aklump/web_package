@@ -21,9 +21,10 @@ Scripts added to `.web_package/hooks/dev` are run.  The intention here is to set
 
 You may add PHP or BASH scripts to `.web_package/hooks/build` and they will be run each time the version increments.  You may also trigger a build by calling `bump build`.
 
-You can also trigger a single file by passing it's filename; you would want to do this if you need to trigger this one script from an external program, while preserving the callback arguments.  Here is an example (this also works for unbuild and dev):
+You can also trigger a single file by passing it's filename (or portion thereof); you would want to do this if you need to trigger this one script from an external program, while preserving the callback arguments.  Here is an example (this also works for unbuild and dev), the second line shows how you can locate a script using a substr as well.
 
-        bump build only_this_script.sh
+        bump build 00_only_this_script.sh
+        bump build only_this
 
 See also [BASH Scripts](bash-scripts.html)
 See also [PHP Scripts](php-scripts.html)
