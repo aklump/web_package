@@ -327,5 +327,7 @@ class HookService {
     catch (\Exception $exception) {
       throw new BuildFailException(strval($exception));
     }
+
+    return $this;
   }
 }
