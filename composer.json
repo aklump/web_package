@@ -8,13 +8,16 @@
             "email": "sourcecode@intheloftstudios.com"
         }
     ],
-    "homepage": "http:\/\/www.intheloftstudios.com\/packages\/bash\/web_package",
+    "homepage": "http://www.intheloftstudios.com/packages/bash/web_package",
     "require": {
-        "symfony\/yaml": "^3.1"
+        "php":"~7.1",
+        "symfony/yaml": "^3.1",
+        "aklump/loft-lib": "^1.0"
     },
     "autoload": {
         "psr-4": {
-            "AKlump\\LoftLib\\Component\\Config\\": "lib\/loft_php_lib\/dist\/src\/AKlump\/LoftLib\/Component\/Config\/"
+            "AKlump\\WebPackage\\": "src",
+            "AKlump\\LoftLib\\Component\\Config\\": "lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/"
         }
     }
 }

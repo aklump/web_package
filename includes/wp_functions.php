@@ -1,75 +1,14 @@
 <?php
 /**
  * @file
- * Provides functions for build scripts
+ * Provides functions for build scripts.
+ *
+ * This is autoloaded before PHP hook scripts by hook_runner.php.  All
+ *   functions herein should be prefixed with "wp_".
  *
  * @ingroup web_package
  * @{
  */
-
-/**
- * @deprecated Use cp_with_token_replacement instead.
- */
-function js_replace_name_version(&$text, $package_name, $new_version) {
-  $regex = '/(.*?)(\s+(?:JQuery|JavaScript|JS).*v)(\{\{\s*version\s*\}\}|[\d\.a-z\-]+)$/i';
-  $text = preg_replace($regex, ' * ' . $package_name . '${2}' . $new_version, $text);
-}
-
-/**
- * @deprecated Use cp_with_token_replacement instead.
- */
-function js_replace_description(&$text, $description) {
-  $text = " * $description";
-}
-
-/**
- * @deprecated Use cp_with_token_replacement instead.
- */
-function js_replace_date(&$text, $date) {
-  $text = " * Date: $date";
-}
-
-/**
- * @deprecated Use cp_with_token_replacement instead.
- */
-function js_replace_homepage(&$text, $homepage) {
-  $text = " * $homepage";
-}
-
-/**
- * Replace the copyright year and holder in a string.
- *
- * @param  string &$text The source string.
- * @param  string $holder The name of the copyright holder.
- * @param  string $year Optional, defaults to 'now' for the current year.
- *
- * @deprecated Use cp_with_token_replacement instead.
- */
-function js_replace_copyright(&$text, $holder, $year = 'now') {
-  $regex = '/copyright\s*((\d{4})(?:\-(\d{4}))?),\s*(.*)$/i';
-  if (preg_match($regex, $text, $matches)) {
-    list(, $find_date, $original_date, , $find_name) = $matches;
-    $replace_date[] = $original_date;
-
-    if ($year === 'now') {
-      $now = new \DateTime('now', new \DateTimeZone('America/Los_Angeles'));
-      $year = $now->format('Y');
-    }
-    $replace_date[] = $year;
-
-    $replace_date = implode('-', array_unique($replace_date));
-    $text = str_replace($find_date, $replace_date, $text);
-
-    $text = str_replace($find_name, $holder, $text);
-  }
-}
-
-/**
- * @deprecated Use cp_with_token_replacement instead.
- */
-function js_replace_version_function(&$source, $new_version) {
-  $source = preg_replace('/((?:this|\$\.fn\..+)\.version.+(?:\'|"))([\d\.]+?)((?:\'|").*)/s', '${1}' . $new_version . '${3}', $source);
-}
 
 /**
  * Copy files from root into demo.
@@ -135,7 +74,7 @@ function from_demo_copy($path_to_root, $files, $demo_dir = 'demo') {
  *   exit(0);
  * @endcode
  */
-function cp_with_token_replacement($source_path, $output_parent_dir = 'dist', array $additional_token_map = array()) {
+function wp_cp_with_token_replacement($source_path, $output_parent_dir = 'dist', array $additional_token_map = array()) {
 
   // Validate the output dir and file.
   if (!is_dir($output_parent_dir)) {
