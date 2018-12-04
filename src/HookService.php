@@ -289,4 +289,43 @@ class HookService {
 
     return $this;
   }
+
+  /**
+   * Publish your package to the appropriate service.
+   *
+   * @throws \AKlump\WebPackage\BuildFailException
+   * @throws \AKlump\WebPackage\HookException
+   */
+  public function publish() {
+    // Do not publish if the version has not changed.
+    if ($this->version === $this->previous_version) {
+      throw new HookException("Skipping publish because the version did not change.");
+    }
+
+    // Publish to https://www.npmjs.com/ when we have a package.json file.
+    $target = $npm = FilePath::create($this->resolve('package.json'));
+
+    if (!$target->exists()) {
+      throw new BuildFailException("Unable to determine publish target.");
+    }
+
+    $can_publish = FALSE;
+    if ($target === $npm) {
+      $command = "npm publish";
+      // Make sure we have enough info to publish to https://www.npmjs.com/
+      $data = $target->load()->getJson();
+      $can_publish = !empty($data->name) && !empty($data->repository) && !empty($data->version) && empty($data->private);
+    }
+
+    if (!$can_publish) {
+      throw new BuildFailException("Missing critical information necessary to publish.");
+    }
+
+    try {
+      Bash::exec($command);
+    }
+    catch (\Exception $exception) {
+      throw new BuildFailException(strval($exception));
+    }
+  }
 }
