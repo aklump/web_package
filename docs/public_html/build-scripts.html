@@ -53,9 +53,10 @@
 
 <p>You may add PHP or BASH scripts to <code>.web_package/hooks/build</code> and they will be run each time the version increments.  You may also trigger a build by calling <code>bump build</code>.</p>
 
-<p>You can also trigger a single file by passing it's filename; you would want to do this if you need to trigger this one script from an external program, while preserving the callback arguments.  Here is an example (this also works for unbuild and dev):</p>
+<p>You can also trigger a single file by passing it's filename (or portion thereof); you would want to do this if you need to trigger this one script from an external program, while preserving the callback arguments.  Here is an example (this also works for unbuild and dev), the second line shows how you can locate a script using a substr as well.</p>
 
-<pre><code>    bump build only_this_script.sh
+<pre><code>    bump build 00_only_this_script.sh
+    bump build only_this
 </code></pre>
 
 <p>See also <a href="bash-scripts.html">BASH Scripts</a>
@@ -74,7 +75,7 @@ See also <a href="php-scripts.html">PHP Scripts</a></p>
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 2.1.28 &bull; Last Updated: Tue, 04 Dec 2018 14:29:47 -0800</p>
+    <p class="legaleeze center">Version: 2.1.28 &bull; Last Updated: Tue, 04 Dec 2018 15:25:06 -0800</p>
   </div>
 </footer>
 
