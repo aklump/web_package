@@ -154,7 +154,8 @@ function do_scripts() {
       else
         local script=$(basename $file)
         lobster_notice "Executing callback: $script..."
-        output="$($wp_php "$LOBSTER_APP_ROOT/includes/hook_runner.php" "$file" "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file" "$dir" "$project_root/.web_package" "$LOBSTER_APP_ROOT" "$project_root/.web_package/hooks")"
+        # We change directory to make sure every script executes from $project_root.
+        output="$(cd $project_root && $wp_php "$LOBSTER_APP_ROOT/includes/hook_runner.php" "$file" "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file" "$dir" "$project_root/.web_package" "$LOBSTER_APP_ROOT" "$project_root/.web_package/hooks")"
         exit_status=$?
         [[ "$output" ]] && lobster_echo "$output"
         echo
