@@ -22,8 +22,9 @@ try {
   $path_to_hook = realpath($argv[1]);
   array_splice($argv, 1, 1);
   $build = new HookService(
+    FilePath::create(__DIR__ . '/..'),
     FilePath::create($argv[9]),
-    $argv[7],
+    FilePath::create($argv[7]),
     $argv[3],
     $argv[4],
     $argv[2],
@@ -45,7 +46,7 @@ try {
   // Capture output so we can write to a tree below.
   ob_start();
   require $path_to_hook;
-  $output = explode(PHP_EOL, ob_get_contents());
+  $output = explode(PHP_EOL, trim(ob_get_contents()));
   ob_end_clean();
 }
 catch (HookException $exception) {
