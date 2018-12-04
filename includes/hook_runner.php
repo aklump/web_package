@@ -44,7 +44,7 @@ try {
       require_once __DIR__ . '/wp_functions.php';
 
       // Include a bootstrap file defined in the project using WP.
-      $local_include = $argv[12] . '/bootstrap.php';
+      $local_include = $argv[13] . '/bootstrap.php';
       if (file_exists($local_include)) {
         require_once $local_include;
       }
