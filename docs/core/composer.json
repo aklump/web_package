@@ -12,9 +12,9 @@
         "aklump/loft_parser": "0.1.*",
         "michelf/php-markdown": ">=1.4.0",
         "twig/twig": "~1.0",
-        "piwik/ini": "^1.0",
         "aklump/data": ">=0.0.25",
         "webuni/front-matter": "^0.2.0",
-        "jasonlewis/resource-watcher": "^1.2"
+        "jasonlewis/resource-watcher": "^1.2",
+        "matomo/ini": "^2.0"
     }
 }

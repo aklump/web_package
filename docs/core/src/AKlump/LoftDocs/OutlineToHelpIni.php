@@ -1,7 +1,7 @@
 <?php
 namespace AKlump\LoftDocs;
 
-use Piwik\Ini\IniWriter;
+use Matomo\Ini\IniWriter;
 
 class OutlineToHelpIni
 {

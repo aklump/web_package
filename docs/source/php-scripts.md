@@ -23,6 +23,7 @@ Here is an example stub for PHP build script:
     
 ## Quick Start
 
+* The working directory is the directory containing _.web_package_.
 * Files should be namespaced to `AKlump\WebPackage`.
 * If you want to stop the build, throw an instance of _\AKlump\WebPackage\BuildFailException_.
 * To indicate a hook failure, but continue the build, throw an instance of _\AKlump\WebPackage\HookException_.
@@ -64,3 +65,23 @@ Then inside your hook file do something with it, e.g.,
       ->replace()
       ->saveToDist()
       ->displayMessages();
+
+## Callback Arguments
+
+These are deprecated, you should only use them as a last resort.
+
+|           data           | build.php |
+|:-------------------------|:----------|
+| prev version             | $argv[1]  |
+| new version              | $argv[2]  |
+| package name             | $argv[3]  |
+| description              | $argv[4]  |
+| homepage                 | $argv[5]  |
+| author                   | $argv[6]  |
+| path to root             | $argv[7]  |
+| date/time                | $argv[8]  |
+| path to info file        | $argv[9]  |
+| dir of the script        | $argv[10] |
+| dir of functions.php/.sh | $argv[11] |
+| root dir of web_package  | $argv[12] |
+| path to hooks dir        | $argv[13] |

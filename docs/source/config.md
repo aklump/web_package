@@ -1,4 +1,15 @@
 # Configuration
+
+## Supported File Types
+
+The following files are supported for storing version.
+
+1. YAML
+1. INI
+1. JSON
+
+## Theory
+
 The configuration file is created during `bump init` and is located at `.web_package/config`.  Default contents look like this:
 
     master = "master"

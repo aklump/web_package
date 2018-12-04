@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>What to Commit to Source Control?</title>
+  <title>Should `.web_package` be added to source control?</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
@@ -10,9 +10,9 @@
 <body class="page--source-control">
 <header>
   <div class="pager">
-  <a href="releases.html" class="prev releases">&laquo;Release Types</a>
+  <a href="config.html" class="prev config">&laquo;Configuration</a>
   <a href="index.html" class="index">Index</a>
-  <a href="supported-filetypes.html" class="next supported-filetypes">Supported File Types&raquo;</a>
+  <a href="build-scripts.html" class="next build-scripts">Hooks: build, unbuild, dev&raquo;</a>
 </div>
 </header>
 
@@ -22,15 +22,12 @@
   </form>
 </div>
 
-  <h1>What to Commit to Source Control?</h1>
+  <h1>Should `.web_package` be added to source control?</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section>
 
-<ul>
-<li>The project installs a sane <em>.gitignore</em> file in <em>.web_package</em> on <code>init</code>, which should take care of most cases.</li>
-<li>If you want to use some of the functionality in the <em>.web_package/functions.php</em> or <em>.web_package/functions.sh</em> files, you will need to remove the <code>*</code> from <em>.web_package/.gitignore</em> as necessary for the scope of usage.</li>
-</ul>
+<p>Yes. You will find <em>.web_package/.gitignore</em>, which should take care of excluding the unnecessary files.</p>
 </section>
 
 <div class="search__results">
@@ -39,13 +36,13 @@
 
 <footer>
   <div class="pager">
-  <a href="releases.html" class="prev releases">&laquo;Release Types</a>
+  <a href="config.html" class="prev config">&laquo;Configuration</a>
   <a href="index.html" class="index">Index</a>
-  <a href="supported-filetypes.html" class="next supported-filetypes">Supported File Types&raquo;</a>
+  <a href="build-scripts.html" class="next build-scripts">Hooks: build, unbuild, dev&raquo;</a>
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 2.1.28 &bull; Last Updated: Fri, 30 Nov 2018 08:10:31 -0800</p>
+    <p class="legaleeze center">Version: 2.1.28 &bull; Last Updated: Tue, 04 Dec 2018 14:29:49 -0800</p>
   </div>
 </footer>
 
