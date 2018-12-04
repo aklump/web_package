@@ -153,15 +153,9 @@ function do_scripts() {
         lobster_warning "Skipping \"$basename\" because filename starts with _"
       else
         local script=$(basename $file)
-        if [[ ${file##*.} == 'php' ]]; then
-          lobster_notice "Executing callback: $script..."
-          output="$($wp_php "$LOBSTER_APP_ROOT/includes/hook_runner.php" "$file" "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file" "$dir" "$project_root/.web_package" "$LOBSTER_APP_ROOT" "$project_root/.web_package/hooks")"
-          exit_status=$?
-        elif [[ ${file##*.} == 'sh' ]]; then
-          lobster_notice "Executing callback: $script..."
-          output="$($wp_bash $file "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file" "$dir" "$project_root/.web_package" "$LOBSTER_APP_ROOT" "$project_root/.web_package/hooks")"
-          exit_status=$?
-        fi
+        lobster_notice "Executing callback: $script..."
+        output="$($wp_php "$LOBSTER_APP_ROOT/includes/hook_runner.php" "$file" "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file" "$dir" "$project_root/.web_package" "$LOBSTER_APP_ROOT" "$project_root/.web_package/hooks")"
+        exit_status=$?
         [[ "$output" ]] && lobster_echo "$output"
         echo
         [[ $exit_status -ne 0 ]] && lobster_error "BUILD HAS FAILED!" && echo && lobster_exit

@@ -1,7 +1,27 @@
 #!/bin/bash
-# 
+#
 # @file
 # Provides common functions to .web_package scripts
+
+# Use to indicate hook failed, but not build.
+#
+# $1 - string The message to echo.
+#
+# Exits 1
+function hook_exception() {
+    echo "$1"
+    exit 1
+}
+
+# Use to indicate hook and build failed.
+#
+# $1 - string The message to echo.
+#
+# Exits 2
+function build_fail_exception() {
+    echo "$1"
+    exit 2
+}
 
 #
 # Duplicates (overwrites) folders or files from one point to another.
