@@ -31,7 +31,7 @@ if [ "$master" ]; then
   $wp_git merge --no-ff $get_branch_return -m "Merge branch '$get_branch_return'"
 
   # Delete the temp branch
-  if lobster_has_flag "y" && lobster_confirm "Delete $get_branch_return"; then
+  if lobster_has_flag "y" || lobster_confirm "Delete $get_branch_return"; then
     # Delete the hotfix or release branch
     $wp_git br -d $get_branch_return || exit 1
   fi
