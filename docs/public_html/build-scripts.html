@@ -2,7 +2,7 @@
 
 <html>
 <head>
-  <title>Timesaving hooks: build, unbuild, dev</title>
+  <title>Hooks: build, unbuild, dev</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
@@ -10,9 +10,9 @@
 <body class="page--build-scripts">
 <header>
   <div class="pager">
-  <a href="README.html" class="prev README">&laquo;README</a>
+  <a href="source-control.html" class="prev source-control">&laquo;Should `.web_package` be added to source control?</a>
   <a href="index.html" class="index">Index</a>
-  <a href="config.html" class="next config">Configuration&raquo;</a>
+  <a href="php-scripts.html" class="next php-scripts">PHP Hooks&raquo;</a>
 </div>
 </header>
 
@@ -22,12 +22,12 @@
   </form>
 </div>
 
-  <h1>Timesaving hooks: build, unbuild, dev</h1>
+  <h1>Hooks: build, unbuild, dev</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section>
 
-<p>There are three commands that are important to know about.  On their own, that is without special implementation, they do nothing.  However they can be configured to help your process out and save time and reduce errors</p>
+<p>The following commands are there to run scripts located in <em>.web_package/hooks</em>.</p>
 
 <h2><code>bump build</code></h2>
 
@@ -35,7 +35,7 @@
 
 <h2><code>bump unbuild</code></h2>
 
-<p>Scripts added to <code>.web_package/hooks/unbuild</code> are run.  You may delete files as necessary to reverse the build step.  May not be that useful for most.</p>
+<p>Scripts added to <code>.web_package/hooks/unbuild</code> are run.  You may delete files as necessary to reverse the build step.</p>
 
 <h2><code>bump dev</code></h2>
 
@@ -43,107 +43,24 @@
 
 <h2>Build Scripts</h2>
 
-<p>You may add php or shell scripts to <code>.web_package/hooks/build</code> and they will be run each time the version increments.  You may also trigger a build by calling <code>bump build</code>.</p>
+<ul>
+<li>Any file ending in <code>.php</code> or <code>.sh</code> found in the build script folder will be called during version bumping.</li>
+<li>Any hook file can be temporarily disabled by renaming the file to begin with a single underscore</li>
+<li>All hooks will be skipped if you pass <code>--no-hooks</code> in the command.</li>
+<li>All hooks will be fired if you pass <code>--hooks</code> in the command.</li>
+<li>There are lots of example build scripts that get installed when you to <code>bump init</code>.  They can be found in <em>.web_package/examples</em>.</li>
+</ul>
 
-<p>You can also trigger a single file by passing it's filename; you would want to do this if you need to trigger this one script from an external program, while preserving the callback arguments.  Here is an example (this also works for unbuild and dev):</p>
+<p>You may add PHP or BASH scripts to <code>.web_package/hooks/build</code> and they will be run each time the version increments.  You may also trigger a build by calling <code>bump build</code>.</p>
 
-<pre><code>    bump build only_this_script.sh
+<p>You can also trigger a single file by passing it's filename (or portion thereof); you would want to do this if you need to trigger this one script from an external program, while preserving the callback arguments.  Here is an example (this also works for unbuild and dev), the second line shows how you can locate a script using a substr as well.</p>
+
+<pre><code>    bump build 00_only_this_script.sh
+    bump build only_this
 </code></pre>
 
-<p>Any file ending in <code>.php</code> or <code>.sh</code> found in the build script folder will be called during version bumping.  Refer to the parameter chart below for script arguments:</p>
-
-<p>One example of using a build script, say with a jQuery plugin, is when you want to embed the version string <em>inside</em> the <code>jquery.pluging_name.js</code> file.  In such a case the  <code>.info</code> file strategy doesn't meet your needs.  For such a scenario you would use a build script.</p>
-
-<h2>Callback Arguments</h2>
-
-<table>
-<thead>
-<tr>
-  <th>data</th>
-  <th>build.php</th>
-  <th>build.sh</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td>prev version</td>
-  <td>$argv[1]</td>
-  <td>$1</td>
-</tr>
-<tr>
-  <td>new version</td>
-  <td>$argv[2]</td>
-  <td>$2</td>
-</tr>
-<tr>
-  <td>package name</td>
-  <td>$argv[3]</td>
-  <td>$3</td>
-</tr>
-<tr>
-  <td>description</td>
-  <td>$argv[4]</td>
-  <td>$4</td>
-</tr>
-<tr>
-  <td>homepage</td>
-  <td>$argv[5]</td>
-  <td>$5</td>
-</tr>
-<tr>
-  <td>author</td>
-  <td>$argv[6]</td>
-  <td>$6</td>
-</tr>
-<tr>
-  <td>path to root</td>
-  <td>$argv[7]</td>
-  <td>$7</td>
-</tr>
-<tr>
-  <td>date/time</td>
-  <td>$argv[8]</td>
-  <td>$8</td>
-</tr>
-<tr>
-  <td>path to info file</td>
-  <td>$argv[9]</td>
-  <td>$9</td>
-</tr>
-<tr>
-  <td>dir of the script</td>
-  <td>$argv[10]</td>
-  <td>${10}</td>
-</tr>
-<tr>
-  <td>dir of functions.php/.sh</td>
-  <td>$argv[11]</td>
-  <td>${11}</td>
-</tr>
-<tr>
-  <td>root dir of web_package</td>
-  <td>$argv[12]</td>
-  <td>${12}</td>
-</tr>
-<tr>
-  <td>path to hooks dir</td>
-  <td>$argv[13]</td>
-  <td>${13}</td>
-</tr>
-</tbody>
-</table>
-
-<ul>
-<li>Your script should print/echo details as to what it did; this will be output to the console.</li>
-<li>Be sure to use <em>path to root</em> in your scripts when you reference any files in your project.</li>
-<li><p>If you need to source another script, e.g. <code>config</code> that sits in your scripts directory, use <code>dir of the script</code>, here's a shell example...  Notice that without the <code>.sh</code> extension, the file will not automatically get called, which is a good way to do a shared config script.</p>
-
-<pre><code>#!/bin/bash
-source "${10}/config"
-source "${11}/functions.sh"
-...
-</code></pre></li>
-</ul>
+<p>See also <a href="bash-scripts.html">BASH Scripts</a>
+See also <a href="php-scripts.html">PHP Scripts</a></p>
 </section>
 
 <div class="search__results">
@@ -152,13 +69,13 @@ source "${11}/functions.sh"
 
 <footer>
   <div class="pager">
-  <a href="README.html" class="prev README">&laquo;README</a>
+  <a href="source-control.html" class="prev source-control">&laquo;Should `.web_package` be added to source control?</a>
   <a href="index.html" class="index">Index</a>
-  <a href="config.html" class="next config">Configuration&raquo;</a>
+  <a href="php-scripts.html" class="next php-scripts">PHP Hooks&raquo;</a>
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 2.1.28 &bull; Last Updated: Fri, 30 Nov 2018 08:10:29 -0800</p>
+    <p class="legaleeze center">Version: 2.1.29 &bull; Last Updated: Thu, 06 Dec 2018 07:56:39 -0800</p>
   </div>
 </footer>
 

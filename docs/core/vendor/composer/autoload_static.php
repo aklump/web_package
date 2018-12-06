@@ -34,11 +34,11 @@ class ComposerStaticInit57e0d1a2964202d36b8a6b260801c423
         array (
             'Psr\\SimpleCache\\' => 16,
             'Psr\\Container\\' => 14,
-            'Piwik\\Ini\\' => 10,
         ),
         'M' => 
         array (
             'Michelf\\' => 8,
+            'Matomo\\Ini\\' => 11,
         ),
         'I' => 
         array (
@@ -93,13 +93,13 @@ class ComposerStaticInit57e0d1a2964202d36b8a6b260801c423
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'Piwik\\Ini\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/piwik/ini/src',
-        ),
         'Michelf\\' => 
         array (
             0 => __DIR__ . '/..' . '/michelf/php-markdown/Michelf',
+        ),
+        'Matomo\\Ini\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/matomo/ini/src',
         ),
         'Illuminate\\Support\\' => 
         array (
@@ -177,6 +177,7 @@ class ComposerStaticInit57e0d1a2964202d36b8a6b260801c423
         'Illuminate\\Contracts\\Auth\\CanResetPassword' => __DIR__ . '/..' . '/illuminate/contracts/Auth/CanResetPassword.php',
         'Illuminate\\Contracts\\Auth\\Factory' => __DIR__ . '/..' . '/illuminate/contracts/Auth/Factory.php',
         'Illuminate\\Contracts\\Auth\\Guard' => __DIR__ . '/..' . '/illuminate/contracts/Auth/Guard.php',
+        'Illuminate\\Contracts\\Auth\\MustVerifyEmail' => __DIR__ . '/..' . '/illuminate/contracts/Auth/MustVerifyEmail.php',
         'Illuminate\\Contracts\\Auth\\PasswordBroker' => __DIR__ . '/..' . '/illuminate/contracts/Auth/PasswordBroker.php',
         'Illuminate\\Contracts\\Auth\\PasswordBrokerFactory' => __DIR__ . '/..' . '/illuminate/contracts/Auth/PasswordBrokerFactory.php',
         'Illuminate\\Contracts\\Auth\\StatefulGuard' => __DIR__ . '/..' . '/illuminate/contracts/Auth/StatefulGuard.php',
@@ -210,6 +211,7 @@ class ComposerStaticInit57e0d1a2964202d36b8a6b260801c423
         'Illuminate\\Contracts\\Events\\Dispatcher' => __DIR__ . '/..' . '/illuminate/contracts/Events/Dispatcher.php',
         'Illuminate\\Contracts\\Filesystem\\Cloud' => __DIR__ . '/..' . '/illuminate/contracts/Filesystem/Cloud.php',
         'Illuminate\\Contracts\\Filesystem\\Factory' => __DIR__ . '/..' . '/illuminate/contracts/Filesystem/Factory.php',
+        'Illuminate\\Contracts\\Filesystem\\FileExistsException' => __DIR__ . '/..' . '/illuminate/contracts/Filesystem/FileExistsException.php',
         'Illuminate\\Contracts\\Filesystem\\FileNotFoundException' => __DIR__ . '/..' . '/illuminate/contracts/Filesystem/FileNotFoundException.php',
         'Illuminate\\Contracts\\Filesystem\\Filesystem' => __DIR__ . '/..' . '/illuminate/contracts/Filesystem/Filesystem.php',
         'Illuminate\\Contracts\\Foundation\\Application' => __DIR__ . '/..' . '/illuminate/contracts/Foundation/Application.php',
@@ -249,6 +251,7 @@ class ComposerStaticInit57e0d1a2964202d36b8a6b260801c423
         'Illuminate\\Contracts\\Support\\MessageProvider' => __DIR__ . '/..' . '/illuminate/contracts/Support/MessageProvider.php',
         'Illuminate\\Contracts\\Support\\Renderable' => __DIR__ . '/..' . '/illuminate/contracts/Support/Renderable.php',
         'Illuminate\\Contracts\\Support\\Responsable' => __DIR__ . '/..' . '/illuminate/contracts/Support/Responsable.php',
+        'Illuminate\\Contracts\\Translation\\HasLocalePreference' => __DIR__ . '/..' . '/illuminate/contracts/Translation/HasLocalePreference.php',
         'Illuminate\\Contracts\\Translation\\Loader' => __DIR__ . '/..' . '/illuminate/contracts/Translation/Loader.php',
         'Illuminate\\Contracts\\Translation\\Translator' => __DIR__ . '/..' . '/illuminate/contracts/Translation/Translator.php',
         'Illuminate\\Contracts\\Validation\\Factory' => __DIR__ . '/..' . '/illuminate/contracts/Validation/Factory.php',
@@ -269,8 +272,6 @@ class ComposerStaticInit57e0d1a2964202d36b8a6b260801c423
         'Illuminate\\Support\\Carbon' => __DIR__ . '/..' . '/illuminate/support/Carbon.php',
         'Illuminate\\Support\\Collection' => __DIR__ . '/..' . '/illuminate/support/Collection.php',
         'Illuminate\\Support\\Composer' => __DIR__ . '/..' . '/illuminate/support/Composer.php',
-        'Illuminate\\Support\\Debug\\Dumper' => __DIR__ . '/..' . '/illuminate/support/Debug/Dumper.php',
-        'Illuminate\\Support\\Debug\\HtmlDumper' => __DIR__ . '/..' . '/illuminate/support/Debug/HtmlDumper.php',
         'Illuminate\\Support\\Facades\\App' => __DIR__ . '/..' . '/illuminate/support/Facades/App.php',
         'Illuminate\\Support\\Facades\\Artisan' => __DIR__ . '/..' . '/illuminate/support/Facades/Artisan.php',
         'Illuminate\\Support\\Facades\\Auth' => __DIR__ . '/..' . '/illuminate/support/Facades/Auth.php',
@@ -325,6 +326,7 @@ class ComposerStaticInit57e0d1a2964202d36b8a6b260801c423
         'Illuminate\\Support\\Testing\\Fakes\\PendingMailFake' => __DIR__ . '/..' . '/illuminate/support/Testing/Fakes/PendingMailFake.php',
         'Illuminate\\Support\\Testing\\Fakes\\QueueFake' => __DIR__ . '/..' . '/illuminate/support/Testing/Fakes/QueueFake.php',
         'Illuminate\\Support\\Traits\\CapsuleManagerTrait' => __DIR__ . '/..' . '/illuminate/support/Traits/CapsuleManagerTrait.php',
+        'Illuminate\\Support\\Traits\\ForwardsCalls' => __DIR__ . '/..' . '/illuminate/support/Traits/ForwardsCalls.php',
         'Illuminate\\Support\\Traits\\Localizable' => __DIR__ . '/..' . '/illuminate/support/Traits/Localizable.php',
         'Illuminate\\Support\\Traits\\Macroable' => __DIR__ . '/..' . '/illuminate/support/Traits/Macroable.php',
         'Illuminate\\Support\\ViewErrorBag' => __DIR__ . '/..' . '/illuminate/support/ViewErrorBag.php',
@@ -337,13 +339,13 @@ class ComposerStaticInit57e0d1a2964202d36b8a6b260801c423
         'JasonLewis\\ResourceWatcher\\Tracker' => __DIR__ . '/..' . '/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Tracker.php',
         'JasonLewis\\ResourceWatcher\\Watcher' => __DIR__ . '/..' . '/jasonlewis/resource-watcher/src/JasonLewis/ResourceWatcher/Watcher.php',
         'JsonSerializable' => __DIR__ . '/..' . '/nesbot/carbon/src/JsonSerializable.php',
+        'Matomo\\Ini\\IniReader' => __DIR__ . '/..' . '/matomo/ini/src/IniReader.php',
+        'Matomo\\Ini\\IniReadingException' => __DIR__ . '/..' . '/matomo/ini/src/IniReadingException.php',
+        'Matomo\\Ini\\IniWriter' => __DIR__ . '/..' . '/matomo/ini/src/IniWriter.php',
+        'Matomo\\Ini\\IniWritingException' => __DIR__ . '/..' . '/matomo/ini/src/IniWritingException.php',
         'Michelf\\Markdown' => __DIR__ . '/..' . '/michelf/php-markdown/Michelf/Markdown.php',
         'Michelf\\MarkdownExtra' => __DIR__ . '/..' . '/michelf/php-markdown/Michelf/MarkdownExtra.php',
         'Michelf\\MarkdownInterface' => __DIR__ . '/..' . '/michelf/php-markdown/Michelf/MarkdownInterface.php',
-        'Piwik\\Ini\\IniReader' => __DIR__ . '/..' . '/piwik/ini/src/IniReader.php',
-        'Piwik\\Ini\\IniReadingException' => __DIR__ . '/..' . '/piwik/ini/src/IniReadingException.php',
-        'Piwik\\Ini\\IniWriter' => __DIR__ . '/..' . '/piwik/ini/src/IniWriter.php',
-        'Piwik\\Ini\\IniWritingException' => __DIR__ . '/..' . '/piwik/ini/src/IniWritingException.php',
         'Psr\\Container\\ContainerExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerExceptionInterface.php',
         'Psr\\Container\\ContainerInterface' => __DIR__ . '/..' . '/psr/container/src/ContainerInterface.php',
         'Psr\\Container\\NotFoundExceptionInterface' => __DIR__ . '/..' . '/psr/container/src/NotFoundExceptionInterface.php',

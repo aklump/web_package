@@ -18,6 +18,13 @@ class NotificationFake implements NotificationFactory, NotificationDispatcher
     protected $notifications = [];
 
     /**
+     * Locale used when sending notifications.
+     *
+     * @var string|null
+     */
+    public $locale;
+
+    /**
      * Assert if a notification was sent based on a truth-test callback.
      *
      * @param  mixed  $notifiable
@@ -57,7 +64,7 @@ class NotificationFake implements NotificationFactory, NotificationDispatcher
     {
         PHPUnit::assertTrue(
             ($count = $this->sent($notifiable, $notification)->count()) === $times,
-            "Expected [{$notification}] to be sent {$count} times, but was sent {$times} times."
+            "Expected [{$notification}] to be sent {$times} times, but was sent {$count} times."
         );
     }
 
@@ -203,6 +210,7 @@ class NotificationFake implements NotificationFactory, NotificationDispatcher
                 'notification' => $notification,
                 'channels' => $notification->via($notifiable),
                 'notifiable' => $notifiable,
+                'locale' => $notification->locale ?? $this->locale,
             ];
         }
     }
@@ -216,5 +224,18 @@ class NotificationFake implements NotificationFactory, NotificationDispatcher
     public function channel($name = null)
     {
         //
+    }
+
+    /**
+     * Set the locale of notifications.
+     *
+     * @param  string  $locale
+     * @return $this
+     */
+    public function locale($locale)
+    {
+        $this->locale = $locale;
+
+        return $this;
     }
 }

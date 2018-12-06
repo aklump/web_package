@@ -15,23 +15,26 @@ $todos = array();
 // Skip this file if no todo items.
 $prefix = '' . pathinfo($source, PATHINFO_FILENAME) . ': ';
 if (!is_readable($source)
-    || (($contents = file_get_contents($source))
-        && (!($todos = parse_todos($contents, $prefix))))
+  || (($contents = file_get_contents($source))
+    && (!($todos = parse_todos($contents, $prefix))))
 ) {
 
-    return;
+  // Cleanup the cached todo list so it doesn't propogate stale info.
+  $global && basename($global) === '_tasklist.md' && file_exists($global) && unlink($global);
+
+  return;
 }
 
 // Merge any todo items from the global list.
 if (($global_list = file_get_contents($global))
-    && ($global_list = parse_todos($global_list))
+  && ($global_list = parse_todos($global_list))
 ) {
-    $todos = array_merge($global_list, $todos);
+  $todos = array_merge($global_list, $todos);
 }
 
 sort_todos($todos);
 
 if (($contents = flatten_todos($todos))) {
-    $contents = "#Tasklist\n<pre>$contents</pre>";
-    file_put_contents($global, $contents);
+  $contents = "#Tasklist\n<pre>$contents</pre>";
+  file_put_contents($global, $contents);
 }
