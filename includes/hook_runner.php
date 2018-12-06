@@ -82,7 +82,7 @@ try {
 catch (HookException $exception) {
   echo Color::wrap("yellow", $exception->getMessage());
 }
-catch (BuildFailException $exception) {
+catch (\Exception $exception) {
   echo Color::wrap("red", $exception->getMessage());
   $exit_status = 1;
 }
@@ -91,7 +91,9 @@ catch (\Error $exception) {
   $exit_status = 1;
 }
 $output = array_filter(explode(PHP_EOL, trim(ob_get_contents())));
-ob_end_clean();
+if (ob_get_contents()) {
+  ob_end_clean();
+}
 $output = empty($output) ? ['OK'] : $output;
 echo Output::tree($output);
 exit($exit_status);

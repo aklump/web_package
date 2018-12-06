@@ -8,7 +8,10 @@
 namespace AKlump\WebPackage;
 
 $build
-  ->loadFile('src/smart-images.js')
-  ->replaceTokens()
-  ->saveToDist()
+  ->addFilesToScm([
+    "docs",
+    "help",
+    "README.txt",
+    "README.md",
+  ])
   ->displayMessages();

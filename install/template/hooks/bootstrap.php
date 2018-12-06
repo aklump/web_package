@@ -5,4 +5,6 @@
  * Loaded before running PHP hooks.
  */
 
-$build->setDistributionDir('dist');
+$build
+  ->setPhp('php')
+  ->setDistributionDir('dist');

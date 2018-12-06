@@ -10,6 +10,8 @@ use AKlump\LoftLib\Storage\FilePath;
  */
 class HookService {
 
+  protected $php = 'php';
+
   protected $pathToWebPackage;
 
   protected $pathToInstance;
@@ -23,6 +25,8 @@ class HookService {
   protected $sourceCode;
 
   protected $messages = [];
+
+  protected $scmFilesToAdd = [];
 
   public function __construct(
     FilePath $path_to_web_package,
@@ -50,7 +54,7 @@ class HookService {
     ];
   }
 
-  public function load($filepath) {
+  public function loadFile($filepath) {
     $this->sourceFile = FilePath::create($this->resolve($filepath));
     if (!$this->sourceFile->exists()) {
       throw new BuildFailException("$filepath does not exist.");
@@ -76,15 +80,16 @@ class HookService {
    * @see ::setSourceCode
    * @see ::getSourceCode
    */
-  public function replace(array $additional_token_map = []) {
+  public function replaceTokens(array $additional_token_map = []) {
     $token_map = $additional_token_map;
     $token_map += array(
-      '__version' => $this->version,
-      '__name' => $this->name,
-      '__description' => wordwrap($this->description, 75),
-      '__date' => $this->date_string,
       '__author' => $this->author,
+      '__date' => $this->date_string,
+      '__description' => $this->description,
       '__homepage' => $this->url,
+      '__name' => $this->name,
+      '__url' => $this->url,
+      '__version' => $this->version,
     );
 
     $info = $this->infoFile->load()->getJson(TRUE);
@@ -142,6 +147,18 @@ class HookService {
   }
 
   /**
+   * Overwrite the last loaded file with $this->sourceCode.
+   *
+   * @return \AKlump\WebPackage\HookService
+   * @throws \AKlump\WebPackage\BuildFailException
+   */
+  public function saveReplacingSourceFile() {
+    $this->sourceFile->exists() && $this->sourceFile->destroy();
+
+    return $this->saveTo(dirname($this->sourceFile->getPath()));
+  }
+
+  /**
    * Save the source file to a directory.
    *
    * Will fail if file already exists.
@@ -161,7 +178,8 @@ class HookService {
     }
     $to = $to_dir->to($this->sourceFile->getBasename())
       ->put($this->sourceFile->get());
-    if (($source = $this->sourceFile->getPath()) === $to->getPath()) {
+    if ($this->sourceFile->exists()
+      && ($source = $this->sourceFile->getPath()) === $to->getPath()) {
       throw new BuildFailException("You have asked to save over your source file, which cannot be done: \"{$this->relativize($source)}\".");
     }
     if ($to->exists()) {
@@ -267,23 +285,18 @@ class HookService {
    * @return $this
    * @throws \AKlump\WebPackage\BuildFailException
    */
-  public function minify($source) {
-    $this->load($source);
+  public function minifyFile($source) {
+    $this->loadFile($source);
     if ($this->sourceFile->getExtension() !== 'js') {
       throw new BuildFailException("Minify does not yet support file types ending in: " . $this->sourceFile->getExtension());
     }
-    try {
-      Bash::exec([
-        $this->pathToWebPackage . "/node_modules/.bin/uglifyjs",
-        "--compress --mangle --comments",
-        "--output=" . ($output = str_replace('.js', '.min.js', $this->sourceFile->getPath())),
-        "-- " . $this->sourceFile->getPath(),
-      ]);
-      $this->addMessage("minified to {$this->relativize($output)}.");
-    }
-    catch (\Exception $exception) {
-      throw new BuildFailException((string) $exception);
-    }
+    Bash::exec([
+      $this->pathToWebPackage . "/node_modules/.bin/uglifyjs",
+      "--compress --mangle --comments",
+      "--output=" . ($output = str_replace('.js', '.min.js', $this->sourceFile->getPath())),
+      "-- " . $this->sourceFile->getPath(),
+    ]);
+    $this->addMessage("minified to {$this->relativize($output)}.");
 
     $this->sourceFile = NULL;
 
@@ -311,6 +324,7 @@ class HookService {
 
     $can_publish = FALSE;
     if ($target === $npm) {
+      $this->startMessageClause("Publishing to npmjs.com");
       $command = "npm publish";
       // Make sure we have enough info to publish to https://www.npmjs.com/
       $data = $target->load()->getJson();
@@ -321,12 +335,107 @@ class HookService {
       throw new BuildFailException("Missing critical information necessary to publish.");
     }
 
-    try {
-      Bash::exec($command);
+    $this->addMessage(Bash::exec($command));
+
+    return $this;
+  }
+
+  protected function isUsingGit() {
+    return file_exists($this->resolve('.git'));
+  }
+
+  /**
+   * Compile documentation and to source control (is using).
+   *
+   * The assumption is that the generated documentation is in "docs".
+   *
+   * @return $this
+   * @throws \AKlump\WebPackage\BuildFailException
+   */
+  public function generateDocumentation() {
+    $path_to_generated_docs = 'docs';
+    $commands = [
+      "[[ -d {$path_to_generated_docs} ]] && rm -r {$path_to_generated_docs}",
+      "(cd documentation && ./core/compile.sh)",
+    ];
+    echo Bash::exec(implode(';', $commands)) . PHP_EOL;
+    $this->scmFilesToAdd[] = $path_to_generated_docs;
+
+    if (!file_exists('docs/index.html')) {
+      throw new BuildFailException("docs/index.html was not created.");
     }
-    catch (\Exception $exception) {
-      throw new BuildFailException(strval($exception));
+
+    return $this;
+  }
+
+  /**
+   * Adds any files that were gathered upstream plus those passed to SCM.
+   *
+   * @param array $files
+   *   An optional array of files to add to SCM.
+   *
+   * @return \AKlump\WebPackage\HookService
+   * @throws \AKlump\WebPackage\BuildFailException
+   *
+   * @see ::documentation
+   */
+  public function addFilesToScm(array $files) {
+    $files = array_unique(array_merge($this->scmFilesToAdd, $files));
+    if ($this->isUsingGit()) {
+      $this->startMessageClause("Git has been detected");
+      foreach ($files as $file) {
+        if (is_dir($file)) {
+          Bash::exec("(cd \"$file\" && git add .)");
+          $this->addMessage('added directory: ' . $this->relativize($file));
+        }
+        elseif (is_file($file)) {
+          Bash::exec("git add \"$file\"");
+          $this->addMessage('added file: ' . $this->relativize($file));
+        }
+      }
     }
+
+    return $this;
+  }
+
+  /**
+   * Run tests indicated by a test runner file.
+   *
+   * @param string $path_to_testrunner
+   *
+   * @return $this
+   * @throws \AKlump\WebPackage\BuildFailException
+   */
+  public function runTests(string $path_to_testrunner) {
+    $this->loadFile($path_to_testrunner);
+    if ($this->sourceFile->getFilename() !== 'phpunit') {
+      throw new BuildFailException("Only PhpUnit (phpunit.xml) is supported at this time; you provided the test runner: \"$path_to_testrunner\".");
+    }
+    $result = Bash::exec([
+      $this->php,
+      Bash::which('phpunit'),
+      '--configuration',
+      $this->resolve($path_to_testrunner),
+    ]);
+    $this->addMessage($result);
+
+    return $this;
+  }
+
+  /**
+   * Set the value of Php.
+   *
+   * @param string $php
+   *   Lorem.
+   *
+   * @return HookService
+   *   Lorem.
+   */
+  public function setPhp(string $php) {
+    if (!is_executable($php)) {
+      throw new BuildFailException("Missing or non-executable php: \"$php\"");
+    }
+    $this->php = $php;
 
     return $this;
   }

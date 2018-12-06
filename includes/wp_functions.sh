@@ -88,3 +88,21 @@ function wp_wait_for_exists() {
       sleep 1
     done
 }
+
+# Remove a file, or folder and it's contents.
+#
+# Use this instead of rm as it includes extra features pertinent to hooks.
+#
+# $1 - string Path to the file or folder.
+#
+# Returns nothing.
+function wp_rm() {
+    local path="$1"
+
+    echo "Deleting: $path"
+    if [[ -d "$path" ]]; then
+        rm -r "$path" || build_fail_exception
+    elif [[ -f "$path" ]]; then
+        rm "$path" || build_fail_exception
+    fi
+}
