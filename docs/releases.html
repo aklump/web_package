@@ -2,17 +2,17 @@
 
 <html>
 <head>
-  <title>Should `.web_package` be added to source control?</title>
+  <title>Release Types</title>
   <link href="search/tipuesearch.css" rel="stylesheet">
   <link href="style.css" rel="stylesheet">
 </head>
 
-<body class="page--source-control">
+<body class="page--releases">
 <header>
   <div class="pager">
-  <a href="config.html" class="prev config">&laquo;Configuration</a>
+  <a href="faq.html" class="prev faq">&laquo;Questions</a>
   <a href="index.html" class="index">Index</a>
-  <a href="build-scripts.html" class="next build-scripts">Hooks: build, unbuild, dev&raquo;</a>
+  <a href="templates.html" class="next templates">Configuration Templates&raquo;</a>
 </div>
 </header>
 
@@ -22,12 +22,22 @@
   </form>
 </div>
 
-  <h1>Should `.web_package` be added to source control?</h1>
+  <h1>Release Types</h1>
   <div class="breadcrumb"><a href="index.html">Index</a></div>
 
 <section>
 
-<p>Yes. You will find <em>.web_package/.gitignore</em>, which should take care of excluding the unnecessary files.</p>
+<h2>Hotfix</h2>
+
+<ul>
+<li>hooks are not fired unless you pass <code>--hooks</code> param.</li>
+</ul>
+
+<h2>Release</h2>
+
+<ul>
+<li>hooks are fired unless you pass <code>--no-hooks</code> param.</li>
+</ul>
 </section>
 
 <div class="search__results">
@@ -36,13 +46,13 @@
 
 <footer>
   <div class="pager">
-  <a href="config.html" class="prev config">&laquo;Configuration</a>
+  <a href="faq.html" class="prev faq">&laquo;Questions</a>
   <a href="index.html" class="index">Index</a>
-  <a href="build-scripts.html" class="next build-scripts">Hooks: build, unbuild, dev&raquo;</a>
+  <a href="templates.html" class="next templates">Configuration Templates&raquo;</a>
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 3.0.1 &bull; Last Updated: Thu, 06 Dec 2018 08:01:24 -0800</p>
+    <p class="legaleeze center">Version: 3.0.1 &bull; Last Updated: Thu, 06 Dec 2018 08:09:38 -0800</p>
   </div>
 </footer>
 

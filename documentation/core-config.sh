@@ -54,3 +54,7 @@ README = '../README.md'
 #post_hooks = "post_compile.sh post_compile.php"
 
 version_file = "../composer.json"
+
+#
+# These paths are relative to the directory containing core-config.sh.
+website_dir = '../docs'
