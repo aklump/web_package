@@ -1,11 +1,11 @@
 template = simple
 master = "master"
-develop = "3.0.0"
+develop = "master"
 remote = origin
 create_tags = patch
 push_tags = auto
 push_master = auto
-push_develop = auto
+push_develop = no
 patch_prefix = .
 git_root = .
 info_file = "composer.json"

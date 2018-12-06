@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
 
-composer update
-composer dumpautoload --optimize
+#
+# Handles composer update, optimize, and git add .lock
+#
+composer update && composer dumpautoload --optimize && git add composer.lock || build_fail_exception
+
