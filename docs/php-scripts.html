@@ -56,6 +56,7 @@ echo "The hook worked as expected";
 <li>If you want to stop the build, throw an instance of <em>\AKlump\WebPackage\BuildFailException</em>.</li>
 <li>To indicate a hook failure, but continue the build, throw an instance of <em>\AKlump\WebPackage\HookException</em>.</li>
 <li>Use <code>echo</code> or <code>print</code> to write to the screen.</li>
+<li>Use <code>caution</code> and <code>danger</code> to write dramatic output while continuing the flow.</li>
 <li>The file <em>.web_package/hooks/bootstrap.php</em>, if it exists, will be included automatically.    You may use it for shared functions and configuration across scripts, for example.</li>
 <li>Web Package provides some PHP functions which are autoloaded as well; review the file <em>includes/wp_functions.php</em> for those functions.</li>
 </ul>
@@ -179,7 +180,7 @@ $build
 </div>
   
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 3.0.3 &bull; Last Updated: Thu, 06 Dec 2018 08:11:56 -0800</p>
+    <p class="legaleeze center">Version: 3.0.4 &bull; Last Updated: Sat, 08 Dec 2018 08:27:23 -0800</p>
   </div>
 </footer>
 
