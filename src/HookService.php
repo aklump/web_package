@@ -3,6 +3,7 @@
 namespace AKlump\WebPackage;
 
 use AKlump\LoftLib\Bash\Bash;
+use AKlump\LoftLib\Bash\Color;
 use AKlump\LoftLib\Storage\FilePath;
 
 /**
@@ -234,6 +235,30 @@ class HookService {
     $this->endMessageClause();
     print implode(PHP_EOL, $this->messages) . PHP_EOL;
     $this->messages = [];
+  }
+
+  /**
+   * Display a message of caution and continue.
+   *
+   * @param string $message
+   *   A message to highlight
+   */
+  public function caution($message) {
+    print Color::wrap('black on yellow', $message) . PHP_EOL;
+
+    return $this;
+  }
+
+  /**
+   * Display message of danger and continue.
+   *
+   * @param string $message
+   *   A message to highlight
+   */
+  public function danger($message) {
+    print Color::wrap('white on red', $message) . PHP_EOL;
+
+    return $this;
   }
 
   protected function startMessageClause($message) {

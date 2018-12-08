@@ -28,6 +28,7 @@ Here is an example stub for PHP build script:
 * If you want to stop the build, throw an instance of _\AKlump\WebPackage\BuildFailException_.
 * To indicate a hook failure, but continue the build, throw an instance of _\AKlump\WebPackage\HookException_.
 * Use `echo` or `print` to write to the screen.
+* Use `caution` and `danger` to write dramatic output while continuing the flow.
 * The file _.web_package/hooks/bootstrap.php_, if it exists, will be included automatically.    You may use it for shared functions and configuration across scripts, for example.
 * Web Package provides some PHP functions which are autoloaded as well; review the file _includes/wp_functions.php_ for those functions.
 
