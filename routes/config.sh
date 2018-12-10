@@ -26,4 +26,5 @@ lobster_echo "major_step = $wp_major_step"
 lobster_echo "minor_step = $wp_minor_step"
 lobster_echo "patch_step = $wp_patch_step"
 lobster_echo "author = $wp_author"
+lobster_echo "preserve_patch_zero = $wp_preserve_patch_zero"
 lobster_echo
