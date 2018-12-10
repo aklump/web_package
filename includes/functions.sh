@@ -99,7 +99,7 @@ function parse_config() {
         name=${line%% =*}
         value=${line##*= }
         if [ "$name" ]; then
-          eval wp_$name=$value
+          eval wp_$name="$value"
         fi
       fi
     done < $1
