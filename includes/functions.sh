@@ -425,13 +425,12 @@ function increment_version () {
 
   case "$2" in
     major)
-      if [ "$patch_prefix" == '.' ] || [ "$patch_prefix" = '' ]
-      then
+      if [ "$patch_prefix" == '.' ] || [ "$patch_prefix" = '' ]; then
         major=$(($major + $major_step))
         major_suffix='.'
         minor=0
-        patch_prefix=''
-        patch=''
+        patch_prefix=$([[ "$wp_preserve_patch_zero" == true ]] && echo $patch_prefix)
+        patch=$([[ "$wp_preserve_patch_zero" == true ]] && echo 0)
       else
         major=$(($major + $major_step))
         major_suffix='.'
@@ -446,8 +445,8 @@ function increment_version () {
       then
         minor=$(($minor + $minor_step))
       fi
-      patch_prefix=''
-      patch=''
+      patch_prefix=$([[ "$wp_preserve_patch_zero" == true ]] && echo $patch_prefix)
+      patch=$([[ "$wp_preserve_patch_zero" == true ]] && echo 0)
       ;;
     patch)
       patch=$(($patch + $patch_step))
