@@ -38,6 +38,12 @@ try {
   // Capture output so we can write to a tree below.
   ob_start();
   switch ($hook_file->getExtension()) {
+    // Politely remind users to remove.
+    case 'txt':
+    case 'md':
+      throw new HookException("This file is not a hook, please delete or move it: " . $hook_file->getPath());
+      break;
+
     case 'php':
 
       // Include our provided globals.
