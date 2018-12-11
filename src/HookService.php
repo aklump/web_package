@@ -335,10 +335,6 @@ class HookService {
    * @throws \AKlump\WebPackage\HookException
    */
   public function publish() {
-    // Do not publish if the version has not changed.
-    if ($this->version === $this->previous_version) {
-      throw new HookException("Skipping publish because the version did not change.");
-    }
 
     // Publish to https://www.npmjs.com/ when we have a package.json file.
     $target = $npm = FilePath::create($this->resolve('package.json'));

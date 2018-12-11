@@ -83,6 +83,13 @@ if [ "$wp_push_master" != 'no' ] && ([ "$wp_push_master" == 'auto' ] || lobster_
   $wp_git push $wp_remote $master
 fi
 
+if lobster_has_param 'no-hooks'; then
+    lobster_notice "Skipping deploy hooks due to --no-hooks"
+else
+    get_version
+    do_scripts $wp_deploy $get_version_return $get_version_return
+fi
+
 # Return to the original branch if not yet there
 get_branch
 if [ "$get_branch_return" != "$original_branch" ]; then
