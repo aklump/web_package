@@ -6,5 +6,5 @@
  */
 
 $build
-  ->setPhp('php')
+//  ->setPhp('/path/to/custom/php')
   ->setDistributionDir('dist');
