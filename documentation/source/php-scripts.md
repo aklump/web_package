@@ -62,8 +62,8 @@ Then inside your hook file do something with it, e.g.,
     namespace AKlump\WebPackage;
     
     $build
-      ->load('src/smart-images.js')
-      ->replace()
+      ->loadFile('src/smart-images.js')
+      ->replaceTokens()
       ->saveToDist()
       ->displayMessages();
 

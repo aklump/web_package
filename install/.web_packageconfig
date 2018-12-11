@@ -70,12 +70,17 @@ wp_patch_prefix='.'
 wp_build=./.web_package/hooks/build/
 
 ##
- # The directory to scan for build scripts
+ # The directory to scan for unbuild scripts
  #
 wp_unbuild=./.web_package/hooks/unbuild/
 
 ##
- # The directory to scan for build scripts
+ # The directory to scan for deploy scripts
+ #
+wp_deploy=./.web_package/hooks/deploy/
+
+##
+ # The directory to scan for dev scripts
  #
 wp_dev=./.web_package/hooks/dev/
 
