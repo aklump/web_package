@@ -368,26 +368,33 @@ class HookService {
   /**
    * Compile documentation and to source control (is using).
    *
-   * The assumption is that the generated documentation is in "docs".
+   * Source documentation must be in documentation/source.  The assumption is
+   * that the generated documentation is in "docs".  But that can be changed by
+   * providing an argument.
    *
-   * @param string $path_to_generated_docs
+   * @param string|false $path_to_generated_docs
    *   Defaults to 'docs'; this will determine success as we look for
-   *   $path_to_generated_docs/index.html as a sign of success.
+   *   $path_to_generated_docs/index.html as a sign of success.  Set this to
+   *   false if you have disabled the website version, as this will prevent a
+   *   failure.
    *
    * @return $this
    * @throws \AKlump\WebPackage\BuildFailException
    */
   public function generateDocumentation($path_to_generated_docs = 'docs') {
     $path_to_generated_docs = rtrim($path_to_generated_docs, '/');
-    $commands = [
-      "[[ -d {$path_to_generated_docs} ]] && rm -r {$path_to_generated_docs}",
-      "(cd documentation && ./core/compile.sh)",
-    ];
+    $commands = [];
+    if ($path_to_generated_docs) {
+      $commands[] = "[[ -d \"{$path_to_generated_docs}\" ]] && rm -r {$path_to_generated_docs}";
+    }
+    $commands[] = "(cd documentation && ./core/compile.sh)";
     echo Bash::exec(implode(';', $commands)) . PHP_EOL;
-    $this->scmFilesToAdd[] = $path_to_generated_docs;
+    if ($path_to_generated_docs) {
+      $this->scmFilesToAdd[] = $path_to_generated_docs;
 
-    if (!file_exists($path_to_generated_docs . '/index.html')) {
-      throw new BuildFailException($path_to_generated_docs . "/index.html was not created.");
+      if (!file_exists($path_to_generated_docs . '/index.html')) {
+        throw new BuildFailException($path_to_generated_docs . "/index.html was not created.");
+      }
     }
 
     return $this;
