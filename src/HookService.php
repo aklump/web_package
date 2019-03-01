@@ -13,6 +13,8 @@ class HookService {
 
   protected $php = 'php';
 
+  protected $phpunit = 'phpunit';
+
   protected $pathToWebPackage;
 
   protected $pathToInstance;
@@ -41,6 +43,8 @@ class HookService {
     $url,
     $date_string
   ) {
+    $this->setPhp(Bash::which('php'));
+    $this->setPhpUnit(Bash::which('phpunit'));
     $this->pathToWebPackage = rtrim($path_to_web_package->getPath(), '/');
     $this->pathToInstance = rtrim($instance_root->getPath(), '/');
     $this->infoFile = $info_file;
@@ -100,7 +104,7 @@ class HookService {
     $code = str_replace(array_keys($token_map), array_values($token_map), $this->getSourceCode());
 
     // Replace the year which will appear as '__year' or '2015__year'.
-    $code = preg_replace_callback('/(\s\d{2,4}?)__year/', function ($matches) {
+    $code = preg_replace_callback('/(\s\d{2,4}?)\-?__year/', function ($matches) {
       $years = array();
       isset($matches[1]) && $years[] = $matches[1];
       $years[] = date('Y');
@@ -445,7 +449,7 @@ class HookService {
     }
     $result = Bash::exec([
       $this->php,
-      Bash::which('phpunit'),
+      $this->phpunit,
       '--configuration',
       $this->resolve($path_to_testrunner),
     ]);
@@ -457,18 +461,47 @@ class HookService {
   /**
    * Set the value of Php.
    *
-   * @param string $php
-   *   Lorem.
+   * @param string $program_name
+   *   The name of the program, e.g. 'php'.
+   * @param string $path_to_executable
+   *   The path to the program executable.
    *
    * @return HookService
-   *   Lorem.
+   *   Self for chaining.
+   *
+   * @throws \AKlump\WebPackage\BuildFailException
    */
-  public function setPhp(string $php) {
-    if (!is_executable($php)) {
-      throw new BuildFailException("Missing or non-executable php: \"$php\"");
+  protected function setBashExecutable(string $program_name, string $path_to_executable) {
+    if (!is_executable($path_to_executable)) {
+      throw new BuildFailException("Missing or non-executable $program_name: \"$path_to_executable\"");
     }
-    $this->php = $php;
+    $this->{$program_name} = $path_to_executable;
 
     return $this;
   }
+
+  /**
+   * Set the php runner.
+   *
+   * @param string $php
+   *
+   * @return \AKlump\WebPackage\HookService
+   * @throws \AKlump\WebPackage\BuildFailException
+   */
+  public function setPhp(string $php) {
+    return $this->setBashExecutable('php', $php);
+  }
+
+  /**
+   * Set the php runner.
+   *
+   * @param string $php
+   *
+   * @return \AKlump\WebPackage\HookService
+   * @throws \AKlump\WebPackage\BuildFailException
+   */
+  public function setPhpUnit(string $phpunit) {
+    return $this->setBashExecutable('phpunit', $phpunit);
+  }
+
 }
