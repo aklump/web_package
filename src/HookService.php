@@ -203,6 +203,9 @@ class HookService {
    * Will fail if file already exists.
    *
    * @param string $dir
+   *   The directory into which to save $this->sourceCode
+   * @param bool $force
+   *   Set to true to erase an existing file.
    *
    * @return $this
    * @throws \AKlump\WebPackage\BuildFailException
@@ -210,7 +213,7 @@ class HookService {
    *   If the destination is the same as the source.
    *   If the destination directory doesn't exist.
    */
-  public function saveTo(string $dir = 'dist') {
+  public function saveTo(string $dir = 'dist', $force = FALSE) {
     $to_dir = FilePath::create($this->resolve($dir));
     if (!$to_dir->exists()) {
       throw new BuildFailException("Cannot save to \"{$this->relativize($to_dir->getPath())}\"; it does not exist.");
@@ -221,7 +224,7 @@ class HookService {
       && ($source = $this->sourceFile->getPath()) === $to->getPath()) {
       throw new BuildFailException("You have asked to save over your source file, which cannot be done: \"{$this->relativize($source)}\".");
     }
-    if ($to->exists()) {
+    if (!$force && $to->exists()) {
       throw new BuildFailException("The output path already exists \"{$this->relativize($to->getPath())}\".");
     }
     $to->put($this->getSourceCode())->save();
