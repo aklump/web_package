@@ -5,6 +5,8 @@ namespace AKlump\WebPackage;
 use AKlump\LoftLib\Bash\Bash;
 use AKlump\LoftLib\Bash\Color;
 use AKlump\LoftLib\Storage\FilePath;
+use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 /**
  * Provide common build functionality to PHP hooks.
@@ -86,21 +88,7 @@ class HookService {
    * @see ::getSourceCode
    */
   public function replaceTokens(array $additional_token_map = []) {
-    $token_map = $additional_token_map;
-    $token_map += array(
-      '__author' => $this->author,
-      '__date' => $this->date_string,
-      '__description' => $this->description,
-      '__homepage' => $this->url,
-      '__name' => $this->name,
-      '__url' => $this->url,
-      '__version' => $this->version,
-    );
-
-    $info = $this->infoFile->load()->getJson(TRUE);
-    if (isset($info['title'])) {
-      $token_map['__title'] = $info['title'];
-    }
+    $token_map = $this->prepareTokenMap('__', $additional_token_map);
     $code = str_replace(array_keys($token_map), array_values($token_map), $this->getSourceCode());
 
     // Replace the year which will appear as '__year' or '2015__year'.
@@ -114,6 +102,52 @@ class HookService {
 
     $this->setSourceCode($code);
     $this->addMessage('tokens have been replaced.');
+
+    return $this;
+  }
+
+  private function prepareTokenMap($prefix, array $additional_token_map = []) {
+    $token_map = $additional_token_map;
+    $token_map += array(
+      $prefix . 'author' => $this->author,
+      $prefix . 'date' => $this->date_string,
+      $prefix . 'description' => $this->description,
+      $prefix . 'homepage' => $this->url,
+      $prefix . 'name' => $this->name,
+      $prefix . 'url' => $this->url,
+      $prefix . 'version' => $this->version,
+    );
+
+    $info = $this->infoFile->load()->getJson(TRUE);
+    if (isset($info['title'])) {
+      $token_map[$prefix . 'title'] = $info['title'];
+    }
+
+    return $token_map;
+  }
+
+  /**
+   * Process the source code as a Twig template.
+   *
+   * @param array $additional_token_map
+   *
+   * @return $this
+   * @throws \Throwable
+   * @throws \Twig_Error_Loader
+   * @throws \Twig_Error_Syntax
+   */
+  public function processWithTwig(array $additional_token_map = []) {
+    if (!$this->sourceFile->exists()) {
+      throw new \RuntimeException("You must call ::loadFile before calling " . __METHOD__);
+    }
+    $token_map = $this->prepareTokenMap('', $additional_token_map);
+    $loader = new FilesystemLoader($this->sourceFile->getDirname());
+    $twig = new Environment($loader);
+    $code = $this->getSourceCode();
+    $code = $twig->createTemplate($code)->render($token_map);
+    $this->setSourceCode($code);
+    $this->addMessage('Twig has run on ' . $this->sourceFile->getBasename() . '.');
+    $this->sourceFile = FilePath::create($this->sourceFile->getDirname() . '/' . $this->sourceFile->getFilename() . '.html');
 
     return $this;
   }
