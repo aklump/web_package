@@ -584,7 +584,7 @@ class HookService {
     if (!is_dir($docs_source_dir)) {
       throw new \RuntimeException("Missing source directory: " . $docs_source_dir);
     }
-    $path_to_generated_docs = $this->resolve($path_to_generated_docs);
+    $path_to_generated_docs = $path_to_generated_docs ? $this->resolve($path_to_generated_docs) : FALSE;
     if (trim($docs_source_dir) === trim($path_to_generated_docs)) {
       throw new \InvalidArgumentException("You cannot generate the demo in the source file itself!");
     }
@@ -598,6 +598,7 @@ class HookService {
     $result = Bash::exec(implode(';', $commands));
     $this->addMessage($result);
 
+    // TODO Rethink this false idea, kinda stinks. 2019-03-08T10:55, aklump
     if ($path_to_generated_docs) {
       $this->scmFilesToAdd[] = $path_to_generated_docs;
 
