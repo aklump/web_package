@@ -30,28 +30,32 @@ function build_fail_exception() {
 # @param string $to A path or filename as the destination.
 #
 function wp_duplicate() {
-  local from=$1
-  local to=$2
-  local to_file=$(basename $to)
+  local from="$1"
+  local to="$2"
+  local basename_from="$(basename "$from")"
+  local basename_to="$basename_from"
+  if [[ ! -d "$to" ]]; then
+    local basename_to="$(basename "$to")"
+  fi
 
-  if [ ! -e "$from" ]; then
+  if [[ ! -e "$from" ]]; then
     echo "`tty -s && tput setaf 1`$from does not exist.`tty -s && tput op`"
     return 1
   fi
 
-  if [ -f "$from" ]; then
-    if ( [ -d "$(dirname $to)" ] ||  mkdir -p "$(dirname $to)") &&  cp "$from" "$to"; then
-      echo "`tty -s && tput setaf 2`$to_file duplicated.`tty -s && tput op`"
+  if [[ -f "$from" ]]; then
+    if ( [[ -d "$(dirname "$to")" ]] ||  mkdir -p "$(dirname "$to")") &&  cp "$from" "$to"; then
+      echo "`tty -s && tput setaf 2`$basename_from duplicated as $basename_to.`tty -s && tput op`"
       return 0
     fi
-  elif [ -d "$from" ]; then
-    if ( [ -d "$to" ] || mkdir -p "$to") && rsync -a "$from/" "$to/"; then
-      echo "`tty -s && tput setaf 2`$to_file duplicated.`tty -s && tput op`"
+  elif [[ -d "$from" ]]; then
+    if ( [[ -d "$to" ]] || mkdir -p "$to") && rsync -a "$from/" "$to/"; then
+      echo "`tty -s && tput setaf 2`$basename_from duplicated as $basename_to.`tty -s && tput op`"
       return 0;
     fi
   fi
 
-  echo "`tty -s && tput setaf 1`Failed duplicating to $to_file.`tty -s && tput op`"
+  echo "`tty -s && tput setaf 1`Failed duplicating $basename_from.`tty -s && tput op`"
   return 1
 }
 

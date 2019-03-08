@@ -8,7 +8,8 @@
 namespace AKlump\WebPackage;
 
 $build
-  ->generateDocumentation()
+  ->setDocumentationSource('documentation')
+  ->generateDocumentationTo('docs')
   // This will adjust the path to the image, pulling it from docs.
   ->loadFile('README.md')
   ->replaceTokens([

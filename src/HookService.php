@@ -13,6 +13,23 @@ use Twig\Loader\FilesystemLoader;
  */
 class HookService {
 
+  /**
+   * The relative (to .web_package parent dir) directory where web_docs core
+   * directory is located.  We must cd into this directory to run
+   * `core/compile`.
+   *
+   * @var string
+   */
+  protected $docsSource = 'documentation';
+
+  /**
+   * The relative (to .web_package parent dir) directory where demo source
+   * files are expected to reside.
+   *
+   * @var string
+   */
+  protected $demoSource = 'documentation/demo';
+
   protected $php = 'php';
 
   protected $phpunit = 'phpunit';
@@ -32,6 +49,10 @@ class HookService {
   protected $messages = [];
 
   protected $scmFilesToAdd = [];
+
+  protected $queuedFiles = [];
+
+  protected $tokens = [];
 
   public function __construct(
     FilePath $path_to_web_package,
@@ -77,6 +98,21 @@ class HookService {
   }
 
   /**
+   * Add tokens to be used by future methods.
+   *
+   * @param array $additional_token_map
+   *   An array of keys (find) and values (replace).
+   *
+   * @return $this
+   *   Self for chaining.
+   */
+  public function addTokens(array $additional_token_map = []) {
+    $this->tokens += $additional_token_map;
+
+    return $this;
+  }
+
+  /**
    * Replace tokens in $this->sourceCode.
    *s
    *
@@ -106,8 +142,9 @@ class HookService {
     return $this;
   }
 
-  private function prepareTokenMap($prefix, array $additional_token_map = []) {
+  protected function prepareTokenMap($prefix, array $additional_token_map = []) {
     $token_map = $additional_token_map;
+    $token_map += $this->tokens;
     $token_map += array(
       $prefix . 'author' => $this->author,
       $prefix . 'date' => $this->date_string,
@@ -123,7 +160,112 @@ class HookService {
       $token_map[$prefix . 'title'] = $info['title'];
     }
 
+    // Have to sort because replacements must happen longest first.
+    uksort($token_map, function ($a, $b) {
+      return strlen($b) - strlen($a);
+    });
+
     return $token_map;
+  }
+
+  /**
+   * Set the documentation source directory.
+   *
+   * @param string $source_dir
+   *   The directory where the demo source code is located.
+   *
+   * @return $this
+   *   Self for chaining.
+   */
+  public function setDocumentationSource($source_dir) {
+    if (!$source_dir || !file_exists($source_dir)) {
+      throw new \InvalidArgumentException("\"$source_dir\" does not exist.");
+    }
+    $this->docsSource = $this->resolve($source_dir);
+
+    return $this;
+  }
+
+  /**
+   * @param string $source_dir
+   *   The directory where the demo source code is located.
+   *
+   * @return $this
+   *   Self for chaining.
+   */
+  public function setDemoSource($source_dir) {
+    if (!$source_dir || !file_exists($source_dir)) {
+      throw new \InvalidArgumentException("\"$source_dir\" does not exist.");
+    }
+    $this->demoSource = $this->resolve($source_dir);
+
+    return $this;
+  }
+
+  /**
+   * Add a file/folder to be copied to the distributed demo.
+   *
+   * Resolves the source code paths and rewrites the HTML as appropriate.
+   *
+   * @param string $path
+   *   Source path to a file or folder to be included with the demo generation.
+   *    This must match exactly what you use in _demo.twig.html to reference
+   *   the file, as it is used for string replacement.  Paths are
+   *   relative to $this->demoSource/ e.g.
+   *   "../../node_modules/bootstrap/dist/css/bootstrap.min.css."
+   * @param null $to_relative_path
+   *   If this is null, and a file the extension of the filepath will be used
+   *   to guess the appropriate location, e.g. file.js will be moved into /js.
+   *   Image files will be moved into /images. If you do not wnt this auto
+   *   behavior set this to FALSE, if you want to specify a folder in the demo
+   *   build directory, then add it without leading slash, and relative to
+   *   $path.
+   *
+   * @return $this
+   *   Self for chaining.
+   */
+  public function addToDemo($path, $to_relative_path = NULL) {
+    $source = FilePath::create($this->resolve($this->demoSource . "/$path"));
+    if (empty($path) || !$source->exists()) {
+      throw new \InvalidArgumentException("\"$path\" does not exist or is invalid.");
+    }
+
+    if (is_null($to_relative_path)) {
+      if ($source->getType() === FilePath::TYPE_FILE) {
+        $extension = $source->getExtension();
+        switch (strtolower($extension)) {
+          case 'woff':
+          case 'eot':
+          case 'ttf':
+            $to_relative_path = 'fonts';
+            break;
+
+          case 'jpeg':
+          case 'jpg':
+          case 'gif':
+          case 'svg':
+            $to_relative_path = 'images';
+            break;
+
+          case 'css':
+          case 'js':
+            $to_relative_path = $extension;
+            break;
+
+          default:
+            break;
+        }
+        $this->addTokens([
+          $path => "$extension/" . $source->getBasename(),
+        ]);
+      }
+    }
+    $this->queuedFiles[] = [
+      $source,
+      $to_relative_path,
+    ];
+
+    return $this;
   }
 
   /**
@@ -144,9 +286,18 @@ class HookService {
     $loader = new FilesystemLoader($this->sourceFile->getDirname());
     $twig = new Environment($loader);
     $code = $this->getSourceCode();
-    $code = $twig->createTemplate($code)->render($token_map);
+
+    $template = $twig->createTemplate($code);
+
+    // Use the actual to set the defaults for the example code.  This may be
+    // overidden in the template files.
+    $token_map['example_markup'] = $template->renderBlock('actual_markup', $token_map);
+    $token_map['example_javascript'] = $template->renderBlock('actual_javascript', $token_map);
+
+    $code = $template->render($token_map);
+
     $this->setSourceCode($code);
-    $this->addMessage('Twig has run on ' . $this->sourceFile->getBasename() . '.');
+    $this->addMessage('processed with Twig.');
     $this->sourceFile = FilePath::create($this->sourceFile->getDirname() . '/' . $this->sourceFile->getFilename() . '.html');
 
     return $this;
@@ -406,12 +557,18 @@ class HookService {
     return file_exists($this->resolve('.git'));
   }
 
+
+  /**
+   * @deprecated Use generateDocumentationTo() instead.
+   */
+  public function generateDocumentation($path_to_generated_docs = 'docs') {
+    return $this->generateDocumentationTo($path_to_generated_docs);
+  }
+
   /**
    * Compile documentation and to source control (is using).
    *
-   * Source documentation must be in documentation/source.  The assumption is
-   * that the generated documentation is in "docs".  But that can be changed by
-   * providing an argument.
+   * Source documentation must be in documentation/source.
    *
    * @param string|false $path_to_generated_docs
    *   Defaults to 'docs'; this will determine success as we look for
@@ -422,14 +579,25 @@ class HookService {
    * @return $this
    * @throws \AKlump\WebPackage\BuildFailException
    */
-  public function generateDocumentation($path_to_generated_docs = 'docs') {
-    $path_to_generated_docs = rtrim($path_to_generated_docs, '/');
+  public function generateDocumentationTo($path_to_generated_docs = 'docs') {
+    $docs_source_dir = $this->resolve($this->docsSource);
+    if (!is_dir($docs_source_dir)) {
+      throw new \RuntimeException("Missing source directory: " . $docs_source_dir);
+    }
+    $path_to_generated_docs = $this->resolve($path_to_generated_docs);
+    if (trim($docs_source_dir) === trim($path_to_generated_docs)) {
+      throw new \InvalidArgumentException("You cannot generate the demo in the source file itself!");
+    }
+
     $commands = [];
     if ($path_to_generated_docs) {
       $commands[] = "[[ -d \"{$path_to_generated_docs}\" ]] && rm -r {$path_to_generated_docs}";
     }
-    $commands[] = "(cd documentation && ./core/compile.sh)";
-    echo Bash::exec(implode(';', $commands)) . PHP_EOL;
+    $commands[] = "cd $docs_source_dir";
+    $commands[] = './core/compile.sh --website="' . $path_to_generated_docs . '"';
+    $result = Bash::exec(implode(';', $commands));
+    $this->addMessage($result);
+
     if ($path_to_generated_docs) {
       $this->scmFilesToAdd[] = $path_to_generated_docs;
 
@@ -437,6 +605,118 @@ class HookService {
         throw new BuildFailException($path_to_generated_docs . "/index.html was not created.");
       }
     }
+
+    return $this;
+  }
+
+  /**
+   * Generates a demo folder using  'demo' as source.
+   *
+   * This does not empty an existing folder, but does create it if it does not
+   * already exist.  The assumption is that there are a number of .twig or
+   * .twig.html files in /demo which need to be processed, which also have
+   * tokens in them.  If the filename begins with '_' it will not be processed;
+   * use such as template references, which will not be converted to pages.
+   * Any other files will be copied verbatim.  If you need to process tokens in
+   * other files do so manually in the $build chain.
+   *
+   * @param string $path_to_generated_demo
+   *   The output path where the demo is created.  Defaults to dist/demo.
+   *
+   * @return $this
+   *   Self for chaining.
+   *
+   * Here's a demo source structure tree example:
+   *
+   *   .
+   *   ├── _demo.twig.html
+   *   ├── css
+   *   │   └── example.css
+   *   ├── fonts
+   *   │   └── glyphicons-halflings-regular.woff
+   *   ├── index.twig
+   *   └── loading.twig
+   *
+   * Here is an example hook file implementation.
+   *
+   * @code
+   *   $build
+   *     ->setDemoSource('documentation/demo')
+   *     ->addToDemo('../../dist/photo_essay.css')
+   *     ->addToDemo('../../dist/jquery.photo_essay.js')
+   *     ->addToDemo('../../node_modules/bootstrap/fonts')
+   *     ->generateDemoTo('dist/demo')
+   *     ->displayMessages();
+   * @endcode
+   */
+  public function generateDemoTo($path_to_generated_demo = 'dist/demo') {
+    $demo_source_dir = $this->resolve($this->demoSource);
+    if (!is_dir($demo_source_dir)) {
+      throw new \RuntimeException("Missing source directory: " . $demo_source_dir);
+    }
+    $path_to_generated_demo = $this->resolve($path_to_generated_demo);
+    if (trim($demo_source_dir) === trim($path_to_generated_demo)) {
+      throw new \InvalidArgumentException("You cannot generate the demo in the source file itself!");
+    }
+
+    FilePath::ensureDir($path_to_generated_demo);
+    $excludes = [];
+
+    // Process all .twig files for tokens and Twig.
+    FilePath::create($demo_source_dir)
+      ->descendents('/(?:\.twig\.html|\.twig)$/')
+      ->each(function ($file) use (&$excludes, $path_to_generated_demo) {
+        // Do not process files beginning with '_'. They are meant only for template references.
+        if (substr($file->getFilename(), 0, 1) !== '_') {
+          $this->loadFile($file->getPath())
+            ->processWithTwig()
+            ->replaceTokens()
+            ->saveTo($path_to_generated_demo, TRUE);
+          $excludes[] = $file;
+        }
+      });
+
+    $this->startMessageClause('Moving files to ' . $this->relativize($path_to_generated_demo) . '.');
+    // Then rsync the remaining files and folders.
+    $rsync_result = Bash::exec(array_merge([
+      "rsync -av",
+      $demo_source_dir . '/',
+      $path_to_generated_demo . '/',
+      '--exclude=_*.twig*',
+    ], array_map(function ($file) {
+      return '--exclude=' . $file->getBasename();
+    }, $excludes)));
+
+    $lines = explode(PHP_EOL, $rsync_result);
+    // Remove rsync cruft.
+    array_shift($lines);
+    array_pop($lines);
+    array_pop($lines);
+    array_pop($lines);
+    array_walk($lines, function ($line) {
+      $this->addMessage($line);
+    });
+
+    // Copy over added files.
+    if ($this->queuedFiles) {
+      foreach ($this->queuedFiles as $queued_file) {
+        list ($source, $to) = $queued_file;
+        $destination_path = $path_to_generated_demo . '/' . $to;
+        if ($source->getType() === FilePath::TYPE_DIR) {
+          Bash::exec([
+            "cp -R",
+            $source->getPath(),
+            $destination_path,
+          ]);
+        }
+        else {
+          FilePath::create($destination_path)
+            ->copyFrom($source->getPath());
+        }
+      }
+    }
+
+    $this->scmFilesToAdd[] = $path_to_generated_demo;
 
     return $this;
   }
