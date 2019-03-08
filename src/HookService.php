@@ -598,6 +598,7 @@ class HookService {
     $result = Bash::exec(implode(';', $commands));
     $this->addMessage($result);
 
+    // TODO Rethink this false idea, kinda stinks. 2019-03-08T10:55, aklump
     if ($path_to_generated_docs) {
       $this->scmFilesToAdd[] = $path_to_generated_docs;
 
