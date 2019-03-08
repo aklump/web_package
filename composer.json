@@ -1,7 +1,7 @@
 {
     "name": "Web Package",
     "description": "A shell script to help the management of files as a package.",
-    "version": "3.0.6",
+    "version": "3.0.7",
     "authors": [
         {
             "name": "Aaron Klump",
@@ -13,7 +13,7 @@
         "php": "~7.1",
         "symfony\/yaml": "^3.1",
         "aklump\/loft-lib": "^1.0",
-        "twig/twig": "^2.6"
+        "twig\/twig": "^2.6"
     },
     "autoload": {
         "psr-4": {
