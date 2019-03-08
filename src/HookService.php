@@ -584,7 +584,7 @@ class HookService {
     if (!is_dir($docs_source_dir)) {
       throw new \RuntimeException("Missing source directory: " . $docs_source_dir);
     }
-    $path_to_generated_docs = $this->resolve($path_to_generated_docs);
+    $path_to_generated_docs = $path_to_generated_docs ? $this->resolve($path_to_generated_docs) : FALSE;
     if (trim($docs_source_dir) === trim($path_to_generated_docs)) {
       throw new \InvalidArgumentException("You cannot generate the demo in the source file itself!");
     }
