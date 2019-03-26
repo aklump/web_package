@@ -139,9 +139,9 @@ function do_scripts() {
     local date=$(date)
 
     # Check to see if a scriptname has been provided, instead.
-    if [[ "$4" ]]; then
-        lobster_echo "Looking for provided file: '$4'"
-        target_scripts=$(ls "$dir/"*"$4"*)
+    if [[ "$script_filter" ]]; then
+        lobster_echo "Looking for provided file: '$script_filter'"
+        target_scripts=$(ls "$dir/"*"$script_filter"*)
     else
         local target_scripts=($(ls "$dir/"*))
     fi
