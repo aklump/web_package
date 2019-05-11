@@ -67,6 +67,10 @@ Then inside your hook file do something with it, e.g.,
       ->saveToDist()
       ->displayMessages();
 
+## `$build` Methods
+
+{% include('_HookService.md') %}
+
 ## Callback Arguments
 
 These are deprecated, you should only use them as a last resort.
