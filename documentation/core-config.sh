@@ -50,7 +50,7 @@ README = '../README.md'
 #
 # Defines pre/post hooks, shell or php scripts to call, space separated.
 #
-#pre_hooks = "pre_compile.sh pre_compile.php"
+pre_hooks = "build-cs.php"
 #post_hooks = "post_compile.sh post_compile.php"
 
 version_file = "../composer.json"
