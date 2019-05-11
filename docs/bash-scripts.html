@@ -9,21 +9,19 @@
 
 <body class="page--bash-scripts">
 <header>
-  <div class="pager">
-  <a href="php-scripts.html" class="prev php-scripts">&laquo;PHP Hooks</a>
-  <a href="index.html" class="index">Index</a>
-  <a href="hooklib.html" class="next hooklib">Hooks Library&raquo;</a>
-</div>
-</header>
-
-  <div class="search__wrapper">
+  <div class="pager"><a href="php-scripts.html" class="prev php-scripts">&laquo;PHP Hooks</a><a href="index.html" class="index pager__book-title"></a><a href="hooklib.html" class="next hooklib">Hooks Library&raquo;</a></div></header>
+<section class="sub-header">
+  <div class="breadcrumbs"><a href="index.html">Index</a>
+         &raquo
+      </div>      <div class="search__wrapper">
   <form action="search--results.html">
     <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
   </form>
 </div>
+  </section>
 
-  <h1>BASH Hooks</h1>
-  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<h1>BASH Hooks</h1>
 
 <section>
 
@@ -122,14 +120,9 @@ echo "The hook worked as expected"
 </div>
 
 <footer>
-  <div class="pager">
-  <a href="php-scripts.html" class="prev php-scripts">&laquo;PHP Hooks</a>
-  <a href="index.html" class="index">Index</a>
-  <a href="hooklib.html" class="next hooklib">Hooks Library&raquo;</a>
-</div>
-  
+  <div class="pager"><a href="php-scripts.html" class="prev php-scripts">&laquo;PHP Hooks</a><a href="index.html" class="index pager__book-title"></a><a href="hooklib.html" class="next hooklib">Hooks Library&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 3.0.8 &bull; Last Updated: Tue, 26 Mar 2019 13:53:24 -0700</p>
+    <p class="legaleeze center">Version: 3.0.8 &bull; Last Updated: Sat, 11 May 2019 12:05:15 -0700</p>
   </div>
 </footer>
 
@@ -138,9 +131,9 @@ echo "The hook worked as expected"
   <script src="search/tipuesearch_set.js"></script>
   <script src="search/tipuesearch.min.js"></script>
   <script>
-    $(document).ready(function () {
-      $('#tipue_search_input').tipuesearch();
-    });
+    $(document).ready(function() {
+      $('#tipue_search_input').tipuesearch()
+    })
   </script>
 <script src="js/core.js"></script>
 </body>

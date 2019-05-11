@@ -9,49 +9,50 @@
 
 <body class="page--index">
 <header>
-  <div class="pager">
-  <a href="README.html" class="prev readme">&laquo;README</a>
-  <a href="index.html" class="index">Index</a>
-  <a href="config.html" class="next config">Configuration&raquo;</a>
-</div>
-</header>
-
-  <div class="search__wrapper">
+  <div class="pager"><a href="README.html" class="prev readme">&laquo;README</a><span class="pager__book-title"></span><a href="config.html" class="next config">Configuration&raquo;</a></div></header>
+<section class="sub-header">
+        <div class="search__wrapper">
   <form action="search--results.html">
     <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
   </form>
 </div>
+  </section>
 
-  <h1>Index</h1>
 
-<section><ul class="index">
-      <li><a href="config.html">Configuration</a></li>
-      <li><a href="source-control.html">Should `.web_package` be added to source control?</a></li>
-      <li><a href="build-scripts.html">Hooks: build, unbuild, dev</a></li>
-      <li><a href="php-scripts.html">PHP Hooks</a></li>
-      <li><a href="bash-scripts.html">BASH Hooks</a></li>
-      <li><a href="hooklib.html">Hooks Library</a></li>
-      <li><a href="drupal.html">Drupal Modules/Themes</a></li>
-      <li><a href="faq.html">Questions</a></li>
-      <li><a href="releases.html">Release Types</a></li>
-      <li><a href="templates.html">Configuration Templates</a></li>
-      <li><a href="README.html">README</a></li>
-  </ul>
-</section>
+<h1></h1>
+
+  
+    <section>
+    <ul class="index">
+              <li><a href="config.html">Configuration</a></li>
+              <li><a href="source-control.html">Should `.web_package` be added to source control?</a></li>
+              <li><a href="build-scripts.html">Hooks: build, unbuild, dev</a></li>
+              <li><a href="php-scripts.html">PHP Hooks</a></li>
+              <li><a href="bash-scripts.html">BASH Hooks</a></li>
+              <li><a href="hooklib.html">Hooks Library</a></li>
+              <li><a href="drupal.html">Drupal Modules/Themes</a></li>
+              <li><a href="faq.html">Questions</a></li>
+              <li><a href="releases.html">Release Types</a></li>
+              <li><a href="templates.html">Configuration Templates</a></li>
+              <li><a href="README.html">README</a></li>
+          </ul>
+  </section>
+
+
+
+
+
+
+
 
 <div class="search__results">
   <div id="tipue_search_content"></div>
 </div>
 
 <footer>
-  <div class="pager">
-  <a href="README.html" class="prev readme">&laquo;README</a>
-  <a href="index.html" class="index">Index</a>
-  <a href="config.html" class="next config">Configuration&raquo;</a>
-</div>
-  
+  <div class="pager"><a href="README.html" class="prev readme">&laquo;README</a><span class="pager__book-title"></span><a href="config.html" class="next config">Configuration&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 3.0.8 &bull; Last Updated: Tue, 26 Mar 2019 13:53:27 -0700</p>
+    <p class="legaleeze center">Version: 3.0.8 &bull; Last Updated: Sat, 11 May 2019 12:05:22 -0700</p>
   </div>
 </footer>
 
@@ -60,9 +61,9 @@
   <script src="search/tipuesearch_set.js"></script>
   <script src="search/tipuesearch.min.js"></script>
   <script>
-    $(document).ready(function () {
-      $('#tipue_search_input').tipuesearch();
-    });
+    $(document).ready(function() {
+      $('#tipue_search_input').tipuesearch()
+    })
   </script>
 <script src="js/core.js"></script>
 </body>

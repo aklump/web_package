@@ -9,21 +9,19 @@
 
 <body class="page--faq">
 <header>
-  <div class="pager">
-  <a href="drupal.html" class="prev drupal">&laquo;Drupal Modules/Themes</a>
-  <a href="index.html" class="index">Index</a>
-  <a href="releases.html" class="next releases">Release Types&raquo;</a>
-</div>
-</header>
-
-  <div class="search__wrapper">
+  <div class="pager"><a href="drupal.html" class="prev drupal">&laquo;Drupal Modules/Themes</a><a href="index.html" class="index pager__book-title"></a><a href="releases.html" class="next releases">Release Types&raquo;</a></div></header>
+<section class="sub-header">
+  <div class="breadcrumbs"><a href="index.html">Index</a>
+         &raquo
+      </div>      <div class="search__wrapper">
   <form action="search--results.html">
     <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
   </form>
 </div>
+  </section>
 
-  <h1>Questions</h1>
-  <div class="breadcrumb"><a href="index.html">Index</a></div>
+
+<h1>Questions</h1>
 
 <section>
 
@@ -45,14 +43,9 @@
 </div>
 
 <footer>
-  <div class="pager">
-  <a href="drupal.html" class="prev drupal">&laquo;Drupal Modules/Themes</a>
-  <a href="index.html" class="index">Index</a>
-  <a href="releases.html" class="next releases">Release Types&raquo;</a>
-</div>
-  
+  <div class="pager"><a href="drupal.html" class="prev drupal">&laquo;Drupal Modules/Themes</a><a href="index.html" class="index pager__book-title"></a><a href="releases.html" class="next releases">Release Types&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 3.0.8 &bull; Last Updated: Tue, 26 Mar 2019 13:53:25 -0700</p>
+    <p class="legaleeze center">Version: 3.0.8 &bull; Last Updated: Sat, 11 May 2019 12:05:18 -0700</p>
   </div>
 </footer>
 
@@ -61,9 +54,9 @@
   <script src="search/tipuesearch_set.js"></script>
   <script src="search/tipuesearch.min.js"></script>
   <script>
-    $(document).ready(function () {
-      $('#tipue_search_input').tipuesearch();
-    });
+    $(document).ready(function() {
+      $('#tipue_search_input').tipuesearch()
+    })
   </script>
 <script src="js/core.js"></script>
 </body>
