@@ -82,12 +82,31 @@ class HookService {
     ];
   }
 
-  public function loadFile($filepath) {
+  /**
+   * Load a file (with optional contents mutation).
+   *
+   * @param string $filepath
+   *   The filepath to the file to load.
+   * @param callable|NULL $mutator
+   *   A callback that receives the file contents as loaded from the
+   *   filesystem, and must return a string to pass on.  Use this to alter the
+   *   contents, for example you could use it to replace the old version string
+   *   with `__version` so the tokens can act upon it and update the version
+   *   string with the current.
+   *
+   * @return $this
+   * @throws \AKlump\WebPackage\BuildFailException
+   */
+  public function loadFile($filepath, callable $mutator = NULL) {
     $this->sourceFile = FilePath::create($this->resolve($filepath));
     if (!$this->sourceFile->exists()) {
       throw new BuildFailException("$filepath does not exist.");
     }
-    $this->setSourceCode($this->sourceFile->load()->get());
+    $code = $this->sourceFile->load()->get();
+    if ($mutator) {
+      $code = $mutator($code, $this->sourceFile->getPath());
+    }
+    $this->setSourceCode($code);
     $this->startMessageClause($this->relativize($this->sourceFile->getPath()) . ' has been loaded.');
 
     return $this;
