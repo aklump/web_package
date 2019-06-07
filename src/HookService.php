@@ -790,8 +790,8 @@ class HookService {
    */
   public function runTests(string $path_to_testrunner) {
     $this->loadFile($path_to_testrunner);
-    if ($this->sourceFile->getFilename() !== 'phpunit') {
-      throw new BuildFailException("Only PhpUnit (phpunit.xml) is supported at this time; you provided the test runner: \"$path_to_testrunner\".");
+    if (strpos($this->sourceFile->getFilename(), 'phpunit') === FALSE) {
+      throw new BuildFailException("Only filenames matching *phpunit*.xml are supported; you provided the test runner: \"$path_to_testrunner\".");
     }
     $result = Bash::exec([
       $this->php,
