@@ -161,7 +161,7 @@ function do_scripts() {
         exit_status=$?
         [[ "$output" ]] && lobster_echo "$output"
         echo
-        [[ $exit_status -ne 0 ]] && lobster_error "BUILD HAS FAILED!" && echo && lobster_exit
+        [[ $exit_status -ne 0 ]] && return 1
       fi
     done
     return 0
