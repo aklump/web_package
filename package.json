@@ -1,0 +1,11 @@
+{
+  "name": "web_package",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:aklump/web_package.git",
+  "author": "Aaron Klump <sourcecode@intheloftstudios.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "uglify-js": "^3.9.3"
+  }
+}
