@@ -27,6 +27,7 @@ fi
 
 # Merge into master
 if [[ "$master" ]]; then
+  lobster_success "Merging into $master (master)..."
   $wp_git checkout "$master"
   $wp_git merge --no-ff $get_branch_return -m "Merge branch '$get_branch_return'"
 
