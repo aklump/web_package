@@ -88,9 +88,18 @@ function wp_duplicate_if_not_exists() {
 # @param string Full path to a file or folder
 #
 function wp_wait_for_exists() {
-    while [ ! -e "$1" ]; do
+    breakout=0
+    while [[ ! -e "$1" ]] && [[ $breakout < 20 ]]; do
+      ((breakout++))
       sleep 1
+      echo $breakout
     done
+    if [[ $breakout -eq 20 ]]; then
+      echo
+      echo "Time out waiting for: $1"
+      echo
+      return 1
+    fi
 }
 
 # Remove a file, or folder and it's contents.
