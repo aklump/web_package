@@ -16,9 +16,9 @@ increment_version $version $severity
 version=$increment_version_return
 
 if [ $previous == $version ]; then
-  lobster_warning "Version unchanged: $previous ---> $version"
+  lobster_warning "Version unchanged: $previous ➡ $version"
 else
-  lobster_success "Version bumped: $previous ---> $version"
+  lobster_success "Version bumped: $previous ➡ $version"
   lobster_echo
 
   # Update the file with the new version string
@@ -30,6 +30,8 @@ else
 
     # Fail if a build script script fails.
     if ! do_scripts "$wp_build" "$previous" "$version"; then
+      put_info_string 'version' "$previous"
+      lobster_success "Version rolled back to ➡ $previous"
       echo_build_failure && exit 1
     fi
 
