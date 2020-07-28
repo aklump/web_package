@@ -9,5 +9,5 @@ lobster_has_param 'no-hooks' && lobster_notice "Skipping all hooks due to --no-h
 if [[ $? -eq 0 ]]; then
   lobster_success "Build complete."
 else
-  lobster_error "BUILD HAS FAILED!" && exit 1
+ echo_build_failure && exit 1
 fi
