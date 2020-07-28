@@ -16,9 +16,9 @@ increment_version $version $severity
 version=$increment_version_return
 
 if [ $previous == $version ]; then
-  lobster_warning "Version unchanged: $previous ---> $version";
+  lobster_warning "Version unchanged: $previous ---> $version"
 else
-  lobster_success "Version bumped: $previous ---> $version";
+  lobster_success "Version bumped: $previous ---> $version"
   lobster_echo
 
   # Update the file with the new version string
@@ -26,13 +26,19 @@ else
 
   # Look for build scripts and call
   lobster_has_param 'no-hooks' && lobster_notice "Skipping all hooks due to --no-hooks"
-  if ! lobster_has_param 'no-hooks' && do_scripts "$wp_build" "$previous" "$version"; then
+  if ! lobster_has_param 'no-hooks'; then
+
+    # Fail if a build script script fails.
+    if ! do_scripts "$wp_build" "$previous" "$version"; then
+      echo_build_failure && exit 1
+    fi
+
     # Pause to allow for processing
     if [[ "$wp_pause" -lt 0 ]]; then
-      read -n1 -p "`tput setaf 3`Press any key to proceed...`tput op`"
+      read -n1 -p "$(tput setaf 3)Press any key to proceed...$(tput op)"
       echo
     elif [[ "$wp_pause" -gt 0 ]]; then
-      lobster_echo "`tput setaf 2`Waiting for $wp_pause seconds...`tput op`"
+      lobster_echo "$(tput setaf 2)Waiting for $wp_pause seconds...$(tput op)"
       sleep $wp_pause
     fi
   fi
@@ -47,8 +53,8 @@ if [ "$release_type" == 'hotfix' ] || [ "$release_type" == 'release' ]; then
   # Git Integration for hotfixes and release branches.
   #
   else
-    starting_dir=$PWD
-    cd $wp_git_root
+    starting_dir="$PWD"
+    cd "$wp_git_root"
 
     # Store this branch so we can return to it when done
     get_branch
@@ -82,6 +88,6 @@ if [ "$release_type" == 'hotfix' ] || [ "$release_type" == 'release' ]; then
     $wp_git add -u
     $wp_git commit -m "Version bumped from $previous to $version"
 
-    cd $starting_dir
+    cd "$starting_dir"
   fi
 fi
