@@ -30,14 +30,29 @@ class HookService {
    */
   protected $demoSource = 'documentation/demo';
 
+  /**
+   * @var string
+   */
   protected $php = 'php';
 
-  protected $phpunit = 'phpunit';
+  /**
+   * @var string
+   */
+  protected $phpunit = '';
 
+  /**
+   * @var string
+   */
   protected $pathToWebPackage;
 
+  /**
+   * @var string
+   */
   protected $pathToInstance;
 
+  /**
+   * @var string
+   */
   protected $pathToDist;
 
   protected $sourceFile;
@@ -70,6 +85,22 @@ class HookService {
     $this->pathToWebPackage = rtrim($path_to_web_package->getPath(), '/');
     $this->pathToInstance = rtrim($instance_root->getPath(), '/');
     $this->infoFile = $info_file;
+
+    // If PHPUnit has not already been set, then auto set it.
+    $composer_provided_phpunit = FilePath::create($this->resolve('vendor/phpunit/phpunit/phpunit'));
+    if (!$this->phpunit) {
+
+      // Look for composer dependency.
+      if ($composer_provided_phpunit->exists()) {
+        $this->setPhpUnit($composer_provided_phpunit->getPath());
+      }
+      else {
+
+        // Look for system dependency.
+        $this->setPhpUnit(Bash::which('phpunit'));
+      }
+    }
+
     $this->data = [
       'name' => $name,
       'description' => $description,
@@ -793,22 +824,6 @@ class HookService {
    * @throws \AKlump\WebPackage\BuildFailException
    */
   public function runTests(string $path_to_testrunner) {
-    $composer_provided_phpunit = FilePath::create($this->resolve('vendor/phpunit/phpunit/phpunit'));
-
-    // If PHPUnit has not already been set, then auto set it.
-    if (!$this->phpunit) {
-
-      // Look for composer dependency.
-      if ($composer_provided_phpunit->exists()) {
-        $this->setPhpUnit($composer_provided_phpunit->getPath());
-      }
-      else {
-
-        // Look for system dependency.
-        $this->setPhpUnit(Bash::which('phpunit'));
-      }
-    }
-
     $this->loadFile($path_to_testrunner);
     if (strpos($this->sourceFile->getFilename(), 'phpunit') === FALSE) {
       throw new BuildFailException("Only filenames matching *phpunit*.xml are supported; you provided the test runner: \"$path_to_testrunner\".");
