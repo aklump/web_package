@@ -67,7 +67,15 @@ class HookService {
     $date_string
   ) {
     $this->setPhp(Bash::which('php'));
-    $this->setPhpUnit(Bash::which('phpunit'));
+
+    $composer_provided_phpunit = FilePath::create($this->resolve('vendor/phpunit/phpunit/phpunit'));
+    if ($composer_provided_phpunit->exists()) {
+      $this->setPhpUnit($composer_provided_phpunit->getPath());
+    }
+    else {
+      $this->setPhpUnit(Bash::which('phpunit'));
+    }
+
     $this->pathToWebPackage = rtrim($path_to_web_package->getPath(), '/');
     $this->pathToInstance = rtrim($instance_root->getPath(), '/');
     $this->infoFile = $info_file;
@@ -783,7 +791,12 @@ class HookService {
   /**
    * Run tests indicated by a test runner file.
    *
+   * If you have installed phpunit as a composer dependency that version of
+   * phpunit will be used, otherwise it will try to fallback to the system's
+   * phpunit executable, a.k.a., "which phpunit".
+   *
    * @param string $path_to_testrunner
+   *   This is the phpunit.xml file to run the tests.
    *
    * @return $this
    * @throws \AKlump\WebPackage\BuildFailException
