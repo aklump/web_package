@@ -67,15 +67,6 @@ class HookService {
     $date_string
   ) {
     $this->setPhp(Bash::which('php'));
-
-    $composer_provided_phpunit = FilePath::create($this->resolve('vendor/phpunit/phpunit/phpunit'));
-    if ($composer_provided_phpunit->exists()) {
-      $this->setPhpUnit($composer_provided_phpunit->getPath());
-    }
-    else {
-      $this->setPhpUnit(Bash::which('phpunit'));
-    }
-
     $this->pathToWebPackage = rtrim($path_to_web_package->getPath(), '/');
     $this->pathToInstance = rtrim($instance_root->getPath(), '/');
     $this->infoFile = $info_file;
@@ -802,6 +793,22 @@ class HookService {
    * @throws \AKlump\WebPackage\BuildFailException
    */
   public function runTests(string $path_to_testrunner) {
+    $composer_provided_phpunit = FilePath::create($this->resolve('vendor/phpunit/phpunit/phpunit'));
+
+    // If PHPUnit has not already been set, then auto set it.
+    if (!$this->phpunit) {
+
+      // Look for composer dependency.
+      if ($composer_provided_phpunit->exists()) {
+        $this->setPhpUnit($composer_provided_phpunit->getPath());
+      }
+      else {
+
+        // Look for system dependency.
+        $this->setPhpUnit(Bash::which('phpunit'));
+      }
+    }
+
     $this->loadFile($path_to_testrunner);
     if (strpos($this->sourceFile->getFilename(), 'phpunit') === FALSE) {
       throw new BuildFailException("Only filenames matching *phpunit*.xml are supported; you provided the test runner: \"$path_to_testrunner\".");
@@ -854,7 +861,12 @@ class HookService {
   /**
    * Set the php runner.
    *
-   * @param string $php
+   * This is generally not necessary, because runTests will try to find it
+   * first at the project-level, then at the system level.  Use this only when
+   * you need to point to something else.
+   *
+   * @param string $phpunit
+   *   Full path the phpunit executable.
    *
    * @return \AKlump\WebPackage\HookService
    * @throws \AKlump\WebPackage\BuildFailException
