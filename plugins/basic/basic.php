@@ -2,10 +2,10 @@
 /**
  * Basic parse of configuration files: .info, .json, .yml
  */
+
 namespace AKlump\LoftLib\Component\Config;
 
 require_once getenv('LOBSTER_ROOT') . '/lobster.php';
-
 $dir = dirname($argv[1]);
 $file = basename($argv[1]);
 $key = isset($argv[2]) ? $argv[2] : NULL;
@@ -15,17 +15,26 @@ $ext = pathinfo($file, PATHINFO_EXTENSION);
 $options = array('install' => TRUE);
 switch ($ext) {
   case 'ini':
-      $conf = new ConfigIni($dir, $file, $options);
-      break;
+    $conf = new ConfigIni($dir, $file, $options);
+    break;
+
   case 'info':
     $conf = new ConfigDrupalInfo($dir, $file, $options);
     break;
+
   case 'json':
     $conf = new ConfigJson($dir, $file, $options);
     if ($file === 'composer.json' && $key === 'author') {
       $key = 'authors';
     }
     break;
+
+  // @link https://robreid.io/semver/
+  case 'semver':
+    $key = ucfirst($key);
+    $conf = new ConfigYaml($dir, $file, $options);
+    break;
+
   case 'yml':
   case 'yaml':
     $conf = new ConfigYaml($dir, $file, $options);
@@ -41,10 +50,10 @@ if ($value) {
   if ($file === 'composer.json' && $key === 'authors') {
     $current = $conf->read($key, array(
       array(
-        'name'     => '',
-        'email'    => '',
+        'name' => '',
+        'email' => '',
         'homepage' => '',
-        'role'     => '',
+        'role' => '',
       ),
     ));
     $name = $value;
@@ -58,7 +67,7 @@ if ($value) {
     foreach ($current as $k => $item) {
       if ($email === $item['email'] || $name === $item['name']) {
         $current[$k] = array_merge($item, array(
-          'name'  => $name,
+          'name' => $name,
           'email' => $email,
         ));
         $found = TRUE;
