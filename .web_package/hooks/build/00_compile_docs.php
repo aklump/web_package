@@ -8,10 +8,9 @@
 namespace AKlump\WebPackage;
 
 $build
-  ->generateDocumentation()
+  ->generateDocumentationTo()
   // Add some additional files to SCM that were generated and outside of the docs directory.
   ->addFilesToScm([
     'README.md',
-    'README.txt',
   ])
   ->displayMessages();
