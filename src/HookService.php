@@ -648,9 +648,9 @@ class HookService {
     $compile = ['./core/compile.sh'];
     if ($path_to_generated_docs) {
       $compile[] = '--website="' . $path_to_generated_docs . '"';
-      $commands[] = "[[ -d \"{$path_to_generated_docs}\" ]] && rm -r {$path_to_generated_docs}";
+      $commands[] = "[[ -d \"{$path_to_generated_docs}\" ]] && rm -r \"{$path_to_generated_docs}\"";
     }
-    $commands[] = "cd $docs_source_dir";
+    $commands[] = "cd \"$docs_source_dir\"";
     $commands[] = implode(' ', $compile);
 
     $result = Bash::exec(implode(';', $commands));
