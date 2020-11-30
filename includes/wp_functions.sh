@@ -89,15 +89,14 @@ function wp_duplicate_if_not_exists() {
 #
 function wp_wait_for_exists() {
     breakout=0
-    while [[ ! -e "$1" ]] && [[ $breakout < 20 ]]; do
+    while [[ ! -e "$1" ]] && [[ $breakout -lt 10 ]]; do
       ((breakout++))
       sleep 1
-      echo $breakout
+      echo waiting...$breakout
     done
-    if [[ $breakout -eq 20 ]]; then
+    if [[ ! -e "$1" ]]; then
       echo
-      echo "Time out waiting for: $1"
-      echo
+      echo "$1 does not exist.  Timed out."
       return 1
     fi
 }
