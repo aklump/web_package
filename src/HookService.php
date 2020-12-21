@@ -4,6 +4,7 @@ namespace AKlump\WebPackage;
 
 use AKlump\LoftLib\Bash\Bash;
 use AKlump\LoftLib\Bash\Color;
+use AKlump\LoftLib\Bash\FailedExecException;
 use AKlump\LoftLib\Storage\FilePath;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -87,19 +88,7 @@ class HookService {
     $this->infoFile = $info_file;
 
     // If PHPUnit has not already been set, then auto set it.
-    $composer_provided_phpunit = FilePath::create($this->resolve('vendor/phpunit/phpunit/phpunit'));
-    if (!$this->phpunit) {
-
-      // Look for composer dependency.
-      if ($composer_provided_phpunit->exists()) {
-        $this->setPhpUnit($composer_provided_phpunit->getPath());
-      }
-      else {
-
-        // Look for system dependency.
-        $this->setPhpUnit(Bash::which('phpunit'));
-      }
-    }
+    $this->boostrapPhpUnit();
 
     $this->data = [
       'name' => $name,
@@ -110,6 +99,32 @@ class HookService {
       'url' => $url,
       'date_string' => $date_string,
     ];
+  }
+
+  /**
+   * Look for PhpUnit executable if not already set.
+   *
+   * @throws \AKlump\WebPackage\BuildFailException
+   */
+  private function boostrapPhpUnit() {
+    if ($this->phpunit) {
+      return;
+    }
+
+    // Look for composer dependency.
+    $composer = FilePath::create($this->resolve('vendor/phpunit/phpunit/phpunit'));
+    if ($composer->exists()) {
+      $this->setPhpUnit($composer->getPath());
+    }
+    else {
+      try {
+        $phpunit = Bash::which('phpunit');
+        $this->setPhpUnit($phpunit);
+      }
+      catch (FailedExecException $exception) {
+        $phpunit = NULL;
+      }
+    }
   }
 
   /**

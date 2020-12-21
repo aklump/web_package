@@ -3,6 +3,8 @@
 /**
  * @file
  * Generates documentation, adjusts paths and adds to SCM.
+ *
+ * @see \AKlump\WebPackage\HookService
  */
 
 namespace AKlump\WebPackage;
