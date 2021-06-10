@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+#
 # @file
 # Bootstrap is automatically called every time example_app.sh is executed, but after Lobster's bootstrap is called.
 
@@ -11,7 +11,7 @@ project_root=${PWD}
 # @todo This configuration needs to be merged with Lobster's app way.
 source $LOBSTER_APP_ROOT/includes/functions.sh
 #if is_initialized >/dev/null; then
-  load_config
+load_config
 #fi
 
 # Detect if 'info' is implied as the operation

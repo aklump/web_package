@@ -7,5 +7,4 @@ namespace AKlump\WebPackage;
  */
 class HookException extends \Exception {
 
-
 }

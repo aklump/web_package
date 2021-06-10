@@ -6,18 +6,18 @@
 # functions at the core level of Lobster.
 
 ##
- # Load the configuration file
- #
- # Lines that begin with [ or # will be ignored
- # Format: Name = "Value"
- # Value does not need wrapping quotes if no spaces
- #
- # @param string $1
- #  (Optional) Defaults to ''.  Config file suffix.
- #
- # @return NULL
- #   Sets value of load_config_return with the master config path
- #
+# Load the configuration file
+#
+# Lines that begin with [ or # will be ignored
+# Format: Name = "Value"
+# Value does not need wrapping quotes if no spaces
+#
+# @param string $1
+#  (Optional) Defaults to ''.  Config file suffix.
+#
+# @return NULL
+#   Sets value of load_config_return with the master config path
+#
 load_config_return=''
 function load_config() {
   load_config_return=''
@@ -68,15 +68,15 @@ function load_config() {
 
   # Legacy support convert micro to patch and alert user
   if [[ "$wp_create_tags" == 'micro' ]]; then
-    wp_create_tags='patch';
-    echo "`tput setaf 3`Replace 'create_tags = micro' with 'create_tags = patch' in .web_package/config`tput op`"
+    wp_create_tags='patch'
+    echo "$(tput setaf 3)Replace 'create_tags = micro' with 'create_tags = patch' in .web_package/config$(tput op)"
   fi
 
   # this will convert something like *.info to a filename.
   if ! test -e "$wp_info_file"; then
     for file in $(ls $wp_info_file 2>/dev/null); do
       wp_info_file=$file
-      break;
+      break
     done
   fi
 
@@ -87,11 +87,11 @@ function load_config() {
 }
 
 ##
- # Parse a config file
- #
- # @param string $1
- #   The filepath of the config file
- #
+# Parse a config file
+#
+# @param string $1
+#   The filepath of the config file
+#
 function parse_config() {
   if [ -f $1 ]; then
     while read line; do
@@ -102,7 +102,7 @@ function parse_config() {
           eval wp_$name="$value"
         fi
       fi
-    done < $1
+    done <$1
   fi
 }
 
@@ -120,51 +120,51 @@ load_config
 # @return 0 if build occurred, 1 otherwise
 #
 function do_scripts() {
-    local dir=$1
-    local prev=$2
-    local version=$3
-    local script_filter=$4
+  local dir=$1
+  local prev=$2
+  local version=$3
+  local script_filter=$4
 
-    if [[ -z "$dir" ]] || [[ ! -d "$dir" ]]; then
-        return 1
-    fi
+  if [[ -z "$dir" ]] || [[ ! -d "$dir" ]]; then
+    return 1
+  fi
 
-    get_name
-    get_info_string 'description'
-    local description=$get_info_string_return
-    get_info_string 'homepage'
-    local homepage=$get_info_string_return
-    get_info_string 'author'
-    local author=$get_info_string_return
-    local date=$(date)
+  get_name
+  get_info_string 'description'
+  local description=$get_info_string_return
+  get_info_string 'homepage'
+  local homepage=$get_info_string_return
+  get_info_string 'author'
+  local author=$get_info_string_return
+  local date=$(date)
 
-    # Check to see if a scriptname has been provided, instead.
-    if [[ "$script_filter" ]]; then
-        lobster_echo "Looking for provided file: '$script_filter'"
-        target_scripts=$(ls "$dir/"*"$script_filter"*)
+  # Check to see if a scriptname has been provided, instead.
+  if [[ "$script_filter" ]]; then
+    lobster_echo "Looking for provided file: '$script_filter'"
+    target_scripts=$(ls "$dir/"*"$script_filter"*)
+  else
+    local target_scripts=($(ls "$dir/"*))
+  fi
+  for file in ${target_scripts[@]}; do
+    if ! test -e "$file"; then
+      echo "$(tty -s && tput setaf 1)wp error: $dir$(tty -s && tput op)"
+      echo "$(tty -s && tput setaf 1)detected hook file: '$file' doesn't exist!$(tty -s && tput op)"
+
+    #skip files that begin with underscore
+    elif [[ $basename == _* ]]; then
+      lobster_warning "Skipping \"$basename\" because filename starts with _"
     else
-        local target_scripts=($(ls "$dir/"*))
+      local script=$(basename $file)
+      lobster_notice "Executing callback: $script..."
+      # We change directory to make sure every script executes from $project_root.
+      output="$(cd "$project_root" && $wp_php "$LOBSTER_APP_ROOT/includes/hook_runner.php" "$file" "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file" "$dir" "$project_root/.web_package" "$LOBSTER_APP_ROOT" "$project_root/.web_package/hooks")"
+      exit_status=$?
+      [[ "$output" ]] && lobster_echo "$output"
+      echo
+      [[ $exit_status -ne 0 ]] && return 1
     fi
-    for file in ${target_scripts[@]}; do
-      if ! test -e "$file"; then
-        echo "`tty -s && tput setaf 1`wp error: $dir`tty -s && tput op`"
-        echo "`tty -s && tput setaf 1`detected hook file: '$file' doesn't exist!`tty -s && tput op`"
-
-      #skip files that begin with underscore
-      elif [[ $basename == _* ]]; then
-        lobster_warning "Skipping \"$basename\" because filename starts with _"
-      else
-        local script=$(basename $file)
-        lobster_notice "Executing callback: $script..."
-        # We change directory to make sure every script executes from $project_root.
-        output="$(cd "$project_root" && $wp_php "$LOBSTER_APP_ROOT/includes/hook_runner.php" "$file" "$prev" "$version" "$get_name_return" "$description" "$homepage" "$author" "$project_root" "$date" "$project_root/$wp_info_file" "$dir" "$project_root/.web_package" "$LOBSTER_APP_ROOT" "$project_root/.web_package/hooks")"
-        exit_status=$?
-        [[ "$output" ]] && lobster_echo "$output"
-        echo
-        [[ $exit_status -ne 0 ]] && return 1
-      fi
-    done
-    return 0
+  done
+  return 0
 }
 
 function needs_update() {
@@ -178,17 +178,17 @@ function needs_update() {
 }
 
 ##
- # Test all version bumping
- #
- # @return NULL
- #
+# Test all version bumping
+#
+# @return NULL
+#
 function do_test() {
   if [ "$1" ]; then
     test_version "$1" "$2" "$3" "$4" "$5" "$6" "$7"
     return
   fi
 
-  staged=$wp_patch_prefix;
+  staged=$wp_patch_prefix
   as_test=''
 
   # standard versions
@@ -204,7 +204,6 @@ function do_test() {
   echo 'MAJOR.MINOR(MINOR_PREFIX)PATCH:'
   wp_patch_prefix='-alpha'
   test_version "0.3${wp_patch_prefix}4" "0.3${wp_patch_prefix}5" "0.3" "1.0${wp_patch_prefix}1" "0.3${wp_patch_prefix}4" "0.3-beta1" "0.3-rc1"
-
 
   test_version 0.1 "0.2${wp_patch_prefix}1" "0.2" "1.0" "0.2-alpha1" "0.2-beta1" "0.2-rc1"
   test_version 1.0 "1.1${wp_patch_prefix}1" "1.1" "2.0" "1.1-alpha1" "1.1-beta1" "1.1-rc1"
@@ -261,25 +260,25 @@ function do_test() {
 }
 
 ##
- # A test for a single version number
- #
- # @param string $1
- #   The version to test
- # @param string $2
- #   The expected patch result
- # @param string $3
- #   The expected minor result
- # @param string $4
- #   The expected major result
- # @param string $5
- #   The expected alpha result
- # @param string $6
- #   The expected beta result
- # @param string $7
- #   The expected rc result
- #
- # @return NULL
- #
+# A test for a single version number
+#
+# @param string $1
+#   The version to test
+# @param string $2
+#   The expected patch result
+# @param string $3
+#   The expected minor result
+# @param string $4
+#   The expected major result
+# @param string $5
+#   The expected alpha result
+# @param string $6
+#   The expected beta result
+# @param string $7
+#   The expected rc result
+#
+# @return NULL
+#
 function test_version() {
   as_test="bump test $1"
   test_version_severity $1 patch $2
@@ -301,59 +300,56 @@ function test_version() {
   as_test="$as_test $increment_version_return"
 
   echo
-  echo "`tty -s && tput setaf 3`$as_test`tty -s && tput op`"
+  echo "$(tty -s && tput setaf 3)$as_test$(tty -s && tput op)"
 }
 
 ##
- # Test a single version by severity
- #
- # @param string $1
- #   The version string
- # @param string $2
- #   The severity level
- # @param string $3
- #   The control/expected value
- #
- # @return NULL
- #
+# Test a single version by severity
+#
+# @param string $1
+#   The version string
+# @param string $2
+#   The severity level
+# @param string $3
+#   The control/expected value
+#
+# @return NULL
+#
 function test_version_severity() {
   increment_version $1 $2
-  result="`tput setaf 4`[No Tests]`tput op`"
-  if [ "$3" ]
-  then
-    result="`tput setaf 2` [OK]`tput op`"
+  result="$(tput setaf 4)[No Tests]$(tput op)"
+  if [ "$3" ]; then
+    result="$(tput setaf 2) [OK]$(tput op)"
   fi
-  if [ "$3" ] && [ "$increment_version_return" != "$3" ]
-  then
-    result="`tput setaf 1` != $3 [FAIL]`tput op`"
+  if [ "$3" ] && [ "$increment_version_return" != "$3" ]; then
+    result="$(tput setaf 1) != $3 [FAIL]$(tput op)"
   fi
   printf "%-10s\n" "$2: $1 --> $increment_version_return $result"
 }
 
-
 #
 # Checks if a version part is even.
 #
-function is_even () {
+function is_even() {
   num=$1
-  return $((num%2))
+  return $((num % 2))
 }
 
 ###
- # Increment the version number
- #
- # This variable relies on a global: $version It should resemble this n.n.n, but
- # can also be n.n or just n, where n is any number
- #
- # @param string $1
- #   The version string to increment
- # @param string $2
- #   The severity of the increment: patch, minor, major, alpha, beta, rc
- #
- ##
+# Increment the version number
+#
+# This variable relies on a global: $version It should resemble this n.n.n, but
+# can also be n.n or just n, where n is any number
+#
+# @param string $1
+#   The version string to increment
+# @param string $2
+#   The severity of the increment: patch, minor, major, alpha, beta, rc
+#
+##
 increment_version_return=''
-function increment_version () {
-  increment_version_return='';
+function increment_version() {
+  increment_version_return=''
 
   # 7.x-1.0.1 || # 7.x-1.0-rc1
   regex1='([^-]+-)?([0-9]+)(.)([0-9]+)([^0-9]+)([0-9]+)'
@@ -397,11 +393,11 @@ function increment_version () {
   patch_step=$wp_patch_step
 
   # Convert odds and evens to an int.
-  odd_step=2;
-  even_step=1;
+  odd_step=2
+  even_step=1
   if is_even $patch; then
-    odd_step=1;
-    even_step=2;
+    odd_step=1
+    even_step=2
   fi
 
   if [[ $major_step == 'odd' ]]; then
@@ -424,43 +420,40 @@ function increment_version () {
   # Done convert
 
   case "$2" in
-    major)
-      if [ "$patch_prefix" == '.' ] || [ "$patch_prefix" = '' ]; then
-        major=$(($major + $major_step))
-        major_suffix='.'
-        minor=0
-        patch_prefix=$([[ "$wp_preserve_patch_zero" == true ]] && echo $patch_prefix)
-        patch=$([[ "$wp_preserve_patch_zero" == true ]] && echo 0)
-      else
-        major=$(($major + $major_step))
-        major_suffix='.'
-        minor=0
-        patch=1
-      fi
-
-      ;;
-    minor)
-      # Only increment minor if the prefix is '.' or prefix is empty
-      if [ "$patch_prefix" == '.' ] || [ ! "$patch_prefix" ]
-      then
-        minor=$(($minor + $minor_step))
-      fi
+  major)
+    if [ "$patch_prefix" == '.' ] || [ "$patch_prefix" = '' ]; then
+      major=$(($major + $major_step))
+      major_suffix='.'
+      minor=0
       patch_prefix=$([[ "$wp_preserve_patch_zero" == true ]] && echo $patch_prefix)
       patch=$([[ "$wp_preserve_patch_zero" == true ]] && echo 0)
-      ;;
-    patch)
-      patch=$(($patch + $patch_step))
-      if [ ! "$patch_prefix" ]
-      then
-        patch_prefix=$wp_patch_prefix
-        #if you bump patch and theres no prefix and the default is not . then
-        #you increment minor too
-        if [ $wp_patch_prefix != '.' ]
-        then
-          minor=$(($minor + $minor_step))
-        fi
+    else
+      major=$(($major + $major_step))
+      major_suffix='.'
+      minor=0
+      patch=1
+    fi
+
+    ;;
+  minor)
+    # Only increment minor if the prefix is '.' or prefix is empty
+    if [ "$patch_prefix" == '.' ] || [ ! "$patch_prefix" ]; then
+      minor=$(($minor + $minor_step))
+    fi
+    patch_prefix=$([[ "$wp_preserve_patch_zero" == true ]] && echo $patch_prefix)
+    patch=$([[ "$wp_preserve_patch_zero" == true ]] && echo 0)
+    ;;
+  patch)
+    patch=$(($patch + $patch_step))
+    if [ ! "$patch_prefix" ]; then
+      patch_prefix=$wp_patch_prefix
+      #if you bump patch and theres no prefix and the default is not . then
+      #you increment minor too
+      if [ $wp_patch_prefix != '.' ]; then
+        minor=$(($minor + $minor_step))
       fi
-      ;;
+    fi
+    ;;
   esac
 
   if [ "$2" == 'alpha' ] || [ "$2" == 'beta' ] || [ "$2" == 'rc' ]; then
@@ -473,14 +466,11 @@ function increment_version () {
     strstr $patch_prefix rc
     is_rc=$strstr_return
 
-    if [[ "$patch_prefix" == '.' ]] || [ ! "$patch_prefix" ] || ([ $is_alpha == true ] && ([ $2 == 'beta' ] || [ $2 == 'rc' ])) || ([ $is_beta == true ] && [ $2 == 'rc' ])
-    then
-      if [ "$patch_prefix" != '.' ] || [ ! "$patch_prefix" ]
-      then
+    if [[ "$patch_prefix" == '.' ]] || [ ! "$patch_prefix" ] || ([ $is_alpha == true ] && ([ $2 == 'beta' ] || [ $2 == 'rc' ])) || ([ $is_beta == true ] && [ $2 == 'rc' ]); then
+      if [ "$patch_prefix" != '.' ] || [ ! "$patch_prefix" ]; then
         patch=1
       fi
-      if [ "$patch_prefix" == '.' ] || [ ! "$patch_prefix" ] || [ "$2" == 'alpha' ]
-      then
+      if [ "$patch_prefix" == '.' ] || [ ! "$patch_prefix" ] || [ "$2" == 'alpha' ]; then
         minor=$(($minor + $minor_step))
       fi
       patch_prefix="-$2"
@@ -488,41 +478,40 @@ function increment_version () {
   fi
 
   increment_version_return="${prefix}${major}${major_suffix}${minor}${patch_prefix}${patch}"
-  return;
+  return
 }
 
 ##
- # Find first occurrence of a string
- #
- # @param string $1
- #   Haystack
- # @param string $2
- #   Needle
- #
- # @return NULL
- #   Sets the value of global $strstr_return
- #
- # @code
- #   strstr "$h" "$n"
- #   if [ $strstr_return == true ] ...
- # @endcode
- #
-strstr_return=false;
+# Find first occurrence of a string
+#
+# @param string $1
+#   Haystack
+# @param string $2
+#   Needle
+#
+# @return NULL
+#   Sets the value of global $strstr_return
+#
+# @code
+#   strstr "$h" "$n"
+#   if [ $strstr_return == true ] ...
+# @endcode
+#
+strstr_return=false
 function strstr() {
-  strstr_return=false;
-  if [ "$1" ] && `echo ${1} | grep "${2}" 1>/dev/null 2>&1`
-  then
+  strstr_return=false
+  if [ "$1" ] && $(echo ${1} | grep "${2}" 1>/dev/null 2>&1); then
     strstr_return=true
   fi
 }
 
 ##
- # Return the name of the current git branch
- #
- # @return NULL
- #   Sets the value of global $get_branch_return
- #
-get_branch_return='';
+# Return the name of the current git branch
+#
+# @return NULL
+#   Sets the value of global $get_branch_return
+#
+get_branch_return=''
 function get_branch() {
   get_branch_return=''
   if in_git_repo; then
@@ -537,32 +526,30 @@ function get_branch() {
 #   if in_git_repo; then
 # @endcode
 #
-function in_git_repo () {
+function in_git_repo() {
   # Copyright (C) 2006,2007 Shawn O. Pearce <spearce@spearce.org>
   # Conceptually based on gitcompletion (http://gitweb.hawaga.org.uk/).
   # Distributed under the GNU General Public License, version 2.0.
-  if [ -d .git ] || (git rev-parse --git-dir 2> /dev/null); then
-    return 0;
-  fi;
+  if [ -d .git ] || (git rev-parse --git-dir 2>/dev/null); then
+    return 0
+  fi
 
-  return -1;
+  return -1
 }
 
 ##
- # Check if we're on a master branch
- #
- # @return NULL
- #   Sets the value of global $is_master_branch_return to true or false
- #
-is_master_branch_return=false;
+# Check if we're on a master branch
+#
+# @return NULL
+#   Sets the value of global $is_master_branch_return to true or false
+#
+is_master_branch_return=false
 function is_master_branch() {
   is_master_branch_return=false
   get_branch
   branches=($wp_master)
-  for branch in "${branches[@]}"
-  do
-    if [ "$branch" == "$get_branch_return" ]
-    then
+  for branch in "${branches[@]}"; do
+    if [ "$branch" == "$get_branch_return" ]; then
       is_master_branch_return=true
       return
     fi
@@ -570,20 +557,18 @@ function is_master_branch() {
 }
 
 ##
- # Check if we're on a master branch
- #
- # @return NULL
- #   Sets the value of global $is_develop_branch_return to true or false
- #
-is_develop_branch_return=false;
+# Check if we're on a master branch
+#
+# @return NULL
+#   Sets the value of global $is_develop_branch_return to true or false
+#
+is_develop_branch_return=false
 function is_develop_branch() {
   is_develop_branch_return=false
   get_branch
   branches=($wp_develop)
-  for branch in "${branches[@]}"
-  do
-    if [ "$branch" == "$get_branch_return" ]
-    then
+  for branch in "${branches[@]}"; do
+    if [ "$branch" == "$get_branch_return" ]; then
       is_develop_branch_return=true
       return
     fi
@@ -591,89 +576,89 @@ function is_develop_branch() {
 }
 
 ##
- # Return the current version
- #
- # @return NULL
- #   Sets the value of global $get_version_return
- #
-get_version_return='';
+# Return the current version
+#
+# @return NULL
+#   Sets the value of global $get_version_return
+#
+get_version_return=''
 function get_version() {
   get_version_with_prefix
   get_version_return=$get_version_with_prefix_return
 }
 
 ##
- # Return the current version
- #
- # @return NULL
- #   Sets the value of global $get_version_with_prefix_return
- #
-get_version_with_prefix_return='';
+# Return the current version
+#
+# @return NULL
+#   Sets the value of global $get_version_with_prefix_return
+#
+get_version_with_prefix_return=''
 function get_version_with_prefix() {
   get_info_string 'version'
   get_version_with_prefix_return=$get_info_string_return
 }
 
 ##
- # Return the a string from the info file
- #
- # @param string the info key
- #
- # @return NULL
- #   Sets the value of global $get_info_string_return
- #
-get_info_string_return='';
+# Return the a string from the info file
+#
+# @param string the info key
+#
+# @return NULL
+#   Sets the value of global $get_info_string_return
+#
+get_info_string_return=''
 function get_info_string() {
   get_info_string_return=$($wp_php $LOBSTER_APP_ROOT/plugins/$wp_plugin_parse/$wp_plugin_parse.php $LOBSTER_PWD/$wp_info_file "$1")
 }
 
 ##
- # Put an info string to persistent storage
- #
- # @param string the info key
- # @param string the info value
- #
+# Put an info string to persistent storage
+#
+# @param string the info key
+# @param string the info value
+#
 function put_info_string() {
   result=$($wp_php $LOBSTER_APP_ROOT/plugins/$wp_plugin_parse/$wp_plugin_parse.php $LOBSTER_PWD/$wp_info_file "$1" "$2")
 }
 
 ##
- # Return the name
- #
- # @return NULL
- #   Sets the value of global $get_name_return
- #
-get_name_return='';
+# Return the name
+#
+# @return NULL
+#   Sets the value of global $get_name_return
+#
+get_name_return=''
 function get_name() {
   get_info_string 'name'
   get_name_return=$get_info_string_return
 }
 
 ##
- # Getter/Setter for persistent stored vars
- #
- # The return branch is the branch from which the release type began, it is used
- # to return to after bump done as well as to know the dev/master pairing
- #
- # @param string $1
- #   the name of the storage variable
- # @param string $2
- #   the value to store
- #
- # @return NULL
- #   Sets the value of global $storage_return
- #
-storage_return='';
+# Getter/Setter for persistent stored vars
+#
+# The return branch is the branch from which the release type began, it is used
+# to return to after bump done as well as to know the dev/master pairing
+#
+# @param string $1
+#   the name of the storage variable
+# @param string $2
+#   the value to store
+#
+# @return NULL
+#   Sets the value of global $storage_return
+#
+storage_return=''
 function storage() {
   file=".web_package/tmp/$1"
   if [ "$2" ]; then
-    echo $2 > "$file"
+    echo $2 >"$file"
   fi
   storage_return=$(test -e "$file" && cat "$file")
 
 }
 
-function has_info_file () {
+function has_info_file() {
   if test -e "$wp_info_file"; then
     return 0
   fi
@@ -681,7 +666,7 @@ function has_info_file () {
   return 1
 }
 
-function is_initialized () {
+function is_initialized() {
   if test -e "$LOBSTER_PWD/.web_package"; then
     return 0
   fi
@@ -689,8 +674,8 @@ function is_initialized () {
   return 1
 }
 
-function is_not_initialized () {
-  if is_initialized > /dev/null ; then
+function is_not_initialized() {
+  if is_initialized >/dev/null; then
     lobster_error "$LOBSTER_PWD is already initialized."
     return 1
   fi
@@ -700,7 +685,7 @@ function is_not_initialized () {
 #
 # Access callback for the bump op
 #
-function bump_access () {
+function bump_access() {
   # Test to see if we can do this operation from this branch
   local allow=true
   local from_branch

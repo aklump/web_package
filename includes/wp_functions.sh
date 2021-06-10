@@ -9,8 +9,8 @@
 #
 # Exits 1
 function hook_exception() {
-    echo "$1"
-    exit 1
+  echo "$1"
+  exit 1
 }
 
 # Use to indicate hook and build failed.
@@ -19,8 +19,8 @@ function hook_exception() {
 #
 # Exits 2
 function build_fail_exception() {
-    echo "$1"
-    exit 2
+  echo "$1"
+  exit 2
 }
 
 #
@@ -39,23 +39,23 @@ function wp_duplicate() {
   fi
 
   if [[ ! -e "$from" ]]; then
-    echo "`tty -s && tput setaf 1`$from does not exist.`tty -s && tput op`"
+    echo "$(tty -s && tput setaf 1)$from does not exist.$(tty -s && tput op)"
     return 1
   fi
 
   if [[ -f "$from" ]]; then
-    if ( [[ -d "$(dirname "$to")" ]] ||  mkdir -p "$(dirname "$to")") &&  cp "$from" "$to"; then
-      echo "`tty -s && tput setaf 2`$basename_from duplicated as $basename_to.`tty -s && tput op`"
+    if ([[ -d "$(dirname "$to")" ]] || mkdir -p "$(dirname "$to")") && cp "$from" "$to"; then
+      echo "$(tty -s && tput setaf 2)$basename_from duplicated as $basename_to.$(tty -s && tput op)"
       return 0
     fi
   elif [[ -d "$from" ]]; then
-    if ( [[ -d "$to" ]] || mkdir -p "$to") && rsync -a "$from/" "$to/"; then
-      echo "`tty -s && tput setaf 2`$basename_from duplicated as $basename_to.`tty -s && tput op`"
-      return 0;
+    if ([[ -d "$to" ]] || mkdir -p "$to") && rsync -a "$from/" "$to/"; then
+      echo "$(tty -s && tput setaf 2)$basename_from duplicated as $basename_to.$(tty -s && tput op)"
+      return 0
     fi
   fi
 
-  echo "`tty -s && tput setaf 1`Failed duplicating $basename_from.`tty -s && tput op`"
+  echo "$(tty -s && tput setaf 1)Failed duplicating $basename_from.$(tty -s && tput op)"
   return 1
 }
 
@@ -71,7 +71,7 @@ function wp_duplicate_if_not_exists() {
   local to_file=$(basename $to)
 
   if [ -e "$to" ]; then
-    echo "`tty -s && tput setaf 3`$to_file already exists.`tty -s && tput op`"
+    echo "$(tty -s && tput setaf 3)$to_file already exists.$(tty -s && tput op)"
     return 1
   fi
 
@@ -88,17 +88,17 @@ function wp_duplicate_if_not_exists() {
 # @param string Full path to a file or folder
 #
 function wp_wait_for_exists() {
-    breakout=0
-    while [[ ! -e "$1" ]] && [[ $breakout -lt 10 ]]; do
-      ((breakout++))
-      sleep 1
-      echo waiting...$breakout
-    done
-    if [[ ! -e "$1" ]]; then
-      echo
-      echo "$1 does not exist.  Timed out."
-      return 1
-    fi
+  breakout=0
+  while [[ ! -e "$1" ]] && [[ $breakout -lt 10 ]]; do
+    ((breakout++))
+    sleep 1
+    echo waiting...$breakout
+  done
+  if [[ ! -e "$1" ]]; then
+    echo
+    echo "$1 does not exist.  Timed out."
+    return 1
+  fi
 }
 
 # Remove a file, or folder and it's contents.
@@ -109,12 +109,12 @@ function wp_wait_for_exists() {
 #
 # Returns nothing.
 function wp_rm() {
-    local path="$1"
+  local path="$1"
 
-    echo "Deleting: $path"
-    if [[ -d "$path" ]]; then
-        rm -r "$path" || build_fail_exception
-    elif [[ -f "$path" ]]; then
-        rm "$path" || build_fail_exception
-    fi
+  echo "Deleting: $path"
+  if [[ -d "$path" ]]; then
+    rm -r "$path" || build_fail_exception
+  elif [[ -f "$path" ]]; then
+    rm "$path" || build_fail_exception
+  fi
 }

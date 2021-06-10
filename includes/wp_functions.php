@@ -13,8 +13,8 @@
 /**
  * Copy files from root into demo.
  *
- * @param  array $files
- * @param  string $demo_dir
+ * @param array $files
+ * @param string $demo_dir
  */
 function to_demo_copy($path_to_root, $files, $demo_dir = 'demo') {
   foreach ($files as $file) {
@@ -25,8 +25,8 @@ function to_demo_copy($path_to_root, $files, $demo_dir = 'demo') {
 /**
  * Copy files from demo into root.
  *
- * @param  array $files
- * @param  string $demo_dir
+ * @param array $files
+ * @param string $demo_dir
  */
 function from_demo_copy($path_to_root, $files, $demo_dir = 'demo') {
   foreach ($files as $file) {

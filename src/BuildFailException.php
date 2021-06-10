@@ -7,5 +7,4 @@ namespace AKlump\WebPackage;
  */
 class BuildFailException extends \Exception {
 
-
 }
