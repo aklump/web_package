@@ -93,7 +93,13 @@ function load_config() {
 #   The filepath of the config file
 #
 function parse_config() {
-  if [ -f $1 ]; then
+  local config_file="$1"
+  if [ -f "$config_file" ]; then
+
+    # Without a \n at the end, the last item is ignored.  So we ensure the file
+    # ends in a newline.
+    [ -n "$(tail -c1 "$config_file")" ] && printf '\n' >>"$config_file"
+
     while read line; do
       if [[ "$line" =~ ^[^#[]+ ]]; then
         name=${line%% =*}
@@ -102,7 +108,7 @@ function parse_config() {
           eval wp_$name="$value"
         fi
       fi
-    done <$1
+    done <"$config_file"
   fi
 }
 
