@@ -44,6 +44,7 @@ lynx = $(which lynx)
 # This would also copy README.md as well as README.txt to the directory one
 # level above /source
 README = '../README.md'
+CHANGELOG = '../CHANGELOG.md'
 
 #root_dir      = ""
 
