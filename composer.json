@@ -1,7 +1,7 @@
 {
-    "name": "Web Package",
+    "name": "aklump\/web-package",
     "description": "A shell script to help the management of files as a package.",
-    "version": "3.0.19",
+    "version": "3.1.0",
     "authors": [
         {
             "name": "Aaron Klump",
