@@ -19,7 +19,6 @@ if [ $previous == $version ]; then
   lobster_warning "Version unchanged: $previous ➡ $version"
 else
   lobster_success "Version bumped: $previous ➡ $version"
-  lobster_echo
 
   # Update the file with the new version string
   put_info_string 'version' "$version"
@@ -88,7 +87,10 @@ if [ "$release_type" == 'hotfix' ] || [ "$release_type" == 'release' ]; then
     get_version_with_prefix
     $wp_git checkout -b "$release_type-$get_version_with_prefix_return"
     $wp_git add -u
-    $wp_git commit -m "Version bumped from $previous to $version"
+
+    if [[ "$wp_do_version_commit" == true ]]; then
+      $wp_git commit -m "Version bumped from $previous to $version"
+    fi
 
     cd "$starting_dir"
   fi

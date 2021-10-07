@@ -34,7 +34,12 @@ if [[ "$master" ]]; then
   # Delete the temp branch
   if lobster_has_flag "y" || lobster_confirm "Delete $get_branch_return"; then
     # Delete the hotfix or release branch
-    $wp_git br -d $get_branch_return || exit 1
+    if ! $wp_git branch -d $get_branch_return; then
+      echo
+      lobster_error "Process aborted before it was complete."
+      echo
+      exit 1
+    fi
   fi
 fi
 
@@ -56,32 +61,67 @@ fi
 if [ "$do_tag" == true ]; then
   get_version_with_prefix
   tagname=$get_version_with_prefix_return
-  $wp_git tag $tagname
-  lobster_success "Git tag created: $tagname"
 
+  # Check if the tag already exists, which happens if the process had to abort
+  # and was restarted.
+  if $wp_git rev-parse "$tagname" >/dev/null 2>&1; then
+    if ! lobster_confirm "$tagname already exists; overwrite it"; then
+      echo
+      lobster_error "Process aborted before it was complete."
+      echo
+      exit 1
+    fi
+    $wp_git tag -d "$tagname"
+  fi
+
+  if ! $wp_git tag "$tagname"; then
+    echo
+    lobster_error "Tag was not created; you will need to manually clean this up."
+    echo
+    exit 1
+  fi
+  lobster_success "Git tag created: $tagname"
   # Ask to push the tag to origin?
   if [ "$wp_push_tags" != 'no' ] && ([ "$wp_push_tags" == 'auto' ] || lobster_has_flag "y" || lobster_confirm "Push tag ($tagname) to $wp_remote"); then
     if [ "$wp_push_tags" == 'auto' ]; then
       lobster_notice "AUTO: git push $wp_remote $tagname"
     fi
-    $wp_git push $wp_remote $tagname
+    if ! $wp_git push $wp_remote $tagname; then
+        lobster_error "Define a remote and try again, or set wp_push_tags = no"
+    fi
   fi
 fi
 
 # Ask to push the develop branch to origin?
-if [ "$wp_push_develop" != 'no' ] && ([ "$wp_push_develop" == 'auto' ] || lobster_has_flag "y" || lobster_confirm "Push develop branch ($develop) to $wp_remote"); then
-  if [ "$wp_push_develop" == 'auto' ]; then
-    lobster_notice "AUTO: git push $wp_remote $develop"
+if [[ "$develop" ]]; then
+  if [ "$wp_push_develop" != 'no' ] && ([ "$wp_push_develop" == 'auto' ] || lobster_has_flag "y" || lobster_confirm "Push develop branch ($develop) to $wp_remote"); then
+    if [[ "$wp_push_develop" == 'ask' ]]; then
+      lobster_notice "To suppress this question use the -y flag or set the configuration push_develop to auto."
+    fi
+    if [ "$wp_push_develop" == 'auto' ]; then
+      lobster_notice "AUTO: git push $wp_remote $develop"
+    fi
+    if ! $wp_git push $wp_remote $develop; then
+        lobster_error "Define a remote and try again, or set wp_push_develop = no"
+    fi
   fi
-  $wp_git push $wp_remote $develop
 fi
 
 # Ask to push the master branch to origin?
 if [ "$wp_push_master" != 'no' ] && ([ "$wp_push_master" == 'auto' ] || lobster_has_flag "y" || lobster_confirm "Push master branch ($master) to $wp_remote"); then
+  if [[ "$wp_push_master" == 'ask' ]]; then
+      lobster_notice "To suppress this question use the -y flag or set the configuration push_master to auto."
+    fi
   if [ "$wp_push_master" == 'auto' ]; then
     lobster_notice "AUTO: git push $wp_remote $master"
   fi
-  $wp_git push $wp_remote $master
+  if ! $wp_git push $wp_remote $master; then
+      lobster_error "Define a remote and try again, or set wp_push_master = no"
+  fi
+fi
+
+if [[ "$wp_push_tags" == 'ask' ]] || [[ "$wp_push_master" == 'ask' ]] || [[ "$wp_push_develop" == 'ask' ]]; then
+  lobster_notice "(To avoid push confirmations, use the -y flag or set the push_* to auto.)"
 fi
 
 if lobster_has_param 'no-hooks'; then

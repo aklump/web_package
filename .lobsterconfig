@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+#
 # @file
 # App configuration file for Lobster Shell
 
@@ -28,10 +28,10 @@ lobster_color_current="null"
 # Default terminal color.
 lobster_color_default="null"
 
-# Set this to 1 and the colors will be brigher/lighter
+# Set this to 1 and the colors will be brighter/lighter
 lobster_color_bright=0
 
-lobster_color_confirm="1;31"
+lobster_color_confirm="1;35"
 lobster_color_notice="0;34"
 lobster_color_verbose="grey"
 lobster_color_success="1;32"

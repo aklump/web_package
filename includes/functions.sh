@@ -661,7 +661,6 @@ function storage() {
     echo $2 >"$file"
   fi
   storage_return=$(test -e "$file" && cat "$file")
-
 }
 
 function has_info_file() {

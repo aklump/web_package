@@ -33,7 +33,7 @@ wp_patch_step=1
  # Whether to create tags or not
  # Values: major, minor, patch or no
  #
-wp_create_tags=minor
+wp_create_tags=patch
 
 ##
  # Should tags be pushed to remote?
@@ -56,7 +56,7 @@ wp_push_master=ask
 ##
  # The initial version for new projects
  #
-wp_init_version="7.x-1.0-alpha1"
+wp_init_version="0.0.1"
 
 ##
  # The default patch prefix when bumping patch from a version that doesn't
@@ -104,3 +104,6 @@ wp_hooklib_action="open"
 
 # Set this to false and the patch value of ".0" will be remove to make 0.5.0 = 0.5 and 1.0.0 = 1.0
 wp_preserve_patch_zero=true
+
+# Set this to true and a commit will be made with just the version change.
+wp_do_version_commit=false

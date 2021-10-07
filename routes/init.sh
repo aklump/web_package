@@ -24,16 +24,17 @@ conf=$LOBSTER_PWD/.web_package/config
 if [ $template ]; then
   echo "template = $template" >> $conf
 fi
+echo "remote = $wp_remote" >> $conf
+echo "git_root = ." >> $conf
 echo "master = \"$wp_master\"" >> $conf
 echo "develop = \"$wp_develop\"" >> $conf
-echo "remote = $wp_remote" >> $conf
-echo "create_tags = $wp_create_tags" >> $conf
-echo "push_tags = $wp_push_tags" >> $conf
-echo "push_master = $wp_push_master" >> $conf
-echo "push_develop = $wp_push_develop" >> $conf
 echo "patch_prefix = $wp_patch_prefix" >> $conf
 echo "preserve_patch_zero = $wp_preserve_patch_zero" >> $conf
-echo "git_root = ." >> $conf
+echo "do_version_commit = $wp_do_version_commit" >> $conf
+echo "create_tags = $wp_create_tags" >> $conf
+echo "push_develop = $wp_push_develop" >> $conf
+echo "push_master = $wp_push_master" >> $conf
+echo "push_tags = $wp_push_tags" >> $conf
 
 # Restore the defaults
 load_config
