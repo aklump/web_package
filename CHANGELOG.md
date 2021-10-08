@@ -13,7 +13,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- Single commits with the version string change will no longer be made by default. To keep this legacy behavior you must add `` to your configuration file per project _my_project/.web_package/config_ or globally at _~/.web_package/config_.
+- Single commits with the version string change will no longer be made by default. To keep this legacy behavior you must add `do_version_commit = true` to your configuration file per project _my_project/.web_package/config_ or globally at _~/.web_package/config_.
 - Default `create_tags` is now `patch`; formerly `minor`.
 - Default `init_version` is now `0.0.1`.
 
