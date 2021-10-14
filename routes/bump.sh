@@ -88,9 +88,21 @@ if [ "$release_type" == 'hotfix' ] || [ "$release_type" == 'release' ]; then
     $wp_git checkout -b "$release_type-$get_version_with_prefix_return"
     $wp_git add -u
 
-    if [[ "$wp_do_version_commit" == true ]]; then
+    # Calculate a commit message based on configuration.
+    message=''
+    if [[ "$release_type" == 'hotfix' ]] && [[ "$wp_hotfix_commit_message" ]]; then
+      message="$wp_hotfix_commit_message"
+      message="${message//PREVIOUS/$previous}"
+      message="${message//VERSION/$version}"
+      $wp_git add -u
+      $wp_git commit -m "$message"
+    elif [[ "$wp_do_version_commit" == true ]]; then
+      $wp_git add -u
       $wp_git commit -m "Version bumped from $previous to $version"
     fi
+
+    storage release_type "$release_type"
+    storage previous "$previous"
 
     cd "$starting_dir"
   fi

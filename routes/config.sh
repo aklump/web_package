@@ -27,4 +27,7 @@ lobster_echo "minor_step = $wp_minor_step"
 lobster_echo "patch_step = $wp_patch_step"
 lobster_echo "author = $wp_author"
 lobster_echo "preserve_patch_zero = $wp_preserve_patch_zero"
+lobster_echo "do_version_commit = $wp_do_version_commit"
+lobster_echo "hotfix_hotfix_message = $wp_hotfix_hotfix_message"
+lobster_echo "release_commit_message = $wp_release_commit_message"
 lobster_echo

@@ -107,3 +107,9 @@ wp_preserve_patch_zero=true
 
 # Set this to true and a commit will be made with just the version change.
 wp_do_version_commit=false
+
+# Add a value and commit messages will be added for hotfixes.  This supercedes the value of wp_do_version_commit.
+wp_hotfix_commit_message=""
+
+# Add a value and commit messages will be added for releases.  This supercedes the value of wp_do_version_commit.
+wp_release_commit_message='New release VERSION.'

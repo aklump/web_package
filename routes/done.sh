@@ -11,6 +11,22 @@ storage develop
 develop=$storage_return
 storage master
 master=$storage_return
+storage release_type
+release_type=$storage_return
+storage previous
+previous=$storage_return
+get_version
+version=$get_version_return
+
+message=''
+if [[ "$release_type" == 'release' ]] && [[ "$wp_release_commit_message" ]]; then
+  echo "committing..."
+  message="$wp_release_commit_message"
+  message="${message//PREVIOUS/$previous}"
+  message="${message//VERSION/$version}"
+  $wp_git add -u
+  $wp_git commit -m "$message"
+fi
 
 # Get the develop to merge back into
 if [[ "$develop" ]] && [[ "$develop" != "$master" ]]; then
@@ -121,7 +137,7 @@ if [ "$wp_push_master" != 'no' ] && ([ "$wp_push_master" == 'auto' ] || lobster_
 fi
 
 if [[ "$wp_push_tags" == 'ask' ]] || [[ "$wp_push_master" == 'ask' ]] || [[ "$wp_push_develop" == 'ask' ]]; then
-  lobster_notice "(To avoid push confirmations, use the -y flag or set the push_* to auto.)"
+  lobster_notice "(To avoid push confirmations, use the -y flag or set the values of push_* to auto or no in your configuration.)"
 fi
 
 if lobster_has_param 'no-hooks'; then
