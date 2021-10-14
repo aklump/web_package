@@ -11,7 +11,7 @@ wp_remote='origin'
 ##
  # The name of the branch serving the GitFlow "master" role
  #
-wp_master="master"
+wp_master="main"
 
 ##
  # The name of the branch serving the GitFlow "develop" role
