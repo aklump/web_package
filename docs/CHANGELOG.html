@@ -29,6 +29,21 @@
 
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>, and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
 
+<h2>[3.2.0] - 2021-10-14</h2>
+
+<h3>Added</h3>
+
+<ul>
+<li>Configurable release commit message when calling 'done'; see <code>release_commit_message</code>. Giving this configuration a value will cause a commit message to be added automatically at the start of the <code>done</code> command; <strong>any changed files are automatically added to the commit.</strong> It allows the following tokens: PREVIOUS, VERSION.</li>
+<li>Configurable hotfix commit message when calling 'hotfix'; see <code>hotfix_commit_message</code>. Giving this configuration a value will cause a commit message to be added automatically as soon as the version string changes. It allows the following tokens: PREVIOUS, VERSION. This supercedes the use of <code>wp_do_version_commit</code>.</li>
+</ul>
+
+<h3>Changed</h3>
+
+<ul>
+<li>The default branchname from <code>master</code> to `main.</li>
+</ul>
+
 <h2>[3.1.0] - 2021-10-07</h2>
 
 <h3>Added</h3>
@@ -60,7 +75,7 @@
 <footer>
   <div class="pager"><a href="templates.html" class="prev templates">&laquo;Configuration Templates</a><a href="index.html" class="index pager__book-title"></a><a href="functionality.html" class="next functionality">Functionality&raquo;</a></div>  
   <div id="footer-legaleeze">
-    <p class="legaleeze center">Version: 3.1.4 &bull; Last Updated: Thu, 07 Oct 2021 17:05:39 -0700</p>
+    <p class="legaleeze center">Version: 3.2.0 &bull; Last Updated: Thu, 14 Oct 2021 12:58:16 -0700</p>
   </div>
 </footer>
 

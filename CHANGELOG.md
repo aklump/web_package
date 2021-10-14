@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2021-10-14
+
+### Added
+
+- Configurable release commit message when calling 'done'; see `release_commit_message`. Giving this configuration a value will cause a commit message to be added automatically at the start of the `done` command; **any changed files are automatically added to the commit.** It allows the following tokens: PREVIOUS, VERSION.
+- Configurable hotfix commit message when calling 'hotfix'; see `hotfix_commit_message`. Giving this configuration a value will cause a commit message to be added automatically as soon as the version string changes. It allows the following tokens: PREVIOUS, VERSION. This supercedes the use of `wp_do_version_commit`.
+
+### Changed
+
+- The default branchname from `master` to `main.
+
 ## [3.1.0] - 2021-10-07
 
 ### Added
