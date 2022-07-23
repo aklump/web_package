@@ -32,12 +32,18 @@ switch ($ext) {
   // @link https://robreid.io/semver/
   case 'semver':
     $key = ucfirst($key);
-    $conf = new ConfigYaml($dir, $file, $options);
+    $conf = new ConfigYaml($dir, $file, $options + [
+        'inline' => 6,
+        'indent' => 2,
+      ]);
     break;
 
   case 'yml':
   case 'yaml':
-    $conf = new ConfigYaml($dir, $file, $options);
+    $conf = new ConfigYaml($dir, $file, $options + [
+        'inline' => 6,
+        'indent' => 2,
+      ]);
     break;
 }
 
