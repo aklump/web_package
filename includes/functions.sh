@@ -104,7 +104,7 @@ function parse_config() {
       if [[ "$line" =~ ^[^#[]+ ]]; then
         name=${line%% =*}
         value=${line##*= }
-        if [ "$name" ]; then
+        if [[ "$name" ]]; then
           eval wp_$name="$value"
         fi
       fi

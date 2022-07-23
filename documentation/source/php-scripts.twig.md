@@ -12,10 +12,10 @@ Here is an example stub for PHP build script:
     namespace AKlump\WebPackage;
     
     if ($little_problem) {
-      throw new HookException("Hook failed, but the build must go on.");
+      throw new \AKlump\WebPackage\HookException("Hook failed, but the build must go on.");
     }
     elseif ($big_problem) {
-      throw new BuildFailException("Stop the build!");
+      throw new \AKlump\WebPackage\BuildFailException("Stop the build!");
     }
     
     echo "The hook worked as expected";
