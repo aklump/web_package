@@ -648,9 +648,14 @@ class HookService {
    *
    * @return $this
    * @throws \AKlump\WebPackage\BuildFailException
+   *
+   * @deprecated Use the bash version.
    */
   public function generateDocumentationTo($path_to_generated_docs = 'docs') {
     $docs_source_dir = $this->resolve($this->docsSource);
+    $relative_config = preg_replace('/^' . preg_quote($this->pathToInstance, '/') . '/', '\$7', $docs_source_dir) . '/core-config.sh';
+    $relative_docs = preg_replace('/^' . preg_quote($this->pathToInstance, '/') . '/', '\$7', $docs_source_dir);
+//    throw new BuildFailException(sprintf('Do not use the deprecated method %s(); use . "%s/core/compile" --config="%s" instead.', __METHOD__, $relative_docs, $relative_config));
     if (!is_dir($docs_source_dir)) {
       throw new \RuntimeException("Missing source directory: " . $docs_source_dir);
     }

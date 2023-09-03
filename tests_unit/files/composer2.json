@@ -1,0 +1,15 @@
+{
+  "name": "aklump/files",
+  "autoload": {
+    "psr-4": {
+      "Aklump\\Files\\": "src/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Aaron Klump",
+      "email": "sourcecode@intheloftstudios.com"
+    }
+  ],
+  "require": {}
+}

@@ -1,0 +1,4 @@
+name: Core Extended
+description: Provides the custom core extending Drupal written by In the Loft Studios.
+version: 9
+type: module

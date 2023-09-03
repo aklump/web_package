@@ -1,24 +1,30 @@
 {
-    "name": "aklump\/web-package",
-    "description": "A shell script to help the management of files as a package.",
-    "version": "3.2.1",
-    "authors": [
-        {
-            "name": "Aaron Klump",
-            "email": "sourcecode@intheloftstudios.com"
-        }
-    ],
-    "homepage": "http:\/\/www.intheloftstudios.com\/packages\/bash\/web_package",
-    "require": {
-        "php": "~7.1",
-        "symfony\/yaml": "^3.1",
-        "aklump\/loft-lib": "^1.0",
-        "twig\/twig": "^2.6"
-    },
-    "autoload": {
-        "psr-4": {
-            "AKlump\\WebPackage\\": "src",
-            "AKlump\\LoftLib\\Component\\Config\\": "lib\/loft_php_lib\/dist\/src\/AKlump\/LoftLib\/Component\/Config\/"
-        }
+  "name": "aklump\/web-package",
+  "description": "A shell script to help the management of files as a package.",
+  "version": "3.2.1",
+  "authors": [
+    {
+      "name": "Aaron Klump",
+      "email": "sourcecode@intheloftstudios.com"
     }
+  ],
+  "homepage": "http:\/\/www.intheloftstudios.com\/packages\/bash\/web_package",
+  "require": {
+    "php": "~7.1",
+    "symfony\/yaml": "^3.1",
+    "aklump\/loft-lib": "^1.0",
+    "twig\/twig": "^2.6",
+    "z4kn4fein/php-semver": "^2.0",
+    "ext-json": "*"
+  },
+  "autoload": {
+    "psr-4": {
+      "AKlump\\WebPackage\\": "src",
+      "AKlump\\WebPackage\\Tests\\": "tests_unit",
+      "AKlump\\LoftLib\\Component\\Config\\": "lib\/loft_php_lib\/dist\/src\/AKlump\/LoftLib\/Component\/Config\/"
+    }
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.5"
+  }
 }

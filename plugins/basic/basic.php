@@ -5,12 +5,39 @@
 
 namespace AKlump\LoftLib\Component\Config;
 
+use AKlump\WebPackage\VersionScribeFactory;
+use z4kn4fein\SemVer\Version;
+
 require_once getenv('LOBSTER_ROOT') . '/lobster.php';
+$path = $argv[1];
 $dir = dirname($argv[1]);
 $file = basename($argv[1]);
 $key = isset($argv[2]) ? $argv[2] : NULL;
 $value = isset($argv[3]) ? $argv[3] : NULL;
 
+// In 2023 this was updated to use a class-based means of version read/write.
+// It only works for the version key so we'll see if we can handle it, and if
+// not, we'll pass it on to the legacy handler further down.
+if ('version' === $key) {
+  $factory = new VersionScribeFactory();
+  $scribe = $factory($path);
+  if (isset($scribe)) {
+    $operation = !empty($value) ? 'write' : 'read';
+    if ('read' === $operation) {
+      print $scribe->read();
+    }
+    else {
+      $version = Version::parse($value, FALSE);
+      if (!$scribe->write($version)) {
+        throw new \RuntimeException(sprintf('Failed to update version file: %s', $path));
+      }
+    }
+    exit(0);
+  }
+}
+
+
+// Legacy Handlers.
 $ext = pathinfo($file, PATHINFO_EXTENSION);
 $options = array('install' => TRUE);
 switch ($ext) {
@@ -45,6 +72,9 @@ switch ($ext) {
         'indent' => 2,
       ]);
     break;
+
+  default:
+    throw new \InvalidArgumentException(sprintf('Cannot extract version from file: %s', $path));
 }
 
 //
