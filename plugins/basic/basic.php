@@ -5,6 +5,7 @@
 
 namespace AKlump\LoftLib\Component\Config;
 
+use AKlump\WebPackage\Output\FacePlant;
 use AKlump\WebPackage\VersionScribeFactory;
 use z4kn4fein\SemVer\Version;
 
@@ -29,7 +30,8 @@ if ('version' === $key) {
     else {
       $version = Version::parse($value, FALSE);
       if (!$scribe->write($version)) {
-        throw new \RuntimeException(sprintf('Failed to update version file: %s', $path));
+        FacePlant::print(sprintf('Failed to update version file: %s', $path));
+        exit(1);
       }
     }
     exit(0);
@@ -74,7 +76,8 @@ switch ($ext) {
     break;
 
   default:
-    throw new \InvalidArgumentException(sprintf('Cannot extract version from file: %s', $path));
+    FacePlant::print(sprintf('Cannot read version from file: %s', $path));
+    exit(1);
 }
 
 //

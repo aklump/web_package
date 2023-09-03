@@ -758,19 +758,5 @@ function done_access() {
 }
 
 function echo_build_failure() {
-  echo
-  echo
-  lobster_error "################################################################################"
-  lobster_error "################################################################################"
-  lobster_error "################################################################################"
-  lobster_error "###                                                                          ###"
-  lobster_error "###                                                                          ###"
-  lobster_error "###                            BUILD HAS FAILED!                             ###"
-  lobster_error "###                                                                          ###"
-  lobster_error "###                                                                          ###"
-  lobster_error "################################################################################"
-  lobster_error "################################################################################"
-  lobster_error "################################################################################"
-  echo
-  echo
+  $wp_php "$LOBSTER_APP_ROOT/includes/build_failure.php" "Build has failed!"
 }

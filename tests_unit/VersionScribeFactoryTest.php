@@ -7,6 +7,7 @@ use AKlump\WebPackage\VersionScribes\DrupalInfo;
 use AKlump\WebPackage\VersionScribes\IniFile;
 use AKlump\WebPackage\VersionScribes\Json;
 use AKlump\WebPackage\VersionScribes\SymfonyConsoleApplication;
+use AKlump\WebPackage\VersionScribes\Text;
 use AKlump\WebPackage\VersionScribes\Yaml;
 use PHPUnit\Framework\TestCase;
 
@@ -17,6 +18,14 @@ class VersionScribeFactoryTest extends TestCase {
 
   public function dataFortestInvokeReturnsTheExpectedClassProvider() {
     $tests = [];
+    $tests[] = [
+      Text::class,
+      '.version',
+    ];
+    $tests[] = [
+      Text::class,
+      'version.txt',
+    ];
     $tests[] = [
       SymfonyConsoleApplication::class,
       'symfonyapp.php',
