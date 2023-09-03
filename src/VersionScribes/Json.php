@@ -9,7 +9,6 @@ use z4kn4fein\SemVer\Version;
 
 class Json implements VersionScribeInterface {
 
-  use ReaderTrait;
   use WriterTrait;
 
   private $source;
@@ -18,12 +17,14 @@ class Json implements VersionScribeInterface {
     $this->source = $source;
   }
 
-  public function read(): Version {
-    $json = file_get_contents($this->source);
-    $data = json_decode($json, TRUE);
-    $data = array_change_key_case($data);
+  public function read(): string {
+    if (file_exists($this->source)) {
+      $json = file_get_contents($this->source);
+      $data = json_decode($json, TRUE);
+      $data = array_change_key_case($data);
+    }
 
-    return $this->getVersion($data['version'] ?? '');
+    return $data['version'] ?? VersionScribeInterface::DEFAULT;
   }
 
   /**
@@ -36,7 +37,7 @@ class Json implements VersionScribeInterface {
         return TRUE;
       }
       // TODO Handle what to do here.
-      throw new \RuntimeException(sprintf('The version %s appears in %s more than once; update failed.', (string) $old, $this->source));
+      throw new \RuntimeException(sprintf('The version %s does not appear in %s exactly once; update failed.', (string) $old, $this->source));
     }
     $data = json_encode(['version' => (string) $version], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
 

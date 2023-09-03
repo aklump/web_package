@@ -6,6 +6,10 @@ use z4kn4fein\SemVer\Version;
 
 trait WriteTestTrait {
 
+  public function filesize(string $path): int {
+    return mb_strlen(file_get_contents($path));
+  }
+
   public function getVersion(): Version {
     return Version::create(rand(0, 3), rand(0, 9), rand(0, 99));
   }

@@ -9,7 +9,6 @@ use z4kn4fein\SemVer\Version;
 
 class IniFile implements VersionScribeInterface {
 
-  use ReaderTrait;
   use WriterTrait;
 
   private $source;
@@ -18,12 +17,14 @@ class IniFile implements VersionScribeInterface {
     $this->source = $source;
   }
 
-  public function read(): Version {
-    $data = file_get_contents($this->source);
-    $data = parse_ini_string($data);
-    $data = array_change_key_case($data);
+  public function read(): string {
+    if (file_exists($this->source)) {
+      $data = file_get_contents($this->source);
+      $data = parse_ini_string($data);
+      $data = array_change_key_case($data);
+    }
 
-    return $this->getVersion($data['version'] ?? '');
+    return $data['version'] ?? VersionScribeInterface::DEFAULT;
   }
 
   /**
@@ -36,7 +37,7 @@ class IniFile implements VersionScribeInterface {
         return TRUE;
       }
       // TODO Handle what to do here.
-      throw new \RuntimeException(sprintf('The version %s appears in %s more than once; update failed.', (string) $old, $this->source));
+      throw new \RuntimeException(sprintf('The version %s does not appear in %s exactly once; update failed.', (string) $old, $this->source));
     }
 
     return file_put_contents($this->source, 'version = ' . $version . PHP_EOL);

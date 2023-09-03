@@ -7,6 +7,7 @@ use AKlump\WebPackage\VersionScribeInterface;
 use AKlump\WebPackage\VersionScribes\Yaml;
 use PHPUnit\Framework\TestCase;
 use z4kn4fein\SemVer\Inc;
+use z4kn4fein\SemVer\Version;
 
 /**
  * @covers \AKlump\WebPackage\VersionScribes\Yaml
@@ -16,15 +17,16 @@ class YamlTest extends TestCase {
   use WriteTestTrait;
 
   public function testWriteReplacesVersionInExistingFile() {
-    $old = $this->getVersion();
-    $new = $old->inc(Inc::MINOR);
-    $this->unlink('yaml');
-    $path = $this->getPath('yaml');
+    $path = $this->getPath('yml');
+    copy(__DIR__ . '/../files/file.yml', $path);
+    $expected_size = $this->filesize($path);
     $scribe = new Yaml($path);
-    $this->assertTrue($scribe->write($old));
+    $old = Version::parse($scribe->read(), FALSE);
+    $new = $old->inc(Inc::MAJOR);
     $this->assertTrue($scribe->write($new));
-    $this->assertSame((string) $new, (string) $scribe->read());
-    $this->unlink('yaml');
+    $this->assertTrue($new->isEqual(Version::parse($scribe->read(), FALSE)));
+    $this->assertSame($expected_size, $this->filesize($path));
+    $this->unlink('yml');
   }
 
   public function testWriteCreatesFileAndWritesVersion() {
@@ -33,20 +35,20 @@ class YamlTest extends TestCase {
     $path = $this->getPath('yaml');
     $scribe = new Yaml($path);
     $this->assertTrue($scribe->write($version));
-    $this->assertSame((string) $version, (string) $scribe->read());
+    $this->assertSame((string) $version, $scribe->read());
     $this->unlink('yaml');
   }
 
   public function testYamlReturnsValueOfVersionKey() {
     $scribe = new Yaml(__DIR__ . '/../files/file.yml');
     $version = $scribe->read();
-    $this->assertSame('9.0.0', (string) $version);
+    $this->assertSame('8', $version);
   }
 
   public function testYamlWithoutVersionReturnsDefaul() {
     $scribe = new Yaml(__DIR__ . '/../files/file2.yml');
     $version = $scribe->read();
-    $this->assertSame(VersionScribeInterface::DEFAULT, (string) $version);
+    $this->assertSame(VersionScribeInterface::DEFAULT, $version);
   }
 
 }

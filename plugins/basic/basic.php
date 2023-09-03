@@ -30,7 +30,7 @@ if ('version' === $key) {
     else {
       $version = Version::parse($value, FALSE);
       if (!$scribe->write($version)) {
-        FacePlant::print(sprintf('Failed to update version file: %s', $path));
+        FacePlant::__invoke(sprintf('Failed to update version file: %s', $path));
         exit(1);
       }
     }
@@ -76,7 +76,7 @@ switch ($ext) {
     break;
 
   default:
-    FacePlant::print(sprintf('Cannot read version from file: %s', $path));
+    FacePlant::__invoke(sprintf('Cannot read version from file: %s', $path));
     exit(1);
 }
 

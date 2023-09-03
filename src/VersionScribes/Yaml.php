@@ -9,7 +9,6 @@ use z4kn4fein\SemVer\Version;
 
 class Yaml implements VersionScribeInterface {
 
-  use ReaderTrait;
   use WriterTrait;
 
   private $source;
@@ -18,11 +17,13 @@ class Yaml implements VersionScribeInterface {
     $this->source = $source;
   }
 
-  public function read(): Version {
-    $data = \Symfony\Component\Yaml\Yaml::parseFile($this->source);
-    $data = array_change_key_case($data);
+  public function read(): string {
+    if (file_exists($this->source)) {
+      $data = \Symfony\Component\Yaml\Yaml::parseFile($this->source);
+      $data = array_change_key_case($data);
+    }
 
-    return $this->getVersion($data['version'] ?? '');
+    return $data['version'] ?? VersionScribeInterface::DEFAULT;
   }
 
   /**
@@ -35,7 +36,7 @@ class Yaml implements VersionScribeInterface {
         return TRUE;
       }
       // TODO Handle what to do here.
-      throw new \RuntimeException(sprintf('The version %s appears in %s more than once; update failed.', (string) $old, $this->source));
+      throw new \RuntimeException(sprintf('The version %s does not appear in %s exactly once; update failed.', (string) $old, $this->source));
     }
     $data = \Symfony\Component\Yaml\Yaml::dump(['version' => (string) $version]);
 

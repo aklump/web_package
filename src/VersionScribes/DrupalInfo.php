@@ -9,8 +9,9 @@ use z4kn4fein\SemVer\Version;
 
 class DrupalInfo implements VersionScribeInterface {
 
-  use ReaderTrait;
   use WriterTrait;
+
+  const REGEX = '/^(version\s*=.*?)([\d\.]+)(.*?' . PHP_EOL . ')/m';
 
   private $source;
 
@@ -18,23 +19,25 @@ class DrupalInfo implements VersionScribeInterface {
     $this->source = $source;
   }
 
-  public function read(): Version {
-    $contents = file_get_contents($this->source);
-    preg_match('/version\s*=\s*"?([\d\.]+)"?/i', $contents, $matches);
+  public function read(): string {
+    if (file_exists($this->source)) {
+      $contents = file_get_contents($this->source);
+      preg_match(self::REGEX, $contents, $matches);
+    }
 
-    return $this->getVersion($matches[1] ?? '');
+    return $matches[2] ?? VersionScribeInterface::DEFAULT;
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function write(Version $version): bool {
     if (file_exists($this->source)) {
-      $old = $this->read();
-      if ($this->replaceVersionInFile($this->source, $old, $version)) {
-        return TRUE;
-      }
-      // TODO Handle what to do here.
-      throw new \RuntimeException(sprintf('The version %s appears in %s more than once; update failed.', (string) $old, $this->source));
+      return $this->regexReplaceVersionInFile($this->source, self::REGEX, $this->read(), $version);
     }
 
     return file_put_contents($this->source, 'version = "' . $version . '"' . PHP_EOL);
   }
+
 }
+

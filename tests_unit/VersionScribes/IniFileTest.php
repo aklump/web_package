@@ -7,6 +7,7 @@ use AKlump\WebPackage\VersionScribeInterface;
 use AKlump\WebPackage\VersionScribes\IniFile;
 use PHPUnit\Framework\TestCase;
 use z4kn4fein\SemVer\Inc;
+use z4kn4fein\SemVer\Version;
 
 /**
  * @covers \AKlump\WebPackage\VersionScribes\IniFile
@@ -16,14 +17,15 @@ class IniFileTest extends TestCase {
   use WriteTestTrait;
 
   public function testWriteReplacesVersionInExistingFile() {
-    $old = $this->getVersion();
-    $new = $old->inc(Inc::MINOR);
-    $this->unlink('ini');
     $path = $this->getPath('ini');
+    copy(__DIR__ . '/../files/file.ini', $path);
+    $expected_size = $this->filesize($path);
     $scribe = new IniFile($path);
-    $this->assertTrue($scribe->write($old));
+    $old = Version::parse($scribe->read(), FALSE);
+    $new = $old->inc(Inc::PATCH);
     $this->assertTrue($scribe->write($new));
-    $this->assertSame((string) $new, (string) $scribe->read());
+    $this->assertTrue($new->isEqual(Version::parse($scribe->read(), FALSE)));
+    $this->assertSame($expected_size, $this->filesize($path));
     $this->unlink('ini');
   }
 
@@ -33,20 +35,20 @@ class IniFileTest extends TestCase {
     $path = $this->getPath('ini');
     $scribe = new IniFile($path);
     $this->assertTrue($scribe->write($version));
-    $this->assertSame((string) $version, (string) $scribe->read());
+    $this->assertSame((string) $version, $scribe->read());
     $this->unlink('ini');
   }
 
   public function testIniFileReturnsValueOfVersionKey() {
     $scribe = new IniFile(__DIR__ . '/../files/file.ini');
     $version = $scribe->read();
-    $this->assertSame('2.3.4', (string) $version);
+    $this->assertSame('2.3.4', $version);
   }
 
   public function testIniFileWithoutVersionReturnsDefaul() {
     $scribe = new IniFile(__DIR__ . '/../files/file2.ini');
     $version = $scribe->read();
-    $this->assertSame(VersionScribeInterface::DEFAULT, (string) $version);
+    $this->assertSame(VersionScribeInterface::DEFAULT, $version);
   }
 
 }

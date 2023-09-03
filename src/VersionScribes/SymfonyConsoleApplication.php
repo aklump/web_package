@@ -3,12 +3,15 @@
 namespace AKlump\WebPackage\VersionScribes;
 
 use AKlump\WebPackage\Traits\ReaderTrait;
+use AKlump\WebPackage\Traits\WriterTrait;
 use AKlump\WebPackage\VersionScribeInterface;
 use z4kn4fein\SemVer\Version;
 
 class SymfonyConsoleApplication implements VersionScribeInterface {
 
-  use ReaderTrait;
+  use WriterTrait;
+
+  const REGEX = '/(\->setVersion\([\'"])(.+?)([\'"]\))/i';
 
   private $source;
 
@@ -16,15 +19,19 @@ class SymfonyConsoleApplication implements VersionScribeInterface {
     $this->source = $source;
   }
 
-  public function read(): Version {
-    $contents = file_get_contents($this->source);
-    preg_match("/setVersion\('(.+?)'\)/", $contents, $matches);
+  public function read(): string {
+    if (file_exists($this->source)) {
+      $contents = file_get_contents($this->source);
+      preg_match(self::REGEX, $contents, $matches);
+    }
 
-    return $this->getVersion($matches[1] ?? '');
+    return $matches[2] ?? VersionScribeInterface::DEFAULT;
   }
 
   public function write(Version $version): bool {
-    // TODO: Implement write() method.
+    if (file_exists($this->source)) {
+      return $this->regexReplaceVersionInFile($this->source, self::REGEX, $this->read(), $version);
+    }
 
     $template = '#!/usr/bin/env php' . PHP_EOL;
     $template .= '<?php' . PHP_EOL;
@@ -33,4 +40,5 @@ class SymfonyConsoleApplication implements VersionScribeInterface {
 
     return file_put_contents($this->source, $template);
   }
+
 }

@@ -9,7 +9,7 @@ use AKlump\LoftLib\Bash\Color;
  */
 class FacePlant {
 
-  public static function print($message) {
+  public static function __invoke($message) {
     $tab = str_repeat(' ', 5);
     $length = mb_strlen($message . $tab . $tab);
     $border = str_repeat(' ', $length);
