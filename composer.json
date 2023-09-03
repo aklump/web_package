@@ -15,7 +15,9 @@
     "aklump\/loft-lib": "^1.0",
     "twig\/twig": "^2.6",
     "z4kn4fein/php-semver": "^2.0",
-    "ext-json": "*"
+    "ext-json": "*",
+    "symfony/config": "^5.4",
+    "symfony/filesystem": "^5.4"
   },
   "autoload": {
     "psr-4": {

@@ -94,22 +94,8 @@ function load_config() {
 #
 function parse_config() {
   local config_file="$1"
-  if [ -f "$config_file" ]; then
 
-    # Without a \n at the end, the last item is ignored.  So we ensure the file
-    # ends in a newline.
-    [ -n "$(tail -c1 "$config_file")" ] && printf '\n' >>"$config_file"
-
-    while read line; do
-      if [[ "$line" =~ ^[^#[]+ ]]; then
-        name=${line%% =*}
-        value=${line##*= }
-        if [[ "$name" ]]; then
-          eval wp_$name="$value"
-        fi
-      fi
-    done <"$config_file"
-  fi
+  eval `$wp_php "$LOBSTER_APP_ROOT/includes/parse_config.php" "$config_file"`
 }
 
 # If .web_package/config then we can override defaults, but optional.

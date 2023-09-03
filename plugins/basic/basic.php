@@ -76,7 +76,7 @@ switch ($ext) {
     break;
 
   default:
-    FacePlant::__invoke(sprintf('Cannot read version from file: %s', $path));
+    FacePlant::__invoke(sprintf('Unknown version file or type: %s', $path));
     exit(1);
 }
 
