@@ -2,7 +2,6 @@
 
 namespace AKlump\WebPackage\VersionScribes;
 
-use AKlump\WebPackage\Traits\ReaderTrait;
 use AKlump\WebPackage\Traits\WriterTrait;
 use AKlump\WebPackage\VersionScribeInterface;
 use z4kn4fein\SemVer\Version;

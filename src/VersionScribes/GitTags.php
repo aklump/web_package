@@ -2,7 +2,6 @@
 
 namespace AKlump\WebPackage\VersionScribes;
 
-use AKlump\WebPackage\Traits\ReaderTrait;
 use AKlump\WebPackage\VersionScribeInterface;
 use z4kn4fein\SemVer\Version;
 
@@ -16,8 +15,6 @@ use z4kn4fein\SemVer\Version;
  * @endcode
  */
 class GitTags implements VersionScribeInterface {
-
-  use ReaderTrait;
 
   private $source;
 
