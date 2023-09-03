@@ -37,9 +37,9 @@ class VersionScribeFactory {
     elseif ('ini' === $extension) {
       return new IniFile($filepath);
     }
-    elseif ('.git' === $basename) {
-      return new GitTags($filepath);
-    }
+//    elseif ('.git' === $basename) {
+//      return new GitTags($filepath);
+//    }
     elseif (in_array($extension, ['yml', 'yaml'])) {
       return new Yaml($filepath);
     }

@@ -8,6 +8,8 @@ use z4kn4fein\SemVer\Version;
 
 /**
  * Read the version from the list of git tags.
+ * 
+ * // TODO This is not yet ready for use.
  *
  * @code
  * info_file = ".git"
