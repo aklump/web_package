@@ -15,7 +15,7 @@ class LegacyLoader extends FileLoader {
     }
     $contents = explode(PHP_EOL, file_get_contents($resource));
     $contents = implode(PHP_EOL, array_filter($contents, function (string $line) {
-      return !empty(trim($line)) && !preg_match('/^[\s#\/]+/', $line);
+      return !empty(trim($line)) && !preg_match('/^[\[\s#\/]+/', $line);
     }));
     $data = parse_ini_string($contents);
 

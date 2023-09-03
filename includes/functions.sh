@@ -8,10 +8,6 @@
 ##
 # Load the configuration file
 #
-# Lines that begin with [ or # will be ignored
-# Format: Name = "Value"
-# Value does not need wrapping quotes if no spaces
-#
 # @param string $1
 #  (Optional) Defaults to ''.  Config file suffix.
 #
@@ -20,6 +16,12 @@
 #
 load_config_return=''
 function load_config() {
+  local config_file="$1"
+
+  eval `$wp_php "$LOBSTER_APP_ROOT/includes/load_config.php" "$config_file"`
+  return 0
+
+
   load_config_return=''
 
   # FIRST CHOICE: Take the template name from argument 1
@@ -48,6 +50,10 @@ function load_config() {
   if [ -f "$config" ]; then
     parse_config $config
   fi
+  config=$HOME/.web_package/config.local
+  if [ -f "$config" ]; then
+    parse_config $config
+  fi
 
   # Load project config
   parse_config .web_package/config
@@ -57,19 +63,9 @@ function load_config() {
   if [ -f "$config" ]; then
     parse_config $config
   fi
-
-  # Handle the git root, or auto detect.
-  if [ ! "$wp_git_root" ]; then
-    wp_git_root=$(lobster_upfind .git && echo "$lobster_upfind_dir")
-    if [ "$wp_git_root" ]; then
-      wp_git_root=$(dirname $wp_git_root)
-    fi
-  fi
-
-  # Legacy support convert micro to patch and alert user
-  if [[ "$wp_create_tags" == 'micro' ]]; then
-    wp_create_tags='patch'
-    echo "$(tput setaf 3)Replace 'create_tags = micro' with 'create_tags = patch' in .web_package/config$(tput op)"
+  config=.web_package/config.local
+  if [ -f "$config" ]; then
+    parse_config $config
   fi
 
   # this will convert something like *.info to a filename.
@@ -80,10 +76,6 @@ function load_config() {
     done
   fi
 
-  # If there is still no file, then we will replace * with web_package
-  if [ "$wp_info_file" ] && ! test -e "$wp_info_file" && [ "${wp_info_file:0:1}" == "*" ]; then
-    wp_info_file="$lobster_app_name${wp_info_file:1}"
-  fi
 }
 
 ##

@@ -1,5 +1,6 @@
 <?php
 
+use AKlump\WebPackage\Config\ConfigManager;
 use AKlump\WebPackage\Config\Loader\LegacyLoader;
 use AKlump\WebPackage\Config\Loader\YamlLoader;
 use Symfony\Component\Config\FileLocator;
@@ -20,24 +21,10 @@ $filesystem = new Filesystem();
 if (!$filesystem->isAbsolutePath($path_to_load)) {
   $path_to_load = Path::makeAbsolute($path_to_load, getcwd());
 }
-$locator = new FileLocator([dirname($path_to_load)]);
-$loader_resolver = new LoaderResolver(
-  [
-    new LegacyLoader($locator),
-    new YamlLoader($locator),
-  ]
-);
-$loader = new DelegatingLoader($loader_resolver);
-try {
-  $located_file = $locator->locate(basename($path_to_load), NULL, TRUE);
-}
-catch (Exception $e) {
-}
-if (empty($located_file)) {
-  exit(1);
-}
+$manager = new ConfigManager();
+$config = $manager->loadFile($path_to_load);
 
-$config = $loader->load($located_file);
+// Convert array to BASH eval code.
 $eval = [];
 foreach ($config as $key => $value) {
   $eval[] = "wp_$key=\"$value\"";
