@@ -7,7 +7,7 @@ use Symfony\Component\Filesystem\Path;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$template = $argv[1] ?? NULL;
+$template = isset($argv[1]) ? $argv[1] : NULL;
 
 $base_dir = getcwd();
 $stack = [];
