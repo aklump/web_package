@@ -2,7 +2,7 @@
 
 namespace AKlump\WebPackage;
 
-use z4kn4fein\SemVer\Version;
+use AKlump\WebPackage\Model\Version;
 
 interface VersionScribeInterface {
 
@@ -25,6 +25,7 @@ interface VersionScribeInterface {
    * @return bool
    *   True if the version was persisted successfully.
    */
-  public function write(Version $version): bool;
+  public function write(string $version): bool;
 
+  public function getFilepath(): string;
 }

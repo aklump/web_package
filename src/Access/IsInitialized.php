@@ -2,19 +2,18 @@
 
 namespace AKlump\WebPackage\Access;
 
+use AKlump\WebPackage\Helpers\GetRootPath;
 use Symfony\Component\Filesystem\Filesystem;
 
-class IsInitialized implements AccessInterface {
-
-  public function __construct(string $directory) {
-    $this->dir = $directory;
-  }
+final class IsInitialized implements AccessInterface {
 
   /**
    * @return bool
    *   True if the directory is already initialized.
    */
   public function access(): bool {
-    return (new Filesystem())->exists($this->dir . '/.web_package');
+    $root_path = (new GetRootPath())() ?? getcwd();
+
+    return (new Filesystem())->exists($root_path . '/.web_package');
   }
 }

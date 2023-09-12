@@ -19,7 +19,12 @@
     "symfony/config": "^5.4",
     "symfony/filesystem": "^5.4",
     "symfony/console": "^5.4",
-    "symfony/serializer": "^5.4"
+    "symfony/serializer": "^5.4",
+    "symfony/event-dispatcher": "^5.4",
+    "webmozart/glob": "^4.6",
+    "jawira/case-converter": "^3.5",
+    "aklump/local-timezone": "^0.0.1",
+    "symfony/validator": "^5.4"
   },
   "autoload": {
     "psr-4": {

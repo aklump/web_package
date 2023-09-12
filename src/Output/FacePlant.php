@@ -6,10 +6,12 @@ use AKlump\LoftLib\Bash\Color;
 
 /**
  * A very loud error message when the fan gets hit.
+ *
+ * @deprecated
  */
 class FacePlant {
 
-  public static function __invoke($message) {
+  public static function echo($message) {
     $tab = str_repeat(' ', 5);
     $length = mb_strlen($message . $tab . $tab);
     $border = str_repeat(' ', $length);

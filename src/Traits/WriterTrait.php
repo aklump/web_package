@@ -2,9 +2,6 @@
 
 namespace AKlump\WebPackage\Traits;
 
-
-use z4kn4fein\SemVer\Version;
-
 trait WriterTrait {
 
   /**

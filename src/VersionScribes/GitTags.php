@@ -3,7 +3,7 @@
 namespace AKlump\WebPackage\VersionScribes;
 
 use AKlump\WebPackage\VersionScribeInterface;
-use z4kn4fein\SemVer\Version;
+use AKlump\WebPackage\Model\Version;
 
 /**
  * Read the version from the list of git tags.
@@ -16,10 +16,8 @@ use z4kn4fein\SemVer\Version;
  */
 class GitTags implements VersionScribeInterface {
 
-  private $source;
-
-  public function __construct(string $source) {
-    $this->source = $source;
+  public function getFilepath(): string {
+    return '';
   }
 
   public function read(): string {
@@ -42,7 +40,7 @@ class GitTags implements VersionScribeInterface {
   /**
    * @inheritDoc
    */
-  public function write(Version $version): bool {
+  public function write(string $version): bool {
     // TODO I'm not sure how to handle this right now.  Need to think.
     return TRUE;
   }

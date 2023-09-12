@@ -5,6 +5,8 @@
  * @param $info
  *
  * @return string
+ *
+ * @deprecated
  */
 function wp_key_value_chart($info) {
   $build = array();

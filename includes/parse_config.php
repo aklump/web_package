@@ -1,4 +1,7 @@
 <?php
+/**
+ * @deprecated
+ */
 
 use AKlump\WebPackage\Config\ConfigManager;
 use AKlump\WebPackage\Config\Loader\LegacyLoader;

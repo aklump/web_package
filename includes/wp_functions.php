@@ -8,6 +8,8 @@
  *
  * @ingroup web_package
  * @{
+ *
+ * @deprecated
  */
 
 /**

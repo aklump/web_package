@@ -3,13 +3,12 @@
 namespace AKlump\WebPackage;
 
 use AKlump\WebPackage\VersionScribes\DrupalInfo;
-use AKlump\WebPackage\VersionScribes\GitTags;
 use AKlump\WebPackage\VersionScribes\IniFile;
 use AKlump\WebPackage\VersionScribes\Json;
 use AKlump\WebPackage\VersionScribes\SymfonyConsoleApplication;
 use AKlump\WebPackage\VersionScribes\Text;
 use AKlump\WebPackage\VersionScribes\Yaml;
-use z4kn4fein\SemVer\Version;
+use AKlump\WebPackage\Model\Version;
 
 class VersionScribeFactory {
 

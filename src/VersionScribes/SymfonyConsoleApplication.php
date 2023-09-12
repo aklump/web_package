@@ -4,7 +4,7 @@ namespace AKlump\WebPackage\VersionScribes;
 
 use AKlump\WebPackage\Traits\WriterTrait;
 use AKlump\WebPackage\VersionScribeInterface;
-use z4kn4fein\SemVer\Version;
+use AKlump\WebPackage\Model\Version;
 
 class SymfonyConsoleApplication implements VersionScribeInterface {
 
@@ -18,6 +18,10 @@ class SymfonyConsoleApplication implements VersionScribeInterface {
     $this->source = $source;
   }
 
+
+  public function getFilepath(): string {
+    return $this->source;
+  }
   public function read(): string {
     if (file_exists($this->source)) {
       $contents = file_get_contents($this->source);
@@ -27,7 +31,7 @@ class SymfonyConsoleApplication implements VersionScribeInterface {
     return $matches[2] ?? VersionScribeInterface::DEFAULT;
   }
 
-  public function write(Version $version): bool {
+  public function write(string $version): bool {
     if (file_exists($this->source)) {
       return $this->regexReplaceVersionInFile($this->source, self::REGEX, $this->read(), $version);
     }

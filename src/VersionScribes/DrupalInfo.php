@@ -4,7 +4,7 @@ namespace AKlump\WebPackage\VersionScribes;
 
 use AKlump\WebPackage\Traits\WriterTrait;
 use AKlump\WebPackage\VersionScribeInterface;
-use z4kn4fein\SemVer\Version;
+use AKlump\WebPackage\Model\Version;
 
 class DrupalInfo implements VersionScribeInterface {
 
@@ -16,6 +16,10 @@ class DrupalInfo implements VersionScribeInterface {
 
   public function __construct(string $source) {
     $this->source = $source;
+  }
+
+  public function getFilepath(): string {
+    return $this->source;
   }
 
   public function read(): string {
@@ -30,7 +34,7 @@ class DrupalInfo implements VersionScribeInterface {
   /**
    * {@inheritdoc}
    */
-  public function write(Version $version): bool {
+  public function write(string $version): bool {
     if (file_exists($this->source)) {
       return $this->regexReplaceVersionInFile($this->source, self::REGEX, $this->read(), $version);
     }

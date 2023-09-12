@@ -4,7 +4,7 @@ namespace AKlump\WebPackage\VersionScribes;
 
 use AKlump\WebPackage\Traits\WriterTrait;
 use AKlump\WebPackage\VersionScribeInterface;
-use z4kn4fein\SemVer\Version;
+use AKlump\WebPackage\Model\Version;
 
 class Text implements VersionScribeInterface {
 
@@ -28,7 +28,7 @@ class Text implements VersionScribeInterface {
   /**
    * @inheritDoc
    */
-  public function write(Version $version): bool {
+  public function write(string $version): bool {
     if (file_exists($this->source)) {
       $old = $this->read();
       if ($this->replaceVersionInFile($this->source, $old, $version)) {
@@ -40,4 +40,9 @@ class Text implements VersionScribeInterface {
 
     return file_put_contents($this->source, $version);
   }
+
+  public function getFilepath(): string {
+    return $this->source;
+  }
+
 }

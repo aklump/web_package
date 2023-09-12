@@ -1,6 +1,8 @@
 <?php
 /**
  * Basic parse of configuration files: .info, .json, .yml
+ *
+ * @deprecated
  */
 
 namespace AKlump\LoftLib\Component\Config;
@@ -30,7 +32,7 @@ if ('version' === $key) {
     else {
       $version = Version::parse($value, FALSE);
       if (!$scribe->write($version)) {
-        FacePlant::__invoke(sprintf('Failed to update version file: %s', $path));
+        FacePlant::echo(sprintf('Failed to update version file: %s', $path));
         exit(1);
       }
     }
@@ -76,7 +78,7 @@ switch ($ext) {
     break;
 
   default:
-    FacePlant::__invoke(sprintf('Unknown version file or type: %s', $path));
+    FacePlant::echo(sprintf('Unknown version file or type: %s', $path));
     exit(1);
 }
 

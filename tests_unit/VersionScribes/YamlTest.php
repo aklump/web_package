@@ -2,7 +2,7 @@
 
 namespace AKlump\WebPackage\Tests\VersionScribes;
 
-use AKlump\WebPackage\Tests\Traits\WriteTestTrait;
+use AKlump\WebPackage\Tests\WriteTestTrait;
 use AKlump\WebPackage\VersionScribeInterface;
 use AKlump\WebPackage\VersionScribes\Yaml;
 use PHPUnit\Framework\TestCase;

@@ -11,6 +11,8 @@ use Twig\Loader\FilesystemLoader;
 
 /**
  * Provide common build functionality to PHP hooks.
+ *
+ * @deprecated
  */
 class HookService {
 

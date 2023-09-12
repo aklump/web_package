@@ -1,7 +1,8 @@
 <?php
 
-// TODO Echo eval code
-
+/**
+ * @deprecated
+ */
 use AKlump\WebPackage\Config\LoadConfig;
 
 require __DIR__ . '/../vendor/autoload.php';

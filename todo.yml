@@ -1,2 +1,13 @@
-- hooks need to show realtime output
+- choose template on init
+
+
+- convert build,unbuild,dev to dynamic routes that check against a folder name in hooks.
+- convert the info route or delete?
+-
+- add dynamic vars to knowledge output for hooks.
+
+## Phase Two
+- split classes in /flax/src?
+- study up on https://docs.github.com/en/get-started/quickstart/github-flow, can it be incorporated, should it?
 - make composer install
+- separate info_file and version_file
