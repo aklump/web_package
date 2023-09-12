@@ -1,3 +1,4 @@
+remote: origin
 master: main
 develop: main
 push_master: true
@@ -7,3 +8,4 @@ create_tags: patch
 do_version_commit: false
 patch_prefix: .
 preserve_patch_zero: true
+info_file: .web_package/.version

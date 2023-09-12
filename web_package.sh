@@ -11,4 +11,11 @@ while [ -h "$LOBSTER_APP" ]; do
 done
 LOBSTER_APP_ROOT="$(cd -P "$(dirname "$LOBSTER_APP")" && pwd)"
 lobster_core_verbose=0
-source "$LOBSTER_APP_ROOT/lib/lobster/dist/lobster.sh"
+
+# We're converting this from Lobster to Symfony console route by route.  All
+# routes that should us symfony console should be added here.
+if [[ "$1" == 'init' ]] || [[ "$1" == 'major' ]] || [[ "$1" == 'minor' ]] || [[ "$1" == 'patch' ]]; then
+  php "$LOBSTER_APP_ROOT/web_package.php" $@
+else
+  source "$LOBSTER_APP_ROOT/lib/lobster/dist/lobster.sh"
+fi

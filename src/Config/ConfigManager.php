@@ -33,20 +33,18 @@ class ConfigManager {
   }
 
   /**
-   * @param string &$path_to_load
+   * @param string $path_to_load
    *   The extension will be ignored and the basename used against all supported
-   *   extensions.  See $fifo_files below for precendence.  This is passed by
-   *   reference and will be updated to the exact file that was loading,
-   *   including the extension used.
+   *   extensions.  See $fifo_files below for precendance.
    *
    * @return array
    *   The loaded configuration from the single file.
    * @throws \InvalidArgumentException If $path_to_load is not absolute.
    */
-  public function loadFile(string &$path_to_load): array {
-    $filesystem = new Filesystem();
-    if (!$filesystem->isAbsolutePath($path_to_load)) {
-      throw new \InvalidArgumentException(sprintf('$path_to_load must be absolute; "%s" is not', $path_to_load));
+  public function loadFile(string $path_to_load): array {
+    $located_file = $this->locateFile($path_to_load);
+    if (!$located_file) {
+      return [];
     }
 
     $locator = new FileLocator([dirname($path_to_load)]);
@@ -58,6 +56,25 @@ class ConfigManager {
     );
     $loader = new DelegatingLoader($loader_resolver);
 
+    return $loader->load($located_file);
+  }
+
+  /**
+   * Get the exact filepath (with extension) of loadable config file.
+   *
+   * @param string $path_to_load
+   *
+   * @return string
+   *   The absolute path with extension to the file that will be loaded by
+   *   self::loadFile($path_to_load).
+   */
+  public function locateFile(string $path_to_load): string {
+    $filesystem = new Filesystem();
+    if (!$filesystem->isAbsolutePath($path_to_load)) {
+      throw new \InvalidArgumentException(sprintf('$path_to_load must be absolute; "%s" is not', $path_to_load));
+    }
+    $locator = new FileLocator([dirname($path_to_load)]);
+
     // The first file found will be used and the rest skipped.
     $fifo_files = [
       basename($path_to_load) . '.yml',
@@ -67,18 +84,13 @@ class ConfigManager {
     foreach ($fifo_files as $fifo_file) {
       try {
         $located_file = $locator->locate(basename($fifo_file));
-        $path_to_load = $located_file;
       }
       catch (Exception $e) {
         continue;
       }
     }
 
-    if (empty($located_file)) {
-      return [];
-    }
-
-    return $loader->load($located_file);
+    return $located_file ?? '';
   }
 
   public function handleGitRoot(array &$config, string $start_dir): void {
