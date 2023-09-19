@@ -27,10 +27,10 @@ class GetBranchType {
     elseif (strstr($branch_name, 'hotfix')) {
       return GitFlow::HOTFIX;
     }
-    elseif ($branch_name === $this->getConfig()['master']) {
+    elseif ($branch_name === ($this->getConfig()['master'] ?? GitFlow::MASTER)) {
       return GitFlow::MASTER;
     }
-    elseif ($branch_name === $this->getConfig()['develop']) {
+    elseif ($branch_name === ($this->getConfig()['develop'] ?? GitFlow::DEVELOP)) {
       return GitFlow::DEVELOP;
     }
 

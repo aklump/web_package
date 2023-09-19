@@ -13,8 +13,7 @@ class GitBranch extends Constraint {
    */
   public $options = [];
 
-  public $messageNotInitialized = 'You have not initialized this repository yet.  "git init" and try again.';
-
+  public $messageNotInitialized = "Git is not initialized; (git init) and try again.";
   public $messageNoCommits = 'The (Git) repository is empty, make at least one commit and try again.';
 
   public $messageInvalidOption;
@@ -33,7 +32,7 @@ class GitBranch extends Constraint {
     array $groups = NULL,
     $payload = NULL
   ) {
-    $this->options = $options;
+    $this->options = array_unique(array_filter($options));
     $this->messageInvalidOption = $message_invalid_option;
     parent::__construct([], $groups, $payload);
   }

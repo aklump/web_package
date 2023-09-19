@@ -15,8 +15,4 @@ lobster_core_verbose=0
 
 # We're converting this from Lobster to Symfony console route by route.  All
 # routes that have not been converted must be listed here.
-if [[ "$1" == 'info' ]] || [[ "$1" == 'i' ]] || [[ "$1" == 'config' ]] || [[ "$1" == 'test' ]] || [[ "$1" == 'update' ]] || [[ "$1" == 'hooklib' ]]; then
-  source "$LOBSTER_APP_ROOT/lib/lobster/dist/lobster.sh"
-else
-  php "$LOBSTER_APP_ROOT/web_package.php" $@
-fi
+php "$LOBSTER_APP_ROOT/web_package.php" $@

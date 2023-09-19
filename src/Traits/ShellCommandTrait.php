@@ -10,15 +10,17 @@ trait ShellCommandTrait {
    *
    * @param string $command
    *
-   * @return void
+   * @return string
    *
    * @throws \RuntimeException If result code is not 0.
    */
-  public function system(string $command) {
-    system($command, $result_code);
+  public function system(string $command): string {
+    $result = system($command, $result_code);
     if (0 !== $result_code) {
       throw new \RuntimeException(sprintf('Failed: %s', $command));
     }
+
+    return $result;
   }
 
   /**

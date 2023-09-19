@@ -20,13 +20,18 @@ class Yaml implements VersionScribeInterface {
   public function getFilepath(): string {
     return $this->source;
   }
-  public function read(): string {
+
+  public function read(): ?string {
     if (file_exists($this->source)) {
       $data = \Symfony\Component\Yaml\Yaml::parseFile($this->source);
       $data = array_change_key_case($data);
     }
 
-    return $data['version'] ?? VersionScribeInterface::DEFAULT;
+    if (empty($data['version'])) {
+      return NULL;
+    }
+
+    return $data['version'];
   }
 
   /**
@@ -45,4 +50,5 @@ class Yaml implements VersionScribeInterface {
 
     return file_put_contents($this->source, $data);
   }
+
 }

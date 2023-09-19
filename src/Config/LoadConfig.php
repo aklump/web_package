@@ -2,15 +2,13 @@
 
 namespace AKlump\WebPackage\Config;
 
-use AKlump\WebPackage\Helpers\GetRootPath;
 use AKlump\WebPackage\Helpers\GetServerHome;
 use Symfony\Component\Filesystem\Path;
-
 
 /**
  * // TODO This was based on the legacy version and needs to be simplified.
  */
-final class LoadConfig {
+class LoadConfig {
 
   static private $defaults = [
     'master' => 'main',
@@ -18,7 +16,7 @@ final class LoadConfig {
   ];
 
   public function __invoke(string $template = NULL): array {
-    $root_path = (new GetRootPath())() ?? getcwd();
+    $root_path = ROOT_PATH;
     $manager = new ConfigManager();
 
     // The first thing to load is going to be in the home directory, and if we can find a template either in a passed argument on in the project's configuration then we'll use that.  If not we'll use the default config from the home directory.
@@ -51,7 +49,7 @@ final class LoadConfig {
 
     $manager->handleGitRoot($config, $root_path);
     $manager->migrateOldKeys($config);
-    $manager->handleInfoFile($config, $root_path);
+    $manager->handleVersionFile($config, $root_path);
 
     ksort($config);
 

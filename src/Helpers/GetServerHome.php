@@ -4,7 +4,7 @@ namespace AKlump\WebPackage\Helpers;
 
 class GetServerHome {
 
-  public function __invoke(): ?string {
+  public function __invoke(): string {
     $home = getenv('HOME');
     if (!empty($home)) {
       // home should never end with a trailing slash.
@@ -18,7 +18,7 @@ class GetServerHome {
       $home = rtrim($home, '\\/');
     }
 
-    return empty($home) ? NULL : $home;
+    return $home ?? '';
   }
 
 }

@@ -48,7 +48,7 @@ class JsonTest extends TestCase {
   public function testJsonWithoutVersionReturnsDefaul() {
     $scribe = new Json(__DIR__ . '/../files/composer2.json');
     $version = $scribe->read();
-    $this->assertSame(VersionScribeInterface::DEFAULT, $version);
+    $this->assertNull($version);
   }
 
 }

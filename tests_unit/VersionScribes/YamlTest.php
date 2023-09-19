@@ -48,7 +48,7 @@ class YamlTest extends TestCase {
   public function testYamlWithoutVersionReturnsDefaul() {
     $scribe = new Yaml(__DIR__ . '/../files/file2.yml');
     $version = $scribe->read();
-    $this->assertSame(VersionScribeInterface::DEFAULT, $version);
+    $this->assertNull($version);
   }
 
 }

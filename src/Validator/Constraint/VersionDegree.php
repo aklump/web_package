@@ -10,6 +10,15 @@ class VersionDegree extends Constraint {
 
   public $degrees = [];
 
+  /**
+   * @param array $degrees
+   * @param array|NULL $groups
+   * @param $payload
+   *
+   * @see \AKlump\WebPackage\Helpers\VersionDegree::MAJOR
+   * @see \AKlump\WebPackage\Helpers\VersionDegree::MINOR
+   * @see \AKlump\WebPackage\Helpers\VersionDegree::PATCH
+   */
   public function __construct(array $degrees, array $groups = NULL, $payload = NULL) {
     $this->degrees = $degrees;
     parent::__construct([], $groups, $payload);

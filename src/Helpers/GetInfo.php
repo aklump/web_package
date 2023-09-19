@@ -15,9 +15,9 @@ class GetInfo {
 
   public function __invoke(): array {
     $config = $this->getConfig();
-    $path_to_info = $config['info_file'];
+    $path_to_info = $config['version_file'];
     if (!Path::isAbsolute($path_to_info)) {
-      $path_to_info = Path::makeAbsolute($path_to_info, (new GetRootPath())());
+      $path_to_info = Path::makeAbsolute($path_to_info, ROOT_PATH);
     }
 
     // TODO Turn this into a real serializer implementation.

@@ -12,6 +12,9 @@ use AKlump\WebPackage\VersionScribeInterface;
  * @method getNextPatchVersion
  * @method getNextMinorVersion
  * @method getNextMajorVersion
+ * @method getMajor
+ * @method getMinor
+ * @method getPatch
  */
 class Version {
 

@@ -94,7 +94,7 @@ class HookEvent extends Event {
   }
 
   public function getRoot(): string {
-    return (new GetRootPath())();
+    return ROOT_PATH;
   }
 
   public function getDateTime(): string {
@@ -102,9 +102,9 @@ class HookEvent extends Event {
   }
 
   public function getInfoFile(): string {
-    $info_file = (new LoadConfig())()['info_file'];
+    $info_file = (new LoadConfig())()['version_file'];
     if (!\Symfony\Component\Filesystem\Path::isAbsolute($info_file)) {
-      $info_file = \Symfony\Component\Filesystem\Path::makeAbsolute($info_file, (new GetRootPath())());
+      $info_file = \Symfony\Component\Filesystem\Path::makeAbsolute($info_file, ROOT_PATH);
     }
 
     return $info_file;

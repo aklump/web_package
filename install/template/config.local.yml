@@ -1,6 +1,1 @@
 #This file should not be added to version control!
-
-#This can be an int, or "odd" or "even"
-patch_step: 1
-#patch_step: even
-#patch_step: odd

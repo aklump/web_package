@@ -9,15 +9,24 @@ interface VersionScribeInterface {
   const DEFAULT = '0.0.0';
 
   /**
-   * Get the version exactly as stored in the version file.
+   * @var string The default filename (no extension) for created files indicated
+   * with a glob char.
    *
-   * @return string
-   *   The string verbatim as stored in the file.  To normalize you should use
-   *   \z4kn4fein\SemVer\Version::parse($foo->read(), false).
-   *
-   * @see \z4kn4fein\SemVer\Version
    */
-  public function read(): string;
+  const DEFAULT_FILENAME = 'web_package';
+
+  /**
+   * Get the version EXACTLY as stored in the version file.
+   *
+   * @return ?string
+   *   The version, verbatim as stored in the file.  If the stored value is
+   *   empty, or is absent then null is returned.
+   *
+   * @see \AKlump\WebPackage\Model\Version::parse()
+   *
+   * @see self::DEFAULT
+   */
+  public function read(): ?string;
 
   /**
    * @param \z4kn4fein\SemVer\Version $version
@@ -28,4 +37,5 @@ interface VersionScribeInterface {
   public function write(string $version): bool;
 
   public function getFilepath(): string;
+
 }

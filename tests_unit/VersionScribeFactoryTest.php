@@ -16,6 +16,8 @@ use PHPUnit\Framework\TestCase;
  */
 class VersionScribeFactoryTest extends TestCase {
 
+  use \AKlump\WebPackage\Tests\TestingTraits\TestWithConfigTrait;
+
   public function dataFortestInvokeReturnsTheExpectedClassProvider() {
     $tests = [];
     $tests[] = [
@@ -62,14 +64,17 @@ class VersionScribeFactoryTest extends TestCase {
    * @dataProvider dataFortestInvokeReturnsTheExpectedClassProvider
    */
   public function testInvokeReturnsTheExpectedClass($expected, $subject) {
-    $factory = new VersionScribeFactory();
-    $subject = __DIR__ . "/files/$subject";
-    $this->assertSame($expected, get_class($factory($subject)));
+    $factory = new VersionScribeFactory($this->createLoadConfigMock([
+      'version_file' => __DIR__ . "/files/$subject",
+    ]));
+    $this->assertSame($expected, get_class($factory()));
   }
 
-  public function testNonExistentFileThrows() {
-    $factory = new VersionScribeFactory();
-    $this->expectException(\InvalidArgumentException::class);
-    $factory('foo/bar.xyz');
+  public function testNonExistentFileReturnsNull() {
+    $factory = new VersionScribeFactory($this->createLoadConfigMock([
+      'version_file' => 'foo/bar.xyz',
+    ]));
+    $this->assertNull($factory());
   }
+
 }

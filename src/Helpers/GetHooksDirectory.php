@@ -13,7 +13,7 @@ class GetHooksDirectory {
     if (empty($hook_type)) {
       throw new \InvalidArgumentException('$hook_type may not be empty');
     }
-    $root_path = (new GetRootPath())();
+    $root_path = ROOT_PATH;
 
     return $root_path . "/.web_package/hooks/$hook_type/";
   }

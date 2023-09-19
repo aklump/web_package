@@ -2,11 +2,14 @@
 
 namespace AKlump\WebPackage\Validator\Constraint;
 
+use AKlump\WebPackage\Helpers\GetCurrentBranch;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class GitBranchValidator extends ConstraintValidator {
+
+  use \AKlump\WebPackage\Traits\ShellCommandTrait;
 
   /**
    * @inheritDoc
@@ -24,17 +27,24 @@ class GitBranchValidator extends ConstraintValidator {
       return;
     }
 
-    $this->context->addViolation($constraint->messageInvalidOption);
-
     if ('' === $value) {
       $this->context->addViolation($constraint->messageNotInitialized);
     }
-
-    $commits = (int) shell_exec(sprintf('git rev-list --count %s 2>/dev/null', $value));
-    if (0 === $commits) {
-      $this->context->addViolation($constraint->messageNoCommits);
+    else {
+      $branch = (new GetCurrentBranch())();
+      try {
+        $commits = (int) $this->exec(sprintf('git rev-list %s --count 2>/dev/null', $branch));
+      }
+      catch (\Exception $exception) {
+        $commits = 0;
+      }
+      if (0 === $commits) {
+        $this->context->addViolation($constraint->messageNoCommits);
+      }
+      elseif (!empty($constraint->options)) {
+        $this->context->addViolation($constraint->messageInvalidOption);
+      }
     }
-
   }
 
 }

@@ -30,5 +30,5 @@ class GetAllTemplates {
 
     return array_combine($labels, $paths);
   }
-  
+
 }

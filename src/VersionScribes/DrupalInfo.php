@@ -10,7 +10,7 @@ class DrupalInfo implements VersionScribeInterface {
 
   use WriterTrait;
 
-  const REGEX = '/^(version\s*=.*?)([\d\.]+)(.*?' . PHP_EOL . ')/m';
+  const REGEX = '/^(version\s*=.*?)([\d\.\-xrc]+)(.*?\n)/m';
 
   private $source;
 
@@ -22,24 +22,31 @@ class DrupalInfo implements VersionScribeInterface {
     return $this->source;
   }
 
-  public function read(): string {
+  public function read(): ?string {
     if (file_exists($this->source)) {
       $contents = file_get_contents($this->source);
       preg_match(self::REGEX, $contents, $matches);
     }
+    if (empty($matches[2])) {
+      return NULL;
+    }
 
-    return $matches[2] ?? VersionScribeInterface::DEFAULT;
+    return $matches[2];
   }
+
 
   /**
    * {@inheritdoc}
    */
   public function write(string $version): bool {
     if (file_exists($this->source)) {
-      return $this->regexReplaceVersionInFile($this->source, self::REGEX, $this->read(), $version);
+      $status = $this->regexReplaceVersionInFile($this->source, self::REGEX, $this->read(), $version);
+    }
+    if (empty($status)) {
+      $status = (bool) file_put_contents($this->source, 'version = "' . $version . '"' . PHP_EOL);
     }
 
-    return file_put_contents($this->source, 'version = "' . $version . '"' . PHP_EOL);
+    return $status;
   }
 
 }

@@ -11,7 +11,6 @@ class SymfonyConsoleApplication implements VersionScribeInterface {
   use WriterTrait;
 
   const REGEX = '/(\->setVersion\([\'"])(.+?)([\'"]\))/i';
-
   private $source;
 
   public function __construct(string $source) {
@@ -22,13 +21,17 @@ class SymfonyConsoleApplication implements VersionScribeInterface {
   public function getFilepath(): string {
     return $this->source;
   }
-  public function read(): string {
+  public function read(): ?string {
     if (file_exists($this->source)) {
       $contents = file_get_contents($this->source);
       preg_match(self::REGEX, $contents, $matches);
     }
 
-    return $matches[2] ?? VersionScribeInterface::DEFAULT;
+    if (empty($matches[2])) {
+      return NULL;
+    }
+
+    return $matches[2];
   }
 
   public function write(string $version): bool {

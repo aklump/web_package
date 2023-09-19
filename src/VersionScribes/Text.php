@@ -16,13 +16,15 @@ class Text implements VersionScribeInterface {
     $this->source = $source;
   }
 
-  public function read(): string {
+  public function read(): ?string {
     if (file_exists($this->source)) {
-      $contents = file_get_contents($this->source);
-      return Version::parse($contents, false);
+      $contents = trim(file_get_contents($this->source));
+    }
+    if (empty($contents)) {
+      return NULL;
     }
 
-    return VersionScribeInterface::DEFAULT;
+    return $contents;
   }
 
   /**

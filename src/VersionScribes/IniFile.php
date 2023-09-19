@@ -9,7 +9,6 @@ use AKlump\WebPackage\Model\Version;
 class IniFile implements VersionScribeInterface {
 
   use WriterTrait;
-
   private $source;
 
   public function __construct(string $source) {
@@ -20,14 +19,18 @@ class IniFile implements VersionScribeInterface {
   public function getFilepath(): string {
     return $this->source;
   }
-  public function read(): string {
+  public function read(): ?string {
     if (file_exists($this->source)) {
       $data = file_get_contents($this->source);
       $data = parse_ini_string($data);
       $data = array_change_key_case($data);
     }
 
-    return $data['version'] ?? VersionScribeInterface::DEFAULT;
+    if (empty($data['version'])) {
+      return NULL;
+    }
+
+    return $data['version'];
   }
 
   /**
