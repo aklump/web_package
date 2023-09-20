@@ -2,16 +2,12 @@
 
 namespace AKlump\WebPackage\Command;
 
-use AKlump\WebPackage\Config\GetVersionScribe;
-use AKlump\WebPackage\Config\LoadConfig;
 use AKlump\WebPackage\Helpers\GetCurrentBranch;
 use AKlump\WebPackage\Helpers\GetHookEvent;
+use AKlump\WebPackage\Helpers\VersionDegree;
 use AKlump\WebPackage\Model\GitFlow;
-use AKlump\WebPackage\Traits\ImplodeTrait;
-use AKlump\WebPackage\Traits\ShellCommandTrait;
-use AKlump\WebPackage\Traits\ValidationTrait;
 use AKlump\WebPackage\Validator\Constraint\GitBranch;
-use AKlump\WebPackage\Validator\Constraint\VersionDegree;
+use AKlump\WebPackage\Validator\Constraint\VersionDegree as VersionDegreeConstraint;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -22,31 +18,34 @@ use AKlump\WebPackage\Model\Version;
 /**
  * @url https://nvie.com/posts/a-successful-git-branching-model/
  */
-class ReleaseCommand extends Command {
-
-  use ValidationTrait;
-  use ShellCommandTrait;
-  use ImplodeTrait;
+class ReleaseCommand extends BaseBranchCommand {
 
   protected static $defaultName = 'release';
 
   protected function configure() {
     $this
+      ->setAliases(['r'])
       ->setDescription('Create a new release branch per Gitflow.')
-      ->addArgument('degree', InputArgument::OPTIONAL, "Version degree change, one of major, minor, or patch.", 'patch');
+      ->addArgument('degree', InputArgument::OPTIONAL, "Version degree change, one of major, minor, or patch.", VersionDegree::PATCH);
   }
 
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  /**
+   * {@inheritdoc}
+   */
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     $this->output = $output;
 
     $version_degree = $input->getArgument('degree');
     $this->validate($version_degree, [
       new NotBlank(),
-      new VersionDegree(['major', 'minor', 'patch']),
+      new VersionDegreeConstraint([
+        VersionDegree::MAJOR,
+        VersionDegree::MINOR,
+        VersionDegree::PATCH,
+      ]),
     ]);
 
-    $config = (new LoadConfig())();
-    $gitflow = new Gitflow(GitFlow::RELEASE, $config['master'], $config['develop']);
+    $gitflow = new Gitflow(GitFlow::RELEASE, $this->config['master'], $this->config['develop']);
     $starting_branch = (new GetCurrentBranch())();
     $branches = $gitflow->getMayBranchOffFrom();
     $this->validate($starting_branch, [
@@ -60,31 +59,29 @@ class ReleaseCommand extends Command {
       return Command::FAILURE;
     }
 
-    $version_scribe = (new GetVersionScribe($config))();
-    $version = $version_scribe->read();
+    $version = $this->scribe->read();
 
-    $event = (new GetHookEvent($config))();
+    $event = (new GetHookEvent($this->config))();
     $event->setPreviousVersion($version);
 
-    $semver = Version::parse($version, FALSE);
+    $semver = Version::parse($version);
     $change = [
-      'major' => $semver->getNextMajorVersion(),
-      'minor' => $semver->getNextMinorVersion(),
-      'patch' => $semver->getNextPatchVersion(),
+      VersionDegree::MAJOR => $semver->getNextMajorVersion(),
+      VersionDegree::MINOR => $semver->getNextMinorVersion(),
+      VersionDegree::PATCH => $semver->getNextPatchVersion(),
     ];
 
     $new_version = $change[$version_degree];
     $event->setVersion((string) $new_version);
 
-    $this->system(sprintf('git checkout -b %s %s', $gitflow->getBranchName($event->getVersion()), $starting_branch));
-    $version_scribe->write($new_version);
+    $this->git->checkoutBranch($gitflow->getBranchName($event->getVersion()), $starting_branch);
+    $this->scribe->write($new_version);
 
-    if ($config['do_version_commit']) {
-      $version_file = $version_scribe->getFilepath();
+    if ($this->config['do_version_commit']) {
+      $version_file = $this->scribe->getFilepath();
       if ($version_file) {
-        $this->system(sprintf('git add %s', $version_file));
+        $this->git->commitFile($version_file, sprintf('Bumped version number to %s', $event->getVersion()));
       }
-      $this->system(sprintf('git commit -a -m "Bumped version number to %s"', $event->getVersion()));
     }
 
     return Command::SUCCESS;

@@ -26,7 +26,7 @@ trait ValidationTrait {
    *
    * @see self::handleViolations()
    */
-  private function validate($value, array $constraints): void {
+  protected function validate($value, array $constraints): void {
     $validator = Validation::createValidator();
     $violations = $validator->validate($value, $constraints);
     if (empty($this->violations)) {
@@ -43,7 +43,7 @@ trait ValidationTrait {
    * @return int
    *   The total violations handled.
    */
-  private function handleViolations(): int {
+  protected function handleViolations(): int {
     $total_violations = count($this->violations);
     if (0 !== $total_violations) {
       foreach ($this->violations as $violation) {

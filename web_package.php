@@ -42,7 +42,6 @@ $app = new Application();
 $app->setName('web_package');
 $app->setVersion('0.0.1');
 
-
 $container = new Container();
 $container->add('config.loader', LoadConfig::class);
 $container->add('context', Context::class)
@@ -65,7 +64,7 @@ $app->add(new DevCommand($container));
 $app->add(DoneCommand::create($container));
 $app->add(new FeatureCommand($container));
 $app->add(new HookLibCommand());
-$app->add(new HotfixCommand($container));
+$app->add(HotfixCommand::create($container));
 $app->add(new MajorCommand($container));
 $app->add(new MinorCommand($container));
 $app->add(new PatchCommand($container));
