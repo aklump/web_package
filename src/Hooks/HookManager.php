@@ -2,8 +2,11 @@
 
 namespace AKlump\WebPackage\Hooks;
 
+use AKlump\LoftLib\Storage\FilePath;
 use AKlump\WebPackage\Helpers\GetHooksDirectory;
+use AKlump\WebPackage\Helpers\GetRootPath;
 use AKlump\WebPackage\HookException;
+use AKlump\WebPackage\HookService;
 use Jawira\CaseConverter\Convert;
 use ReflectionClass;
 use ReflectionMethod;
@@ -120,6 +123,40 @@ class HookManager {
     });
 
     return $hooks;
+  }
+
+  private function executePhp() {
+    require_once WEB_PACKAGE_ROOT . '/includes/wp_functions.php';
+    $args = $this->getHookArgs();
+
+    $build = new HookService(
+      FilePath::create(__DIR__ . '/..'),
+      FilePath::create($args[9]),
+      FilePath::create($args[7]),
+      $args[3],
+      $args[4],
+      $args[2],
+      $args[1],
+      $args[6],
+      $args[5],
+      $args[8]
+    );
+
+    // Include a bootstrap file defined in the project using WP.
+    $local_include = $args[13] . '/bootstrap.php';
+    if (file_exists($local_include)) {
+      require_once $local_include;
+    }
+
+    $stash_wd = getcwd();
+    $root = (new GetRootPath())(getcwd());
+    $hook_path = $this->event->getHook();
+    if (!chdir($root)) {
+      throw new \RuntimeException(sprintf('Failed to chdir; cannot execute hook: %s', $hook_path));
+    }
+    $argv = $args; // Legacy support of $argv
+    require $hook_path;
+    chdir($stash_wd);
   }
 
   private function executeShell(): int {
