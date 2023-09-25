@@ -2,6 +2,7 @@
 
 namespace AKlump\WebPackage;
 
+use AKlump\WebPackage\Config\Config;
 use AKlump\WebPackage\Config\LoadConfig;
 use AKlump\WebPackage\Traits\HasConfigTrait;
 use AKlump\WebPackage\VersionScribes\DrupalInfo;
@@ -35,7 +36,7 @@ class VersionScribeFactory {
    * @throws \InvalidArgumentException If the file does not exist.
    */
   public function __invoke(): ?VersionScribeInterface {
-    $filepath = $this->getConfig()['version_file'];
+    $filepath = $this->getConfig()[Config::VERSION_FILE];
     if (!$this->filesystem->exists($filepath)) {
       return NULL;
     }
@@ -47,7 +48,9 @@ class VersionScribeFactory {
     elseif ('info' === $extension) {
       return new DrupalInfo($filepath);
     }
-    elseif ('ini' === $extension) {
+    elseif ('ini' === $extension
+      // The legacy file .web_package/config can be used and it's .ini.
+      || ('' === $extension && 'config' === $basename)) {
       return new IniFile($filepath);
     }
     //    elseif ('.git' === $basename) {

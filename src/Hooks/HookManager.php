@@ -154,9 +154,21 @@ class HookManager {
     if (!chdir($root)) {
       throw new \RuntimeException(sprintf('Failed to chdir; cannot execute hook: %s', $hook_path));
     }
-    $argv = $args; // Legacy support of $argv
-    require $hook_path;
-    chdir($stash_wd);
+
+    try {
+      set_error_handler(function ($errno, $errstr, $errfile, $errline) {
+        throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
+      });
+      $argv = $args; // Legacy support of $argv
+      require $hook_path;
+    }
+    catch (\Exception $exception) {
+      throw $exception;
+    }
+    finally {
+      restore_error_handler();
+      chdir($stash_wd);
+    }
   }
 
   private function executeShell(): int {

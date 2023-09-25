@@ -4,6 +4,7 @@ namespace AKlump\WebPackage\Config;
 
 use AKlump\WebPackage\Config\Loader\LegacyLoader;
 use AKlump\WebPackage\Config\Loader\YamlLoader;
+use AKlump\WebPackage\VersionScribeInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\DelegatingLoader;
 use Symfony\Component\Config\Loader\LoaderResolver;
@@ -13,7 +14,9 @@ use Symfony\Component\Filesystem\Path;
 
 class ConfigManager {
 
-  const DEFAULT_VERSION_FILENAME = '.version';
+  public function __construct() {
+    $this->filesystem = new Filesystem();
+  }
 
   /**
    * @param string $path_to_load
@@ -52,8 +55,7 @@ class ConfigManager {
    *   self::loadFile($path_to_load).
    */
   public function locateFile(string $path_to_load): string {
-    $filesystem = new Filesystem();
-    if (!$filesystem->isAbsolutePath($path_to_load)) {
+    if (!Path::isAbsolute($path_to_load)) {
       throw new \InvalidArgumentException(sprintf('$path_to_load must be absolute; "%s" is not', $path_to_load));
     }
     $locator = new FileLocator([dirname($path_to_load)]);
@@ -98,13 +100,32 @@ class ConfigManager {
     }
   }
 
-  public function handleInfoFile(array &$config, string $base_dir): void {
-    if (!empty($config['info_file'])
-      && strstr($config['info_file'], '*')) {
-      $config['info_file'] = glob($base_dir . '/' . $config['info_file'])[0] ?? $config['info_file'];
+  public function handleVersionFile(array &$config, string $root_dir): void {
+    $config[Config::VERSION_FILE] = $config[Config::VERSION_FILE] ?? ConfigDefaults::VERSION_FILE;
+    if (empty($config[Config::VERSION_FILE])) {
+      return;
     }
-    if (empty($config['info_file'])) {
-      $config['info_file'] = self::DEFAULT_VERSION_FILENAME;
+
+    $version_file =& $config[Config::VERSION_FILE];
+    if (strstr($version_file, '*') !== FALSE) {
+      $info = pathinfo($version_file);
+      $temp = array_filter($info, function ($value) {
+        return strstr($value, '*') !== FALSE;
+      });
+      if (array_diff_key($temp, array_flip(['basename', 'filename']))) {
+        throw new \RuntimeException(sprintf('version_file (%s) is invalid, you may only glob the filename, e.g. /foo/bar/*.yml', $version_file));
+      }
+
+      //... but we have to de-glob-ify!
+      $version_file = str_replace('*.', VersionScribeInterface::DEFAULT_FILENAME . '.', $version_file);
+    }
+
+    if (!Path::isAbsolute($version_file)) {
+      $version_file = Path::makeAbsolute($version_file, $root_dir);
+    }
+
+    if (!file_exists($version_file)) {
+      $this->filesystem->touch($version_file);
     }
   }
 

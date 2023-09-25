@@ -32,8 +32,6 @@ abstract class BaseBranchCommand extends Command {
   use ShellCommandTrait;
   use ImplodeTrait;
 
-  protected static $defaultName = 'hotfix';
-
   /**
    * @var array
    */

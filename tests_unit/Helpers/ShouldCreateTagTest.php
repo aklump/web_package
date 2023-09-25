@@ -2,6 +2,7 @@
 
 namespace AKlump\WebPackage\Tests\Helpers;
 
+use AKlump\WebPackage\Config\Config;
 use AKlump\WebPackage\Helpers\ShouldCreateTag;
 use AKlump\WebPackage\Helpers\VersionDegree;
 use PHPUnit\Framework\TestCase;
@@ -99,7 +100,7 @@ class ShouldCreateTagTest extends TestCase {
    * @dataProvider dataFortestInvokeProvider
    */
   public function testInvoke($expected, $config_value, $old_version, $new_version) {
-    $config = [ShouldCreateTag::CONFIG_KEY => $config_value];
+    $config = [Config::CREATE_TAGS => $config_value];
     $this->assertSame($expected, (new ShouldCreateTag($config))($old_version, $new_version));
   }
 

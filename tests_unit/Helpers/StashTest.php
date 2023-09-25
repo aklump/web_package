@@ -3,10 +3,15 @@
 namespace AKlump\WebPackage\Tests\Helpers;
 
 use AKlump\WebPackage\Model\Context;
+use AKlump\WebPackage\Tests\WriteTestTrait;
+use PHPUnit\Framework\TestCase;
 
-class StashTest extends \PHPUnit\Framework\TestCase {
+/**
+ * @covers \AKlump\WebPackage\Helpers\Stash
+ */
+class StashTest extends TestCase {
 
-  use \AKlump\WebPackage\Tests\WriteTestTrait;
+  use WriteTestTrait;
 
   public function testCanWriteAndReadVersion() {
     $context = $this->createConfiguredMock(Context::class, [

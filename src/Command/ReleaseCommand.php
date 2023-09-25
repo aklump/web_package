@@ -2,6 +2,9 @@
 
 namespace AKlump\WebPackage\Command;
 
+use AKlump\WebPackage\Config\Config;
+use AKlump\WebPackage\Config\ConfigDefaults;
+use AKlump\WebPackage\Config\DefaultConfig;
 use AKlump\WebPackage\Helpers\GetCurrentBranch;
 use AKlump\WebPackage\Helpers\GetHookEvent;
 use AKlump\WebPackage\Helpers\VersionDegree;
@@ -77,7 +80,7 @@ class ReleaseCommand extends BaseBranchCommand {
     $this->git->checkoutBranch($gitflow->getBranchName($event->getVersion()), $starting_branch);
     $this->scribe->write($new_version);
 
-    if ($this->config['do_version_commit']) {
+    if ($this->config[Config::DO_VERSION_COMMIT] ?? ConfigDefaults::DO_VERSION_COMMIT) {
       $version_file = $this->scribe->getFilepath();
       if ($version_file) {
         $this->git->commitFile($version_file, sprintf('Bumped version number to %s', $event->getVersion()));

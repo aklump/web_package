@@ -2,6 +2,7 @@
 
 namespace AKlump\WebPackage\Tests;
 
+use AKlump\WebPackage\Config\Config;
 use AKlump\WebPackage\VersionScribeFactory;
 use AKlump\WebPackage\VersionScribes\DrupalInfo;
 use AKlump\WebPackage\VersionScribes\IniFile;
@@ -65,14 +66,14 @@ class VersionScribeFactoryTest extends TestCase {
    */
   public function testInvokeReturnsTheExpectedClass($expected, $subject) {
     $factory = new VersionScribeFactory($this->createLoadConfigMock([
-      'version_file' => __DIR__ . "/files/$subject",
+      Config::VERSION_FILE => __DIR__ . "/files/$subject",
     ]));
     $this->assertSame($expected, get_class($factory()));
   }
 
   public function testNonExistentFileReturnsNull() {
     $factory = new VersionScribeFactory($this->createLoadConfigMock([
-      'version_file' => 'foo/bar.xyz',
+      Config::VERSION_FILE => 'foo/bar.xyz',
     ]));
     $this->assertNull($factory());
   }

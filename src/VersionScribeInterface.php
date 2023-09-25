@@ -6,8 +6,6 @@ use AKlump\WebPackage\Model\Version;
 
 interface VersionScribeInterface {
 
-  const DEFAULT = '0.0.0';
-
   /**
    * @var string The default filename (no extension) for created files indicated
    * with a glob char.
@@ -20,11 +18,12 @@ interface VersionScribeInterface {
    *
    * @return ?string
    *   The version, verbatim as stored in the file.  If the stored value is
-   *   empty, or is absent then null is returned.
+   *   empty, or is absent then null is returned and you may want to use
+   *   \AKlump\WebPackage\Config\Config::INITIAL_VERSION.
    *
    * @see \AKlump\WebPackage\Model\Version::parse()
    *
-   * @see self::DEFAULT
+   * @see \AKlump\WebPackage\Config\ConfigDefaults::INITIAL_VERSION
    */
   public function read(): ?string;
 

@@ -2,6 +2,7 @@
 
 namespace AKlump\WebPackage\Helpers;
 
+use AKlump\WebPackage\Config\Config;
 use AKlump\WebPackage\Traits\HasConfigTrait;
 use Symfony\Component\Filesystem\Path;
 
@@ -15,7 +16,7 @@ class GetInfo {
 
   public function __invoke(): array {
     $config = $this->getConfig();
-    $path_to_info = $config['version_file'];
+    $path_to_info = $config[Config::VERSION_FILE];
     if (!Path::isAbsolute($path_to_info)) {
       $path_to_info = Path::makeAbsolute($path_to_info, ROOT_PATH);
     }

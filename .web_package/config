@@ -8,4 +8,4 @@ push_master = auto
 push_develop = no
 patch_prefix = .
 git_root = .
-info_file = "composer.json"
+version_file = "composer.json"

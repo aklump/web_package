@@ -15,7 +15,12 @@ trait WriteTestTrait {
   }
 
   public function getPath(string $extension): string {
-    return __DIR__ . '/files/temp.' . $extension;
+    $path = __DIR__ . '/files/temp.' . $extension;
+    if (!file_exists(dirname($path))) {
+      mkdir(dirname($path), 0755, TRUE);
+    }
+
+    return $path;
   }
 
   public function unlink(string $extension): void {

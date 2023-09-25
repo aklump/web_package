@@ -2,7 +2,7 @@
 
 namespace AKlump\WebPackage\Model;
 
-use AKlump\WebPackage\VersionScribeInterface;
+use AKlump\WebPackage\Config\ConfigDefaults;
 
 /**
  * A wrapper class to handle more variations on version strings.
@@ -35,7 +35,7 @@ class Version {
 
   private function parseOddballs($string): array {
     $prefix = '';
-    $semver = \z4kn4fein\SemVer\Version::parse(VersionScribeInterface::DEFAULT);
+    $semver = \z4kn4fein\SemVer\Version::parse(ConfigDefaults::INITIAL_VERSION);
     $suffix = '';
 
     do {

@@ -2,6 +2,7 @@
 
 namespace AKlump\WebPackage\Command;
 
+use AKlump\WebPackage\Config\Config;
 use AKlump\WebPackage\Config\ConfigManager;
 use AKlump\WebPackage\Input\HumanInterface;
 use AKlump\WebPackage\Traits\HasConfigTrait;
@@ -37,7 +38,7 @@ class ConfigCommand extends Command {
     parent::__construct();
   }
 
-  protected function execute(InputInterface $input, OutputInterface $output) {
+  protected function execute(InputInterface $input, OutputInterface $output): int {
     if ($input->getOption('edit')) {
       $root_path = $this->context->getRootPath();
       $options = [HumanInterface::CHOICE_QUESTION_NONE];
@@ -73,19 +74,19 @@ class ConfigCommand extends Command {
 
     $tables = [
       'Versioning' => [
-        'version_file',
-        'create_tags',
-        'patch_prefix',
-        'preserve_patch_zero',
-        'do_version_commit',
+        Config::VERSION_FILE,
+        Config::CREATE_TAGS,
+        Config::PATCH_PREFIX,
+        Config::PRESERVE_PATCH_ZERO,
+        Config::DO_VERSION_COMMIT,
       ],
       'Git Integration' => [
         'master',
         'develop',
         'remote',
-        'push_master',
-        'push_develop',
-        'push_tags',
+        Config::PUSH_MASTER,
+        Config::PUSH_DEVELOP,
+        Config::PUSH_TAGS,
       ],
       'Invalid Configuration' => [
         'major_step',
@@ -130,7 +131,8 @@ class ConfigCommand extends Command {
   private function normalize($config) {
     $config['version_file'] = Path::makeRelative($config['version_file'], getcwd());
     if ($config['develop'] === $config['master']) {
-      $config['develop'] = 'n/a';
+      unset($config['develop']);
+      unset($config[Config::PUSH_DEVELOP]);
     }
 
     $config = array_map(function ($value) {

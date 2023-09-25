@@ -1,13 +1,22 @@
-- choose template on init
+## Critical
 
+- handle preserve_patch_zero
+- handle patch_prefix
 
-- convert build,unbuild,dev to dynamic routes that check against a folder name in hooks.
-- convert the info route or delete?
--
+## Normal
+- remove all create() command methods
+- continue with unit tests on the done class
+- unit tests for GitProxy
+- remove all access classes.
+- get rid of the ROOT_PATH usage, it thwarts unit testing.
+- handle git_root
+- handle push_* processes
+
 - add dynamic vars to knowledge output for hooks.
+- convert the info route or delete?
 
 ## Phase Two
+- convert build,unbuild,dev to dynamic routes that check against a folder name in hooks.
 - split classes in /flax/src?
 - study up on https://docs.github.com/en/get-started/quickstart/github-flow, can it be incorporated, should it?
 - make composer install
-- separate info_file and version_file

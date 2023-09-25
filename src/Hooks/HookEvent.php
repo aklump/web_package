@@ -3,8 +3,10 @@
 namespace AKlump\WebPackage\Hooks;
 
 use AKlump\LocalTimezone\LocalTimezone;
+use AKlump\WebPackage\Config\Config;
 use AKlump\WebPackage\Config\LoadConfig;
 use AKlump\WebPackage\Helpers\GetRootPath;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class HookEvent extends Event {
@@ -102,9 +104,9 @@ class HookEvent extends Event {
   }
 
   public function getInfoFile(): string {
-    $info_file = (new LoadConfig())()['version_file'];
-    if (!\Symfony\Component\Filesystem\Path::isAbsolute($info_file)) {
-      $info_file = \Symfony\Component\Filesystem\Path::makeAbsolute($info_file, ROOT_PATH);
+    $info_file = (new LoadConfig())()[Config::VERSION_FILE];
+    if (!Path::isAbsolute($info_file)) {
+      $info_file = Path::makeAbsolute($info_file, ROOT_PATH);
     }
 
     return $info_file;

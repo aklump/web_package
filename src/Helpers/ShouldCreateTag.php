@@ -2,11 +2,11 @@
 
 namespace AKlump\WebPackage\Helpers;
 
+use AKlump\WebPackage\Config\Config;
+use AKlump\WebPackage\Config\ConfigDefaults;
 use AKlump\WebPackage\Traits\HasConfigTrait;
 
 class ShouldCreateTag {
-
-  const CONFIG_KEY = 'create_tags';
 
   use HasConfigTrait;
 
@@ -15,7 +15,7 @@ class ShouldCreateTag {
   }
 
   public function __invoke(string $old_version, string $new_version): bool {
-    $config_value = $this->getConfig()[self::CONFIG_KEY] ?? NULL;
+    $config_value = $this->getConfig()[Config::CREATE_TAGS] ?? ConfigDefaults::CREATE_TAGS;
     $config_value = $this->normalize($config_value) ?? VersionDegree::PATCH;
     if (is_bool($config_value)) {
       return $config_value;
