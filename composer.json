@@ -24,7 +24,8 @@
     "webmozart/glob": "^4.6",
     "jawira/case-converter": "^3.5",
     "aklump/local-timezone": "^0.0.1",
-    "symfony/validator": "^5.4"
+    "symfony/validator": "^5.4",
+    "league/container": "^4.2"
   },
   "autoload": {
     "psr-4": {

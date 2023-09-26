@@ -11,8 +11,8 @@ use Symfony\Component\Filesystem\Path;
 class LoadConfig {
 
   static private $defaults = [
-    'master' => 'main',
-    'develop' => 'main',
+    Config::MAIN_BRANCH => ConfigDefaults::MAIN_BRANCH,
+    Config::DEVELOP_BRANCH => ConfigDefaults::DEVELOP_BRANCH,
   ];
 
   public function __invoke(string $template = NULL): array {

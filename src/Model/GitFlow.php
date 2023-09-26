@@ -63,15 +63,16 @@ class GitFlow {
   }
 
   public function getMustMergeBackInto(): array {
+    $branches = [];
     if ($this->type === self::FEATURE) {
-      return [$this->develop];
+      $branches = [$this->develop];
     }
     elseif (in_array($this->type, [self::RELEASE, self::HOTFIX])) {
       // Order is important here, as it determines the merge order.
-      return array_unique([$this->develop, $this->master]);
+      $branches = array_unique([$this->develop, $this->master]);
     }
 
-    return [];
+    return array_filter($branches);
   }
 
   public function getMayFinish(): array {

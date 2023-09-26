@@ -4,6 +4,16 @@ namespace AKlump\WebPackage\Config;
 
 class ConfigDefaults {
 
+  /**
+   * @var string The default main branch name.
+   */
+  const MAIN_BRANCH = 'master';
+
+  /**
+   * @var string The default development branch name.
+   */
+  const DEVELOP_BRANCH = '';
+
   const DO_VERSION_COMMIT = TRUE;
 
   const PATCH_PREFIX = '.';

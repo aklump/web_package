@@ -4,6 +4,7 @@ namespace AKlump\WebPackage\Helpers;
 
 use AKlump\WebPackage\Model\GitFlow;
 use AKlump\WebPackage\Traits\HasConfigTrait;
+use AKlump\WebPackage\Config\Config;
 
 class GetBranchType {
 
@@ -27,10 +28,10 @@ class GetBranchType {
     elseif (strstr($branch_name, 'hotfix')) {
       return GitFlow::HOTFIX;
     }
-    elseif ($branch_name === ($this->getConfig()['master'] ?? GitFlow::MASTER)) {
+    elseif ($branch_name === ($this->getConfig()[Config::MAIN_BRANCH] ?? GitFlow::MASTER)) {
       return GitFlow::MASTER;
     }
-    elseif ($branch_name === ($this->getConfig()['develop'] ?? GitFlow::DEVELOP)) {
+    elseif ($branch_name === ($this->getConfig()[Config::DEVELOP_BRANCH] ?? GitFlow::DEVELOP)) {
       return GitFlow::DEVELOP;
     }
 

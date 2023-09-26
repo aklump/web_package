@@ -4,6 +4,16 @@ namespace AKlump\WebPackage\Config;
 
 class Config {
 
+  /**
+   * @var string The config key for the main branch, not the branch name.
+   */
+  const MAIN_BRANCH = 'master';
+
+  /**
+   * @var string The config key for the development branch, not the branch name.
+   */
+  const DEVELOP_BRANCH = 'develop';
+
   const DO_VERSION_COMMIT = 'do_version_commit';
 
   const PATCH_PREFIX = 'patch_prefix';

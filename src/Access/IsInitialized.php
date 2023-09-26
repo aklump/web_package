@@ -12,7 +12,7 @@ final class IsInitialized implements AccessInterface {
    *   True if the directory is already initialized.
    */
   public function access(): bool {
-    $root_path = (new GetRootPath())() ?? getcwd();
+    $root_path = ROOT_PATH ?? getcwd();
 
     return (new Filesystem())->exists($root_path . '/.web_package');
   }

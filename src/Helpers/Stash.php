@@ -17,7 +17,7 @@ class Stash {
   }
 
   public function read(string $key): string {
-    $path = $this->getFilePath($key);
+    $path = $this->createPath($key);
     if (!file_exists($path)) {
       return '';
     }
@@ -26,17 +26,28 @@ class Stash {
   }
 
   public function write(string $key, string $value): void {
-    file_put_contents($this->getFilePath($key), $value);
+    file_put_contents($this->createPath($key), $value);
   }
 
-  private function getFilePath($key): string {
-    $path = $this->getContext()
-        ->getRootPath() . "/.web_package/.stash.$key.txt";
+  private function createPath(string $key): string {
+    $path = self::getStashPath($this->getContext(), $key);
     if (!file_exists(dirname($path))) {
       mkdir(dirname($path), 0755, TRUE);
     }
 
     return $path;
+  }
+
+  /**
+   * Get the absolute filepath for a stashed value.
+   *
+   * @param Context $context
+   * @param $stash_key
+   *
+   * @return string
+   */
+  private static function getStashPath(Context $context, $stash_key): string {
+    return $context->getRootPath() . "/.web_package/.stash.$stash_key.txt";
   }
 
 }

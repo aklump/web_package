@@ -31,7 +31,7 @@ class HotfixCommand extends BaseBranchCommand {
   protected function execute(InputInterface $input, OutputInterface $output): int {
     $this->output = $output;
 
-    $gitflow = new Gitflow(GitFlow::HOTFIX, $this->config['master'], $this->config['develop']);
+    $gitflow = new Gitflow(GitFlow::HOTFIX, $this->config[Config::MAIN_BRANCH], $this->config[Config::DEVELOP_BRANCH]);
     $starting_branch = (new GetCurrentBranch())();
     $branches = $gitflow->getMayBranchOffFrom();
     $this->validate($starting_branch, [

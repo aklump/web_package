@@ -48,7 +48,7 @@ class ReleaseCommand extends BaseBranchCommand {
       ]),
     ]);
 
-    $gitflow = new Gitflow(GitFlow::RELEASE, $this->config['master'], $this->config['develop']);
+    $gitflow = new Gitflow(GitFlow::RELEASE, $this->config[Config::MAIN_BRANCH], $this->config[Config::DEVELOP_BRANCH]);
     $starting_branch = (new GetCurrentBranch())();
     $branches = $gitflow->getMayBranchOffFrom();
     $this->validate($starting_branch, [

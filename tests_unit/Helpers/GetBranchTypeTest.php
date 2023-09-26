@@ -4,15 +4,13 @@ namespace AKlump\WebPackage\Tests\Helpers;
 
 use AKlump\WebPackage\Helpers\GetBranchType;
 use AKlump\WebPackage\Model\GitFlow;
-use AKlump\WebPackage\Tests\TestingTraits\TestWithConfigTrait;
 use PHPUnit\Framework\TestCase;
+use AKlump\WebPackage\Config\Config;
 
 /**
  * @covers GetBranchType
  */
 class GetBranchTypeTest extends TestCase {
-
-  use TestWithConfigTrait;
 
   public function dataFortestInvokeProvider() {
     $tests = [];
@@ -23,12 +21,12 @@ class GetBranchTypeTest extends TestCase {
     ];
     $tests[] = [
       GitFlow::MASTER,
-      ['master' => 'main'],
+      [Config::MAIN_BRANCH => 'main'],
       'main',
     ];
     $tests[] = [
       GitFlow::DEVELOP,
-      ['develop' => 'dev'],
+      [Config::DEVELOP_BRANCH => 'dev'],
       'dev',
     ];
     $tests[] = [

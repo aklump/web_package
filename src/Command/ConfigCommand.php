@@ -81,8 +81,8 @@ class ConfigCommand extends Command {
         Config::DO_VERSION_COMMIT,
       ],
       'Git Integration' => [
-        'master',
-        'develop',
+        Config::MAIN_BRANCH,
+        Config::DEVELOP_BRANCH,
         'remote',
         Config::PUSH_MASTER,
         Config::PUSH_DEVELOP,
@@ -129,9 +129,9 @@ class ConfigCommand extends Command {
   }
 
   private function normalize($config) {
-    $config['version_file'] = Path::makeRelative($config['version_file'], getcwd());
-    if ($config['develop'] === $config['master']) {
-      unset($config['develop']);
+    $config[Config::VERSION_FILE] = Path::makeRelative($config[Config::VERSION_FILE], getcwd());
+    if ($config[Config::DEVELOP_BRANCH] === $config[Config::MAIN_BRANCH]) {
+      unset($config[Config::DEVELOP_BRANCH]);
       unset($config[Config::PUSH_DEVELOP]);
     }
 

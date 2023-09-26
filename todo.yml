@@ -1,18 +1,16 @@
 ## Critical
-
 - handle preserve_patch_zero
 - handle patch_prefix
+- handle git_root
 
 ## Normal
-- remove all create() command methods
+- add dynamic vars to knowledge output for hooks.
 - continue with unit tests on the done class
+- get rid of the ROOT_PATH usage, it thwarts unit testing.
+- remove all create() command methods
 - unit tests for GitProxy
 - remove all access classes.
-- get rid of the ROOT_PATH usage, it thwarts unit testing.
-- handle git_root
 - handle push_* processes
-
-- add dynamic vars to knowledge output for hooks.
 - convert the info route or delete?
 
 ## Phase Two

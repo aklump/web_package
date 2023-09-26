@@ -29,7 +29,7 @@ class FeatureCommand extends BaseBranchCommand {
     $this->output = $output;
     $name = $input->getArgument('name');
 
-    $gitflow = new Gitflow(GitFlow::FEATURE, $this->config['master'], $this->config['develop']);
+    $gitflow = new Gitflow(GitFlow::FEATURE, $this->config[Config::MAIN_BRANCH], $this->config[Config::DEVELOP_BRANCH]);
     $starting_branch = (new GetCurrentBranch())();
     $branches = $gitflow->getMayBranchOffFrom();
     $this->validate($starting_branch, [
