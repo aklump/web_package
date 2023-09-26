@@ -77,7 +77,7 @@ class ReleaseCommand extends BaseBranchCommand {
     $new_version = $change[$version_degree];
     $event->setVersion((string) $new_version);
 
-    $this->git->checkoutBranch($gitflow->getBranchName($event->getVersion()), $starting_branch);
+    $this->git->createBranch($gitflow->getBranchName($event->getVersion()), $starting_branch);
     $this->scribe->write($new_version);
 
     if ($this->config[Config::DO_VERSION_COMMIT] ?? ConfigDefaults::DO_VERSION_COMMIT) {

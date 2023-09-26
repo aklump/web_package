@@ -54,7 +54,7 @@ class HotfixCommand extends BaseBranchCommand {
     $new_version = $semver->getNextPatchVersion();
     $event->setVersion((string) $new_version);
 
-    $this->git->checkoutBranch($gitflow->getBranchName($event->getVersion()), $starting_branch);
+    $this->git->createBranch($gitflow->getBranchName($event->getVersion()), $starting_branch);
     $this->scribe->write($new_version);
 
 

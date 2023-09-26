@@ -19,14 +19,14 @@ class GitProxy {
     return $this->system(sprintf('git branch -d %s', $branch_name));
   }
 
-  public function checkoutBranch(string $new_branch, string $original_branch) {
+  public function createBranch(string $new_branch, string $original_branch) {
     return $this->system(sprintf('git checkout -b %s %s', $new_branch, $original_branch));
   }
 
   /**
    * Merge one branch into another.
    *
-   * There is no need to call \AKlump\WebPackage\Git\GitProxy::checkoutBranch()
+   * There is no need to call \AKlump\WebPackage\Git\GitProxy::createBranch()
    * first, as this method handles that aspect of the procedure.
    *
    * @param string $merge_into_branch
@@ -36,8 +36,8 @@ class GitProxy {
    * @return string
    */
   public function mergeBranch(string $merge_into_branch, string $branch_to_merge): void {
-    $this->checkoutBranch($merge_into_branch, $branch_to_merge);
-    $this->system(sprintf('git merge --no-ff %s -m "Merge branch %s"', $merge_into_branch, $branch_to_merge));
+    $this->system(sprintf('git checkout %s', $merge_into_branch));
+    $this->system(sprintf('git merge --no-ff %s -m "Merge branch %s"', $branch_to_merge, $branch_to_merge));
   }
 
   public function commitFile(string $file, string $commit_message) {

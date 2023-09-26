@@ -50,7 +50,7 @@ class FeatureCommand extends BaseBranchCommand {
     $event->setVersion($version);
 
     $branch_name = $gitflow->getBranchName($name);
-    $this->git->checkoutBranch($branch_name, $starting_branch);
+    $this->git->createBranch($branch_name, $starting_branch);
 
     return Command::SUCCESS;
   }
