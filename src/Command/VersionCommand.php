@@ -3,6 +3,7 @@
 namespace AKlump\WebPackage\Command;
 
 use AKlump\WebPackage\Access\IsInitialized;
+use AKlump\WebPackage\Helpers\GetCurrentVersion;
 use AKlump\WebPackage\UpgradeException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -33,7 +34,9 @@ class VersionCommand extends Command {
     if (!$scribe) {
       throw new UpgradeException();
     }
-    $output->writeln((string) $scribe->read());
+    $config = $this->container->get('config.loader')();
+    $version = (new GetCurrentVersion($config, $scribe))();
+    $output->writeln((string) $version);
 
     return Command::SUCCESS;
   }

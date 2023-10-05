@@ -5,6 +5,7 @@ namespace AKlump\WebPackage\Command;
 use AKlump\WebPackage\Config\Config;
 use AKlump\WebPackage\Config\ConfigDefaults;
 use AKlump\WebPackage\Git\GitProxy;
+use AKlump\WebPackage\Helpers\GetCurrentVersion;
 use AKlump\WebPackage\Helpers\GetPreviousVersion;
 use AKlump\WebPackage\Helpers\ShouldCreateTag;
 use AKlump\WebPackage\Model\Context;
@@ -105,7 +106,7 @@ class DoneCommand extends Command {
     }
 
     $old_version = (new GetPreviousVersion($this->getContext()))();
-    $new_version = $this->scribe->read();
+    $new_version = (new GetCurrentVersion($this->config, $this->scribe))();
 
     // Create a tag?
     if ($merge_successful

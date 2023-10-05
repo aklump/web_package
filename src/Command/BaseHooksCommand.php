@@ -2,6 +2,7 @@
 
 namespace AKlump\WebPackage\Command;
 
+use AKlump\WebPackage\Helpers\GetCurrentVersion;
 use AKlump\WebPackage\Helpers\GetHookEvent;
 use AKlump\WebPackage\Hooks\HookManager;
 use AKlump\WebPackage\Traits\HasConfigTrait;
@@ -49,8 +50,9 @@ abstract class BaseHooksCommand extends Command {
 
   protected function execute(InputInterface $input, OutputInterface $output): int {
     $this->setConfig($this->container->get('config.loader')());
-    $event = (new GetHookEvent($this->getConfig()))();
-    $version = $this->container->get('scribe.factory')()->read();
+    $config = $this->getConfig();
+    $event = (new GetHookEvent($config))();
+    $version = (new GetCurrentVersion($config, $this->container->get('scribe.factory')))();
     $event->setPreviousVersion($version);
     $event->setVersion($version);
     $filter = $input->getArgument('filter') ?? '';

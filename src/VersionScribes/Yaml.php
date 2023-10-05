@@ -23,7 +23,7 @@ class Yaml implements VersionScribeInterface {
 
   public function read(): ?string {
     if (file_exists($this->source)) {
-      $data = \Symfony\Component\Yaml\Yaml::parseFile($this->source);
+      $data = \Symfony\Component\Yaml\Yaml::parseFile($this->source) ?? [];
       $data = array_change_key_case($data);
     }
 

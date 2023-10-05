@@ -3,6 +3,7 @@
 namespace AKlump\WebPackage\Command;
 
 use AKlump\WebPackage\Helpers\GetCurrentBranch;
+use AKlump\WebPackage\Helpers\GetCurrentVersion;
 use AKlump\WebPackage\Helpers\GetHookEvent;
 use AKlump\WebPackage\Model\GitFlow;
 use AKlump\WebPackage\Validator\Constraint\GitBranch;
@@ -43,9 +44,8 @@ class FeatureCommand extends BaseBranchCommand {
       return Command::FAILURE;
     }
 
-    $version = $this->scribe->read();
-
     $event = (new GetHookEvent($this->config))();
+    $version = (new GetCurrentVersion($this->config, $this->scribe))();
     $event->setPreviousVersion($version);
     $event->setVersion($version);
 

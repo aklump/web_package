@@ -2,6 +2,7 @@
 
 namespace AKlump\WebPackage\Command;
 
+use AKlump\WebPackage\Helpers\GetCurrentVersion;
 use AKlump\WebPackage\Traits\HasConfigTrait;
 use AKlump\WebPackage\Traits\ValidationTrait;
 use AKlump\WebPackage\Validator\Constraint\IsInitialized;
@@ -31,7 +32,7 @@ abstract class BaseVersionCommand extends Command {
     }
 
     $scribe = $this->container->get('scribe.factory')();
-    $version = $scribe->read();
+    $version = (new GetCurrentVersion($this->getConfig(), $scribe))();
     $version = Version::parse($version);
     $next_version = $this->getNextVersion($version);
     $scribe->write($next_version);

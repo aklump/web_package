@@ -4,8 +4,8 @@ namespace AKlump\WebPackage\Command;
 
 use AKlump\WebPackage\Config\Config;
 use AKlump\WebPackage\Config\ConfigDefaults;
-use AKlump\WebPackage\Config\DefaultConfig;
 use AKlump\WebPackage\Helpers\GetCurrentBranch;
+use AKlump\WebPackage\Helpers\GetCurrentVersion;
 use AKlump\WebPackage\Helpers\GetHookEvent;
 use AKlump\WebPackage\Helpers\GetPreviousVersion;
 use AKlump\WebPackage\Helpers\Stash;
@@ -44,7 +44,7 @@ class HotfixCommand extends BaseBranchCommand {
       return Command::FAILURE;
     }
 
-    $version = $this->scribe->read();
+    $version = (new GetCurrentVersion($this->config, $this->scribe))();
     (new Stash($this->context))->write(GetPreviousVersion::STASH_KEY, $version);
 
     $event = (new GetHookEvent($this->config))();

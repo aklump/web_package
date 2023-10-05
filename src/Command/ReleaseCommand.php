@@ -4,8 +4,8 @@ namespace AKlump\WebPackage\Command;
 
 use AKlump\WebPackage\Config\Config;
 use AKlump\WebPackage\Config\ConfigDefaults;
-use AKlump\WebPackage\Config\DefaultConfig;
 use AKlump\WebPackage\Helpers\GetCurrentBranch;
+use AKlump\WebPackage\Helpers\GetCurrentVersion;
 use AKlump\WebPackage\Helpers\GetHookEvent;
 use AKlump\WebPackage\Helpers\VersionDegree;
 use AKlump\WebPackage\Model\GitFlow;
@@ -62,9 +62,8 @@ class ReleaseCommand extends BaseBranchCommand {
       return Command::FAILURE;
     }
 
-    $version = $this->scribe->read();
-
     $event = (new GetHookEvent($this->config))();
+    $version = (new GetCurrentVersion($this->config, $this->scribe))();
     $event->setPreviousVersion($version);
 
     $semver = Version::parse($version);

@@ -28,7 +28,7 @@ class GetInfo {
     switch ($ext) {
       case 'yml':
       case 'yaml':
-        $data = \Symfony\Component\Yaml\Yaml::parse($contents);
+        $data = \Symfony\Component\Yaml\Yaml::parse($contents) ?? [];
         break;
       case 'json':
         $data = json_decode($contents, TRUE);
