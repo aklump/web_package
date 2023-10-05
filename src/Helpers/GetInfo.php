@@ -35,7 +35,6 @@ class GetInfo {
         break;
     }
 
-
     return $this->mutate($data);
   }
 

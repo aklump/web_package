@@ -22,13 +22,13 @@ class DrupalInfo implements VersionScribeInterface {
     return $this->source;
   }
 
-  public function read(): ?string {
+  public function read(): string {
     if (file_exists($this->source)) {
       $contents = file_get_contents($this->source);
       preg_match(self::REGEX, $contents, $matches);
     }
     if (empty($matches[2])) {
-      return NULL;
+      return '';
     }
 
     return $matches[2];

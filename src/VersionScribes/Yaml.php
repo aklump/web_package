@@ -21,14 +21,14 @@ class Yaml implements VersionScribeInterface {
     return $this->source;
   }
 
-  public function read(): ?string {
+  public function read(): string {
     if (file_exists($this->source)) {
       $data = \Symfony\Component\Yaml\Yaml::parseFile($this->source) ?? [];
       $data = array_change_key_case($data);
     }
 
     if (empty($data['version'])) {
-      return NULL;
+      return '';
     }
 
     return $data['version'];
@@ -43,8 +43,10 @@ class Yaml implements VersionScribeInterface {
       if ($this->replaceVersionInFile($this->source, $old, $version)) {
         return TRUE;
       }
-      // TODO Handle what to do here.
-      throw new \RuntimeException(sprintf('The version %s does not appear in %s exactly once; update failed.', (string) $old, $this->source));
+      $data = \Symfony\Component\Yaml\Yaml::parseFile($this->source) ?? [];
+      $data['version'] = (string) $version;
+
+      return file_put_contents($this->source, \Symfony\Component\Yaml\Yaml::dump($data));
     }
     $data = \Symfony\Component\Yaml\Yaml::dump(['version' => (string) $version]);
 

@@ -20,7 +20,7 @@ class GitTags implements VersionScribeInterface {
     return '';
   }
 
-  public function read(): ?string {
+  public function read(): string {
     exec(sprintf("cd %s && git tag 2> /dev/null", $this->source), $tags);
     usort($tags, 'version_compare');
     while (($version = (string) array_pop($tags))) {
@@ -34,7 +34,7 @@ class GitTags implements VersionScribeInterface {
       }
     }
     if (empty($version)) {
-      return NULL;
+      return '';
     }
 
     return $version;

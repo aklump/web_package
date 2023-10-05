@@ -4,8 +4,8 @@
 
 ## version_file
 
-This path is relative to the initialized directory<sup>1</sup>.
-
+* This path is relative to the initialized directory<sup>1</sup>.
+* You may use the token `__DIR__` when creating templates.
 
 
 

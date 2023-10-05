@@ -52,7 +52,7 @@ abstract class BaseHooksCommand extends Command {
     $this->setConfig($this->container->get('config.loader')());
     $config = $this->getConfig();
     $event = (new GetHookEvent($config))();
-    $version = (new GetCurrentVersion($config, $this->container->get('scribe.factory')))();
+    $version = (new GetCurrentVersion($config, $this->container->get('scribe.factory')()))();
     $event->setPreviousVersion($version);
     $event->setVersion($version);
     $filter = $input->getArgument('filter') ?? '';

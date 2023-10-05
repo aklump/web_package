@@ -8,7 +8,9 @@ use AKlump\WebPackage\Config\ConfigDefaults;
 use AKlump\WebPackage\Config\ConfigManager;
 use AKlump\WebPackage\Helpers\GetAllBranches;
 use AKlump\WebPackage\Helpers\GetAllTemplates;
+use AKlump\WebPackage\Helpers\GetCurrentVersion;
 use AKlump\WebPackage\Input\HumanInterface;
+use Jawira\CaseConverter\CaseConverter;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -115,7 +117,13 @@ class InitCommand extends Command {
         throw new \RuntimeException(sprintf('Could not save to: %s', $this->savePath));
       }
 
-      $this->handleInitVersion($config[Config::INITIAL_VERSION] ?? ConfigDefaults::INITIAL_VERSION);
+      /** @var \AKlump\WebPackage\VersionScribeInterface $scribe */
+      $scribe = $this->container->get('scribe.factory')();
+      $version = (new GetCurrentVersion($config, $scribe))();
+      if (!$scribe->read()) {
+        $scribe->write($version);
+      }
+
       $output->writeln('<info>Created ./.web_package directory</info>');
     }
     catch (\Exception $exception) {
@@ -127,18 +135,13 @@ class InitCommand extends Command {
     return Command::SUCCESS;
   }
 
-
-  private function handleInitVersion(string $init_version): void {
-    if (!$init_version) {
-      return;
-    }
-    $scribe = $this->container->get('scribe.factory')();
-    if (!$scribe->read()) {
-      $scribe->write($init_version);
-    }
-  }
-
   private function prepareValuesForWrite(array $config): array {
+    if (strpos($config[Config::VERSION_FILE], '__DIR__') !== FALSE) {
+      $basename = basename(dirname($this->dir));
+      $basename = (new CaseConverter())->convert($basename)->toSnake();
+      $config[Config::VERSION_FILE] = str_replace('__DIR__', $basename, $config[Config::VERSION_FILE]);
+    }
+
     if (Path::isAbsolute($config[Config::VERSION_FILE])) {
       $config[Config::VERSION_FILE] = Path::makeRelative($config[Config::VERSION_FILE], $this->context->getRootPath());
     }

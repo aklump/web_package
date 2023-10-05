@@ -45,10 +45,10 @@ class JsonTest extends TestCase {
     $this->assertSame('1.2.3', $version);
   }
 
-  public function testJsonWithoutVersionReturnsDefaul() {
+  public function testJsonWithoutVersionReturnsEmptyString() {
     $scribe = new Json(__DIR__ . '/../files/composer2.json');
     $version = $scribe->read();
-    $this->assertNull($version);
+    $this->assertSame('', $version);
   }
 
 }

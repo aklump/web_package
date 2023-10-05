@@ -8,6 +8,7 @@ use AKlump\WebPackage\Traits\HasConfigTrait;
 use AKlump\WebPackage\VersionScribes\DrupalInfo;
 use AKlump\WebPackage\VersionScribes\IniFile;
 use AKlump\WebPackage\VersionScribes\Json;
+use AKlump\WebPackage\VersionScribes\MissingFileScribe;
 use AKlump\WebPackage\VersionScribes\SymfonyConsoleApplication;
 use AKlump\WebPackage\VersionScribes\Text;
 use AKlump\WebPackage\VersionScribes\Yaml;
@@ -31,14 +32,14 @@ class VersionScribeFactory {
   }
 
   /**
-   * @return \AKlump\WebPackage\VersionScribeInterface|null
+   * @return \AKlump\WebPackage\VersionScribeInterface
    *
    * @throws \InvalidArgumentException If the file does not exist.
    */
-  public function __invoke(): ?VersionScribeInterface {
+  public function __invoke(): VersionScribeInterface {
     $filepath = $this->getConfig()[Config::VERSION_FILE];
     if (!$this->filesystem->exists($filepath)) {
-      return NULL;
+      return new MissingFileScribe();
     }
     $basename = strtolower(basename($filepath));
     $extension = Path::getExtension($basename);
@@ -78,7 +79,7 @@ class VersionScribeFactory {
       }
     }
 
-    return NULL;
+    return new MissingFileScribe();
   }
 
   private function tryCreateMissingVersionFile(string $filepath) {

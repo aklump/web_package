@@ -45,10 +45,10 @@ class IniFileTest extends TestCase {
     $this->assertSame('2.3.4', $version);
   }
 
-  public function testIniFileWithoutVersionReturnsDefaul() {
+  public function testIniFileWithoutVersionReturnsEmptyString() {
     $scribe = new IniFile(__DIR__ . '/../files/file2.ini');
     $version = $scribe->read();
-    $this->assertNull($version);
+    $this->assertSame('', $version);
   }
 
 }

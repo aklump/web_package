@@ -15,6 +15,9 @@ trait WriterTrait {
    *   file version string.
    */
   private function replaceVersionInFile(string $filepath, string $old, string $new): bool {
+    if (empty($old)) {
+      return FALSE;
+    }
     $new = $this->rtrimZerosToMatchFormat($old, $new);
     $contents = file_get_contents($filepath);
     $count = substr_count($contents, (string) $old);

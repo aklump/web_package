@@ -16,6 +16,15 @@ class YamlTest extends TestCase {
 
   use WriteTestTrait;
 
+  public function testWriteAddsVersionInExistingFileWithoutVersion() {
+    $path = $this->getPath('yml');
+    file_put_contents($path, \Symfony\Component\Yaml\Yaml::dump(['name' => 'lorem']));
+    $scribe = new Yaml($path);
+    $this->assertTrue($scribe->write('0.2.19'));
+    $this->assertSame('0.2.19', $scribe->read());
+    $this->unlink('yml');
+  }
+
   public function testWriteReplacesVersionInExistingFile() {
     $path = $this->getPath('yml');
     copy(__DIR__ . '/../files/file.yml', $path);
@@ -45,10 +54,10 @@ class YamlTest extends TestCase {
     $this->assertSame('8', $version);
   }
 
-  public function testYamlWithoutVersionReturnsDefaul() {
+  public function testYamlWithoutVersionReturnsEmptyString() {
     $scribe = new Yaml(__DIR__ . '/../files/file2.yml');
     $version = $scribe->read();
-    $this->assertNull($version);
+    $this->assertSame('', $version);
   }
 
 }

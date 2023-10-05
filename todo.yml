@@ -4,6 +4,7 @@
 - handle git_root
 
 ## Normal
+- In other scribes than YAML, add support for existing files without versions.  Use yaml as example.
 - add dynamic vars to knowledge output for hooks.
 - continue with unit tests on the done class
 - get rid of the ROOT_PATH usage, it thwarts unit testing.

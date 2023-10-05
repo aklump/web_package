@@ -3,6 +3,6 @@ push_master: true
 push_develop: true
 push_tags: true
 create_tags: patch
-do_version_commit: false
+do_version_commit: true
 patch_prefix: .
 preserve_patch_zero: true

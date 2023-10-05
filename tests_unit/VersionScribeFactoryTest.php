@@ -71,11 +71,13 @@ class VersionScribeFactoryTest extends TestCase {
     $this->assertSame($expected, get_class($factory()));
   }
 
-  public function testNonExistentFileReturnsNull() {
-    $factory = new VersionScribeFactory($this->createLoadConfigMock([
+  public function testNonExistentFileReturnsScribe() {
+    $scribe = (new VersionScribeFactory($this->createLoadConfigMock([
       Config::VERSION_FILE => 'foo/bar.xyz',
-    ]));
-    $this->assertNull($factory());
+    ])))();
+    $this->assertSame('', $scribe->read());
+    $this->assertFalse($scribe->write('1.0'));
+    $this->assertSame('', $scribe->getFilepath());
   }
 
 }

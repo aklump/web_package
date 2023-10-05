@@ -16,16 +16,14 @@ interface VersionScribeInterface {
   /**
    * Get the version EXACTLY as stored in the version file.
    *
-   * @return ?string
-   *   The version, verbatim as stored in the file.  If the stored value is
-   *   empty, or is absent then null is returned and you may want to use
-   *   \AKlump\WebPackage\Config\Config::INITIAL_VERSION.
+   * @return string
+   *   The version, verbatim as stored in the file.
    *
    * @see \AKlump\WebPackage\Model\Version::parse()
    *
    * @see \AKlump\WebPackage\Config\ConfigDefaults::INITIAL_VERSION
    */
-  public function read(): ?string;
+  public function read(): string;
 
   /**
    * @param \z4kn4fein\SemVer\Version $version

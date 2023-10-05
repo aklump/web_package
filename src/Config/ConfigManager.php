@@ -124,9 +124,6 @@ class ConfigManager {
       $version_file = Path::makeAbsolute($version_file, $root_dir);
     }
 
-    if (!file_exists($version_file)) {
-      $this->filesystem->touch($version_file);
-    }
   }
 
 }

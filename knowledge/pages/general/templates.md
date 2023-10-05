@@ -1,5 +1,6 @@
 # Configuration Templates
-Let's take the use case of a Drupal module, which has a different configuration setup than a website project.  For our module we want the following configuration:
+
+Let's take the use case of a Drupal module, which has a different configuration setup than a website project. For our module we want the following configuration:
 
     master = 8.x-1.x 7.x-1.x 6.x-1.x
     develop = 8.x-1.x 7.x-1.x 6.x-1.x
@@ -11,12 +12,14 @@ Let's take the use case of a Drupal module, which has a different configuration 
     info_file = web_package.info
     patch_prefix = -rc
 
-Wouldn't it be nice to not have to retype that for every new Drupal module?  Well you don't have to if you use a Global Template.
+Wouldn't it be nice to not have to retype that for every new Drupal module? Well you don't have to if you use a Global Template.
 
 ## Defining a Global Template
-For a template called `drupal`, create a file at `~/.web_package/config_drupal`, containing the configuration you wish to use for that class of projects.  So the pattern is `~/.web_package/config_[template name]`.
+
+For a template called `drupal`, create a file at `~/.web_package/config_drupal`, containing the configuration you wish to use for that class of projects. So the pattern is `~/.web_package/config_[template name]`.
 
 ## Implementing a Global Template
+
 When creating a new project, use the command `bump init drupal` and your template will automatically be used as the default configuration.
 
     $ mkdir new_drupal
@@ -39,3 +42,7 @@ When creating a new project, use the command `bump init drupal` and your templat
     info_file = web_package.info
     patch_prefix = -rc
     $
+
+## Tokens
+
+* You may use the token `__DIR__` in the `version_file` value when creating templates. It will be replaced with the basename of the WP root directory.

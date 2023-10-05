@@ -19,7 +19,7 @@ class IniFile implements VersionScribeInterface {
   public function getFilepath(): string {
     return $this->source;
   }
-  public function read(): ?string {
+  public function read(): string {
     if (file_exists($this->source)) {
       $data = file_get_contents($this->source);
       $data = parse_ini_string($data);
@@ -27,7 +27,7 @@ class IniFile implements VersionScribeInterface {
     }
 
     if (empty($data['version'])) {
-      return NULL;
+      return '';
     }
 
     return $data['version'];
@@ -38,7 +38,7 @@ class IniFile implements VersionScribeInterface {
    */
   public function write(string $version): bool {
     if (file_exists($this->source)) {
-      $old = $this->read();
+      $old = $this->read() ?? '';
       if ($this->replaceVersionInFile($this->source, $old, $version)) {
         return TRUE;
       }

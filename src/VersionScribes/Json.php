@@ -19,7 +19,7 @@ class Json implements VersionScribeInterface {
   public function getFilepath(): string {
     return $this->source;
   }
-  public function read(): ?string {
+  public function read(): string {
     if (file_exists($this->source)) {
       $json = file_get_contents($this->source);
       $data = json_decode($json, TRUE);
@@ -27,7 +27,7 @@ class Json implements VersionScribeInterface {
     }
 
     if (empty($data['version'])) {
-      return NULL;
+      return '';
     }
 
     return $data['version'];
