@@ -1,10 +1,15 @@
+<!--
+id: changelog
+tags: ''
+-->
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [4.0.0] - 2023-09-12
+## [4.0.0] - tbd
 
 ### Added
 
@@ -12,8 +17,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- `push_tags` is now a boolean
+- Rebuilt using Symfony Console.
+- configuration key `info_file` is now `version_file`.
 - hooks, all failures will now stop the build. That is `hook_exception` and `build_fail_exception` now have the same result. They should not be used. Now simple use `exit 1`, etc. PHP hooks should not throw exceptions anymore, but just `exit(1)`, etc.
-
 
 ### Deprecated
 
@@ -21,7 +28,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Removed
 
-- lorem
+- Project info other than version is no longer handled by this project.
+- The "update" route was removed.
+- The "info" route was removed.
+- The "test" route was removed.
+- Removed configuration options `major_step, minor_step, patch_step`
 
 ### Fixed
 
@@ -35,6 +46,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- Some route aliases
 - Configurable release commit message when calling 'done'; see `release_commit_message`. Giving this configuration a value will cause a commit message to be added automatically at the start of the `done` command; **any changed files are automatically added to the commit.** It allows the following tokens: PREVIOUS, VERSION.
 - Configurable hotfix commit message when calling 'hotfix'; see `hotfix_commit_message`. Giving this configuration a value will cause a commit message to be added automatically as soon as the version string changes. It allows the following tokens: PREVIOUS, VERSION. This supercedes the use of `wp_do_version_commit`.
 

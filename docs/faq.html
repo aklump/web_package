@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Questions</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--faq">
+<header><div class="pager"><a href="drupal.html" class="prevdrupal">&laquo;Drupal Modules/Themes</a><a href="index.html" class="index pager__book-title"></a><a href="releases.html" class="nextreleases">Release Types&raquo;</a></div></header>
+<section class="sub-header"><div class="breadcrumbs"><a href="index.html">Index</a> &raquo</div><div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+</section>
+
+
+<h1>Questions</h1><section><h1>Questions</h1>
+
+<h2>When should I use 'bump hotfix'?</h2>
+
+<p>When you need to make an immediate change to the production state (master branch) of the project, you will use <code>bump hotfix</code>.  A hotfix is unique in that the release number gets bumped <em>before</em> the work is done.</p>
+
+<h2>When should I use 'bump release'?</h2>
+
+<p>When you have finished work on the development branch and you want to release it to the production-ready state of the project, you will use <code>bump release</code>.  A release is different from a hotfix, in that the version is bumped <em>after</em> the work is done.</p>
+
+<h2>When should I use 'bump major', 'bump minor', or 'bump patch'?</h2>
+
+<p>These three commands are unique in that they do not interact with git in any way, they simply modify <code>web_package.info</code>.  The choice of which of the three to use is based on the severity of the changes and your versioning mandates.  However, <em>why</em> you would use one of these three can be answered thus: <strong>Any time that you will need to step away from the development branch for an extended period of time, but cannot release the package.</strong>  This way you can be certain that no implementation of your web_package thinks it has the most recent version.  I would argue it's best practice to <code>bump_patch</code> at the end of each work session, if you have multiple projects underway.</p>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer><div class="pager"><a href="drupal.html" class="prevdrupal">&laquo;Drupal Modules/Themes</a><a href="index.html" class="index pager__book-title"></a><a href="releases.html" class="nextreleases">Release Types&raquo;</a></div>  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version:3.2.4 &bull; Last Updated:Thu, 05 Oct 2023 20:21:03 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#tipue_search_input').tipuesearch()
+    })
+  </script><script src="js/core.js"></script>
+</body>
+</html>
+

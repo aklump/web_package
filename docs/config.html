@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Configuration</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--config">
+<header><div class="pager"><a href="index.html" class="previndex">&laquo;Index</a><a href="index.html" class="index pager__book-title"></a><a href="source-control.html" class="nextsource-control">source-control&raquo;</a></div></header>
+<section class="sub-header"><div class="breadcrumbs"><a href="index.html">Index</a> &raquo</div><div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+</section>
+
+
+<h1>Configuration</h1><section><h1>Configuration</h1>
+
+<h2>Supported File Types</h2>
+
+<p>The following files are supported for storing version.</p>
+
+<ol>
+<li>YAML</li>
+<li>INI</li>
+<li>JSON</li>
+</ol>
+
+<h2>Theory</h2>
+
+<p>The configuration file is created during <code>bump init</code> and is located at <code>.web_package/config</code>.  Default contents look like this:</p>
+
+<pre><code>master = "master"
+develop = "develop"
+git_remote = origin
+create_tags = yes
+push_tags = ask
+push_master = ask
+push_develop = ask
+</code></pre>
+
+<p>The entire <code>.web_package</code> directory should not be included in source control.  <strong>To modify the configurations simply edit <code>.web_package/config</code> directly.</strong>  Make sure to have spaces surrounding your equal signs as <code>create_tags=yes</code> is not the same as <code>create_tags = yes</code>.  <strong>Also you must have a line break at the end of the file!</strong></p>
+
+<h2>master: <code>(string)</code></h2>
+
+<p>The name of the branch you consider master.  If you have more than one branch you consider a master then list them all, separated by spaces, e.g. <code>"master1 master2"</code> For more insight into this feature, see the <a href="#drupal">Drupal Modules/Themes section</a> below.</p>
+
+<h2>develop: <code>(string)</code></h2>
+
+<p>The name of the branch you consider develop.  If you have more than one branch you consider a develop branch then list them all, separated by spaces, e.g. <code>"develop1 develop2"</code>.  <strong>In the case of multiples: Make sure that you list them in the exact order as the master list, as the correlation of master to develop is imperative.</strong></p>
+
+<h2>remote: <code>(string)</code></h2>
+
+<p>The name of the git remote to be used with <code>git push [git_remote] release-1.0</code></p>
+
+<h2>create_tags: <code>major</code>, <code>minor</code>, <code>patch</code> or <code>no</code></h2>
+
+<p>When executing <code>bump done</code>, determine what severity level will create a git tag.  Set to <code>no</code> to never create a tag.</p>
+
+<h2>push_tags: <code>no</code>, <code>ask</code> or <code>auto</code></h2>
+
+<p>If tags should be pushed to <code>git_remote</code>.  Set to <code>auto</code> and you will not be prompted first.</p>
+
+<h2>push_master: <code>no</code>, <code>ask</code> or <code>auto</code></h2>
+
+<p>If master branches should be pushed to <code>git_remote</code>.  Set to <code>auto</code> and you will not be prompted first.</p>
+
+<h2>push_develop: <code>no</code>, <code>ask</code> or <code>auto</code></h2>
+
+<p>If develop branches should be pushed to <code>git_remote</code>.  Set to <code>auto</code> and you will not be prompted first.</p>
+
+<h2>info_file: <code>(string)</code></h2>
+
+<p>(Optional) If you have more than one .info file and you need to force Web Package to use the correct one then add this option. The name of the file containing the version info.</p>
+
+<h2>author: <code>"(string)"</code></h2>
+
+<p>(Optional) This one needs to be wrapped in quotes if you have spaces like this example… "Aaron Klump \<a href="&#x6d;&#97;&#105;&#x6c;&#x74;&#111;:&#x73;&#111;&#117;&#x72;&#x63;&#101;c&#x6f;&#100;&#101;&#x40;&#x69;&#110;&#116;&#x68;&#x65;&#108;&#x6f;&#x66;&#116;&#115;&#x74;&#x75;&#100;i&#x6f;&#115;&#46;&#x63;&#x6f;&#109;">&#x73;&#111;&#117;&#x72;&#x63;&#101;c&#x6f;&#100;&#101;&#x40;&#x69;&#110;&#116;&#x68;&#x65;&#108;&#x6f;&#x66;&#116;&#115;&#x74;&#x75;&#100;i&#x6f;&#115;&#46;&#x63;&#x6f;&#109;</a>".  This will get written to <code>web_package.info</code> file during the init process.</p>
+
+<h2>init_version: <code>"(string)"</code></h2>
+
+<p>(Optional)  This is used during <code>bump init</code> to set the default version of a package.</p>
+
+<h2>patch_prefix: <code>"(string)"</code></h2>
+
+<p>(Optional)  This is used as the default patch_prefix.</p>
+
+<h2>php: <code>"(string)"</code></h2>
+
+<p>(Optional)  The path to the php to use for PHP build scripts.</p>
+
+<h2>bash: <code>"(string)"</code></h2>
+
+<p>(Optional)  The path to bash to use for shell build scripts.</p>
+
+<h2>pause: <code>"(int)"</code></h2>
+
+<p>(Optional)  Enter a number of seconds to pause before git creates a branch and adds files.  This is here in case you need to allow time for file processing after the version file has been updated. If you want to be prompted before git does it's thing enter a -1 here.</p>
+
+<h2>Global Configuration</h2>
+
+<p>A global configuration file may be created at <code>~/.web_package/config</code>, the contents of which will be used as defaults for new projects or existing projects without said parameter.  This is most useful for the <code>author</code> and <code>info_file</code> parameters.  **Note: if a global config parameter is set, but the project does not override it, the global will apply for that project, even after <code>bump init</code>.</p>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer><div class="pager"><a href="index.html" class="previndex">&laquo;Index</a><a href="index.html" class="index pager__book-title"></a><a href="source-control.html" class="nextsource-control">source-control&raquo;</a></div>  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version:3.2.4 &bull; Last Updated:Thu, 05 Oct 2023 20:21:02 -0700</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#tipue_search_input').tipuesearch()
+    })
+  </script><script src="js/core.js"></script>
+</body>
+</html>
+

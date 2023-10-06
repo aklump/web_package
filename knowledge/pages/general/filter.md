@@ -1,3 +1,8 @@
+<!--
+id: filter
+tags: ''
+-->
+
 # Hook Filters
 
 ## Examples

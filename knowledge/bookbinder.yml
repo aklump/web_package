@@ -6,6 +6,6 @@
   include:
     - '**/README.md'
     - '**/CHANGELOG.md'
--
-  format: website
-  path: ../docs
+#-
+#  format: website
+#  path: ../docs

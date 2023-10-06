@@ -1,3 +1,8 @@
 page_order:
   - readme
   - changelog
+  - config
+  - filter
+  - hooks
+  - source_control
+  - templates

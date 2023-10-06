@@ -1,3 +1,8 @@
+<!--
+id: templates
+tags: ''
+-->
+
 # Configuration Templates
 
 Let's take the use case of a Drupal module, which has a different configuration setup than a website project. For our module we want the following configuration:
