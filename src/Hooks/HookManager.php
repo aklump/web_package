@@ -7,6 +7,7 @@ use AKlump\WebPackage\Helpers\GetHooksDirectory;
 use AKlump\WebPackage\Helpers\GetRootPath;
 use AKlump\WebPackage\HookException;
 use AKlump\WebPackage\HookService;
+use AKlump\WebPackage\Output\Icons;
 use Jawira\CaseConverter\Convert;
 use ReflectionClass;
 use ReflectionMethod;
@@ -67,10 +68,13 @@ class HookManager {
       if ($callable) {
         $this->event->setHook($path);
         $id = Path::makeRelative($path, dirname($path, 2));
-        $this->output->writeln(sprintf('<info>Executing hook: %s...</info>', $id));
+        $this->output->writeln(sprintf('<info>Executing hook: %s ...</info>', $id));
         $exit_code = $callable();
-        if (0 != $exit_code) {
-          throw new HookException(sprintf("%s exited with code %d", $id, $exit_code));
+        if (255 === $exit_code) {
+          $this->output->writeln(sprintf('<info>%s... 255 received; hook skipped.</info>', Icons::SKIP, $id));
+        }
+        elseif (0 != $exit_code) {
+          throw new HookException(sprintf("%s exited with code %d", $path, $exit_code));
         }
       }
     }
