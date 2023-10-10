@@ -24,6 +24,9 @@ class Yaml implements VersionScribeInterface {
   public function read(): string {
     if (file_exists($this->source)) {
       $data = \Symfony\Component\Yaml\Yaml::parseFile($this->source) ?? [];
+      if (!is_array($data)) {
+        throw new \RuntimeException(sprintf("Invalid YAML in file %s\n%s", $this->source, $data));
+      }
       $data = array_change_key_case($data);
     }
 

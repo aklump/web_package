@@ -22,7 +22,10 @@ class Json implements VersionScribeInterface {
   public function read(): string {
     if (file_exists($this->source)) {
       $json = file_get_contents($this->source);
-      $data = json_decode($json, TRUE);
+      $data = json_decode($json, TRUE) ?? [];
+      if (!is_array($data)) {
+        throw new \RuntimeException(sprintf("Invalid JSON in file %s\n%s", $this->source, $data));
+      }
       $data = array_change_key_case($data);
     }
 
