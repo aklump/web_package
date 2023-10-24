@@ -5,6 +5,7 @@ namespace AKlump\WebPackage\Helpers;
 use AKlump\WebPackage\Config\Config;
 use AKlump\WebPackage\Traits\HasConfigTrait;
 use Symfony\Component\Filesystem\Path;
+use Symfony\Component\Yaml\Exception\ParseException;
 
 class GetInfo {
 
@@ -29,9 +30,15 @@ class GetInfo {
       case 'yml':
       case 'yaml':
         $data = \Symfony\Component\Yaml\Yaml::parse($contents) ?? [];
+        if (!is_array($data)) {
+          throw new \UnexpectedValueException("$path_to_info must be a YAML array.");
+        }
         break;
       case 'json':
         $data = json_decode($contents, TRUE);
+        if (!is_array($data)) {
+          throw new \UnexpectedValueException("$path_to_info must be a JSON array.");
+        }
         break;
     }
 
