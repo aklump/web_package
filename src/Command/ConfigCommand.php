@@ -41,8 +41,6 @@ class ConfigCommand extends Command {
   protected function execute(InputInterface $input, OutputInterface $output): int {
     if ($input->getOption('edit')) {
       $root_path = $this->context->getRootPath();
-      $options = [HumanInterface::CHOICE_QUESTION_NONE];
-      $config_files = [''];
       foreach ([
                  $root_path . '/.web_package/config',
                  $root_path . '/.web_package/local_config',
@@ -56,11 +54,18 @@ class ConfigCommand extends Command {
         $config_files[$option] = $located;
         $options[] = $option;
       }
+      if (count($config_files) === 1) {
+        $file = array_pop($config_files);
+      }
+      else {
+        array_unshift($options, HumanInterface::CHOICE_QUESTION_NONE);
+        array_unshift($config_files, '');
+        $helper = $this->getHelper('question');
+        $question = new ChoiceQuestion('<question>Edit which file?</question> ', $options);
+        $key = $helper->ask($input, $output, $question);
+        $file = $config_files[$key] ?? NULL;
+      }
 
-      $helper = $this->getHelper('question');
-      $question = new ChoiceQuestion('<question>Edit which file?</question> ', $options);
-      $key = $helper->ask($input, $output, $question);
-      $file = $config_files[$key] ?? NULL;
       if (!$file) {
         return Command::FAILURE;
       }
