@@ -21,6 +21,9 @@ class GetInfo {
     if (!Path::isAbsolute($path_to_info)) {
       $path_to_info = Path::makeAbsolute($path_to_info, ROOT_PATH);
     }
+    if (!file_exists($path_to_info)) {
+      return [];
+    }
 
     // TODO Turn this into a real serializer implementation.
     $ext = strtolower(Path::getExtension($path_to_info));
