@@ -5,9 +5,11 @@ namespace AKlump\WebPackage\Hooks;
 use AKlump\LoftLib\Storage\FilePath;
 use AKlump\WebPackage\Helpers\GetHooksDirectory;
 use AKlump\WebPackage\Helpers\GetRootPath;
+use AKlump\WebPackage\Helpers\ThrowShellError;
 use AKlump\WebPackage\HookException;
 use AKlump\WebPackage\HookService;
 use AKlump\WebPackage\Output\Icons;
+use Exception;
 use Jawira\CaseConverter\Convert;
 use ReflectionClass;
 use ReflectionMethod;
@@ -28,6 +30,12 @@ class HookManager {
    * @var \Symfony\Component\Console\Output\OutputInterface
    */
   private $output;
+
+  /**
+   * @var array
+   *   An array that is shared with all PHP hooks for value sharing.
+   */
+  private $sandbox;
 
   public function __construct(OutputInterface $output, HookEvent $event) {
     $this->output = $output;
@@ -56,6 +64,7 @@ class HookManager {
 
       return;
     }
+    $this->sandbox = [];
     foreach ($files as $path) {
       $callable = NULL;
       $extension = strtolower(Path::getExtension($path));
@@ -71,10 +80,7 @@ class HookManager {
         $this->output->writeln(sprintf('<info>Executing hook: %s ...</info>', $id));
         $exit_code = $callable();
         if (255 === $exit_code) {
-          $this->output->writeln(sprintf('<info>%s... 255 received; hook skipped.</info>', Icons::SKIP, $id));
-        }
-        elseif (0 != $exit_code) {
-          throw new HookException(sprintf("%s exited with code %d", $path, $exit_code));
+          $this->output->writeln(sprintf('<info>%s... Hook skipped (code 255)</info>', Icons::SKIP, $id));
         }
       }
     }
@@ -117,8 +123,8 @@ class HookManager {
     }
     else {
       $hooks = array_merge(
-        Glob::glob("$hooks_dir/$filter.sh"),
-        Glob::glob("$hooks_dir/$filter.php"),
+        Glob::glob("$hooks_dir{$filter}.sh"),
+        Glob::glob("$hooks_dir{$filter}.php"),
       );
     }
 
@@ -129,6 +135,13 @@ class HookManager {
     return $hooks;
   }
 
+  /**
+   * Execute a PHP hook.
+   *
+   * @return int
+   *   0 or 255, 255 means the hook was skipped but keep buildling.
+   * @throws \Exception If the build should stop.
+   */
   private function executePhp() {
     require_once WEB_PACKAGE_ROOT . '/includes/wp_functions.php';
     $args = $this->getHookArgs();
@@ -163,21 +176,53 @@ class HookManager {
       set_error_handler(function ($errno, $errstr, $errfile, $errline) {
         throw new \ErrorException($errstr, $errno, 0, $errfile, $errline);
       });
-      $argv = $args; // Legacy support of $argv
-      require $hook_path;
+
+      // This will trap any calls to `exit()` which is incorrect for PHP hooks.
+      $hook_exit = (object) [];
+      register_shutdown_function(function ($hook_exit) {
+        if (!isset($hook_exit->status)) {
+          $this->output->writeln('<error>Failing PHP hooks must only throw exceptions; do not call `exit()`</error>');
+        }
+      }, $hook_exit);
+
+      $argv = [0 => $hook_path] + $args; // Legacy support of $argv
+      $run_in_sandbox = function () use ($argv) {
+        $sandbox =& $this->sandbox;
+        // Isolate this hook from any other.
+        require $argv[0];
+      };
+      $run_in_sandbox();
+      $hook_exit->status = 0;
     }
-    catch (\Exception $exception) {
-      throw $exception;
+    catch (Exception $exception) {
+      $hook_exit->status = (int) $exception->getCode();
+      if (!$hook_exit->status) {
+        $hook_exit->status = 1;
+      }
+      if ($hook_exit->status === 255) {
+        $this->output->writeln($exception->getMessage());
+      }
+      else {
+        throw $exception;
+      }
     }
     finally {
       restore_error_handler();
       chdir($stash_wd);
     }
+
+    return $hook_exit->status;
   }
 
+  /**
+   * Execute a Shell hook.
+   *
+   * @return int
+   *   0 or 255, 255 means the hook was skipped but keep buildling.
+   * @throws \Exception If the build should stop.
+   */
   private function executeShell(): int {
     $shell_code = '';
-
     foreach ($this->getHookConstants() as $key => $value) {
       if (empty($value)) {
         continue;
@@ -192,7 +237,13 @@ class HookManager {
       $shell_code .= " '$arg'";
     }
     $shell_code = trim($shell_code, ';');
-    system($shell_code, $result_code);
+    $message = system($shell_code, $result_code);
+
+    // Throw an exception for build-stopping situations.
+    if ($result_code > 0 && $result_code < 255) {
+      $script_path = $this->event->getHook();
+      (new ThrowShellError($script_path))($message, $result_code, \InvalidArgumentException::class);
+    }
 
     return $result_code;
   }
