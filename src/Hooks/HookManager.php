@@ -185,8 +185,10 @@ class HookManager {
         }
       }, $hook_exit);
 
-      $argv = [0 => $hook_path] + $args; // Legacy support of $argv
-      $run_in_sandbox = function () use ($argv) {
+      // Legacy support of $argv.
+      $argv = [0 => $hook_path] + $args;
+      // $build has to be there for legacy reasons as well.
+      $run_in_sandbox = function () use ($argv, $build) {
         $sandbox =& $this->sandbox;
         // Isolate this hook from any other.
         require $argv[0];
