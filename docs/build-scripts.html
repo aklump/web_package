@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+  <title>Hooks: build, unbuild, dev</title>
+  <link href="search/tipuesearch.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+
+<body class="page--build-scripts">
+<header><div class="pager"><a href="source-control.html" class="prevsource-control">&laquo;source-control</a><a href="index.html" class="index pager__book-title"></a><a href="php-scripts.html" class="nextphp-scripts">PHP Hooks&raquo;</a></div></header>
+<section class="sub-header"><div class="breadcrumbs"><a href="index.html">Index</a> &raquo</div><div class="search__wrapper">
+  <form action="search--results.html">
+    <input type="text" class="search-input" name="q" id="tipue_search_input" autocomplete="off" required>
+  </form>
+</div>
+</section>
+
+
+<h1>Hooks: build, unbuild, dev</h1><section><h1>Hooks: build, unbuild, dev</h1>
+
+<p>The following commands are there to run scripts located in <em>.web_package/hooks</em>.</p>
+
+<h2><code>bump build</code></h2>
+
+<p>Scripts added to <code>.web_package/hooks/build</code> are run.  By design, these scripts should serve the purpose of building the package and making it ready for a release.  Such as create a <code>dist</code> directory and copy over distribution files, etc.  **Of the three, this is the only command that is automatically called by calling <code>bump done</code>.</p>
+
+<h2><code>bump unbuild</code></h2>
+
+<p>Scripts added to <code>.web_package/hooks/unbuild</code> are run.  You may delete files as necessary to reverse the build step.</p>
+
+<h2><code>bump dev</code></h2>
+
+<p>Scripts added to <code>.web_package/hooks/dev</code> are run.  The intention here is to set up the project to be developed.  I use this to symlink dependencies during development.  These symlinks get reversed in my build scripts.</p>
+
+<h2>Build Scripts</h2>
+
+<ul>
+<li>Any file ending in <code>.php</code> or <code>.sh</code> found in the build script folder will be called during version bumping.</li>
+<li>Any hook file can be temporarily disabled by renaming the file to begin with a single underscore</li>
+<li>All hooks will be skipped if you pass <code>--no-hooks</code> in the command.</li>
+<li>All hooks will be fired if you pass <code>--hooks</code> in the command.</li>
+<li>There are lots of example build scripts that get installed when you to <code>bump init</code>.  They can be found in <em>.web_package/examples</em>.</li>
+</ul>
+
+<p>You may add PHP or BASH scripts to <code>.web_package/hooks/build</code> and they will be run each time the version increments.  You may also trigger a build by calling <code>bump build</code>.</p>
+
+<p>You can also trigger a single file by passing it's filename (or portion thereof); you would want to do this if you need to trigger this one script from an external program, while preserving the callback arguments.  Here is an example (this also works for unbuild and dev), the second line shows how you can locate a script using a substr as well.</p>
+
+<pre><code>    bump build 00_only_this_script.sh
+    bump build only_this
+</code></pre>
+
+<p>See also <a href="bash-scripts.html">BASH Scripts</a>
+See also <a href="php-scripts.html">PHP Scripts</a></p>
+</section>
+
+<div class="search__results">
+  <div id="tipue_search_content"></div>
+</div>
+
+<footer><div class="pager"><a href="source-control.html" class="prevsource-control">&laquo;source-control</a><a href="index.html" class="index pager__book-title"></a><a href="php-scripts.html" class="nextphp-scripts">PHP Hooks&raquo;</a></div>  
+  <div id="footer-legaleeze">
+    <p class="legaleeze center">Version:3.2.5 &bull; Last Updated:Mon, 27 Nov 2023 15:12:41 -0800</p>
+  </div>
+</footer>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>  <script src="search/tipuesearch_content.js"></script>
+  <script src="search/tipuesearch_set.js"></script>
+  <script src="search/tipuesearch.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#tipue_search_input').tipuesearch()
+    })
+  </script><script src="js/core.js"></script>
+</body>
+</html>
+
