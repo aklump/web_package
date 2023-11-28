@@ -9,7 +9,7 @@ Here is an example stub for PHP build script:
      * An example PHP hook file.
      */
     
-    namespace AKlump\WebPackage;
+    namespace AKlump\WebPackage\User;
     
     if ($little_problem) {
       throw new \AKlump\WebPackage\HookException("Hook failed, but the build must go on.");
@@ -24,7 +24,7 @@ Here is an example stub for PHP build script:
 ## Quick Start
 
 * The working directory is the directory containing _.web_package_.
-* Files should be namespaced to `AKlump\WebPackage`.
+* Files should be namespaced to `AKlump\WebPackage\User`.
 * If you want to stop the build, throw an instance of _\AKlump\WebPackage\BuildFailException_.
 * To indicate a hook failure, but continue the build, throw an instance of _\AKlump\WebPackage\HookException_.
 * Use `echo` or `print` to write to the screen.
@@ -59,7 +59,7 @@ Then inside your hook file do something with it, e.g.,
      * Load a source file, replace tokens and save to dist folder.
      */
     
-    namespace AKlump\WebPackage;
+    namespace AKlump\WebPackage\User;
     
     $build
       ->loadFile('src/smart-images.js')

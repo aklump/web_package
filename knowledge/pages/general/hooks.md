@@ -29,3 +29,5 @@ tags: ''
 * A failure is indicated by throwing any exception.
 * Set the exception code to 255 to indicate the hook was skipped, for example it could not be run in a given context.
 * PHP hooks may share values with one another using the `$sandbox` array.
+* The namespace `AKlump\WebPackage\User` is automatically mapped to _.web_package/src_ for PSR-4 classes.
+* If _.web_package/vendor/autoload.php_ exists, it will be loaded automatically.

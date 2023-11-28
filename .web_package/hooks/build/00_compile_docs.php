@@ -5,7 +5,7 @@
  * Generates documentation, adjusts paths and adds to SCM.
  */
 
-namespace AKlump\WebPackage;
+namespace AKlump\WebPackage\User;
 
 $build
   ->generateDocumentationTo()

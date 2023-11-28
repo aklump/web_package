@@ -29,14 +29,33 @@ $autoload = __DIR__ . '/../../../vendor/autoload.php';
 if (!is_file($autoload)) {
   $autoload = __DIR__ . '/vendor/autoload.php';
 }
-require_once $autoload;
+$loader = require_once $autoload;
 
 $filesystem = new Filesystem();
 
 const WEB_PACKAGE_ROOT = __DIR__;
+const INSTALL_DIR = '.web_package';
 
-// This is the path where .web_package is located, or will be created.
+// This is the path where INSTALL_DIR is located, or will be created.
 define("ROOT_PATH", (new GetRootPath())(getcwd()));
+
+// Automatic Composer autoloader support.
+$user_autoload = ROOT_PATH . '/' . INSTALL_DIR . '/vendor/autoload.php';
+if (file_exists($user_autoload)) {
+  require_once $user_autoload;
+}
+
+// Autowire PSR-4 namespace.
+$user_src_directory = ROOT_PATH . '/' . INSTALL_DIR . '/src';
+if (file_exists($user_src_directory)) {
+  $loader->addPsr4('\AKlump\WebPackage\User\\', [
+    $user_src_directory,
+  ]);
+  // This is legacy support.
+  $loader->addPsr4('\AKlump\WebPackage\\', [
+    $user_src_directory,
+  ]);
+}
 
 $app = new Application();
 $app->setName('web_package');
@@ -52,7 +71,7 @@ $container->add('git', GitProxy::class);
 
 $app->add(new InitCommand(
   $container,
-  '.web_package',
+  INSTALL_DIR,
   __DIR__ . '/install/template/',
   $filesystem
 ));
