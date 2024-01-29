@@ -14,6 +14,7 @@ use Jawira\CaseConverter\CaseConverter;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
@@ -41,6 +42,7 @@ class InitCommand extends Command {
 
   protected function configure() {
     $this->setDescription('Initialize the current directory.')
+      ->addOption('child', NULL, InputOption::VALUE_NONE, 'Use this flag to allow initializing a child of another project.')
       ->setHelp('This command allows you to see all available versions to be swapped');
   }
 
@@ -64,7 +66,9 @@ class InitCommand extends Command {
       if ((new IsInitialized())->access()) {
         $root = $this->context->getRootPath();
         if (getcwd() !== $root) {
-          throw new \RuntimeException(sprintf("You are within an initialized directory: %s", $root));
+          if (!$input->getOption('child')) {
+            throw new \RuntimeException(sprintf("Inside an initialized directory; use --child if you are sure. %s", $root));
+          }
         }
         else {
           throw new \RuntimeException(sprintf("%s is already initialized.", $root));
