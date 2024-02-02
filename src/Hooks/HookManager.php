@@ -224,19 +224,31 @@ class HookManager {
    * @throws \Exception If the build should stop.
    */
   private function executeShell(): int {
+
+    $quote_value = function ($value): string {
+      $value = trim($value, "'");
+      if (strstr($value, "'") !== FALSE) {
+        return "\"$value\"";
+      }
+
+      return "'$value'";
+    };
+
     $shell_code = '';
     foreach ($this->getHookConstants() as $key => $value) {
       if (empty($value)) {
         continue;
       }
-      $shell_code .= ";export $key='" . trim($value, "'") . "'";
+      $value = $quote_value($value);
+      $shell_code .= ";export $key=$value";
     }
 
     $shell_code .= ';' . WEB_PACKAGE_ROOT . '/includes/hook_runner.sh';
 
     $args = $this->getHookArgs();
     foreach ($args as $arg) {
-      $shell_code .= " '$arg'";
+      $arg = $quote_value($arg);
+      $shell_code .= " $arg";
     }
     $shell_code = trim($shell_code, ';');
     $message = system($shell_code, $result_code);
