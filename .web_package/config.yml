@@ -6,4 +6,4 @@ push_master: auto
 patch_prefix: .
 git_root: .
 version_file: .web_package/config.yml
-version: "3.2.5"
+version: "3.2.6"
