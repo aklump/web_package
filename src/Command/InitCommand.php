@@ -10,6 +10,7 @@ use AKlump\WebPackage\Helpers\GetAllBranches;
 use AKlump\WebPackage\Helpers\GetAllTemplates;
 use AKlump\WebPackage\Helpers\GetCurrentVersion;
 use AKlump\WebPackage\Input\HumanInterface;
+use AKlump\WebPackage\Model\GitFlow;
 use Jawira\CaseConverter\CaseConverter;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -180,7 +181,7 @@ class InitCommand extends Command {
       return in_array($name, [
         'main',
         ConfigDefaults::MAIN_BRANCH,
-        \AKlump\WebPackage\Model\GitFlow::MASTER,
+        GitFlow::MASTER,
         $fallback,
       ]);
     }))[0] ?? NULL;
@@ -193,7 +194,7 @@ class InitCommand extends Command {
     $question->setAutocompleterValues([
       'main',
       'master',
-      \AKlump\WebPackage\Model\GitFlow::MASTER,
+      GitFlow::MASTER,
       ConfigDefaults::MAIN_BRANCH,
       $fallback,
     ]);
@@ -206,7 +207,7 @@ class InitCommand extends Command {
     $branches = (new GetAllBranches())();
     $existing = array_values(array_filter($branches, function ($name) use ($fallback) {
       if (in_array($name, [
-        \AKlump\WebPackage\Model\GitFlow::DEVELOP,
+        GitFlow::DEVELOP,
         ConfigDefaults::DEVELOP_BRANCH,
         $fallback,
       ])) {
@@ -248,7 +249,7 @@ class InitCommand extends Command {
 
     $question = new Question('<question>Branch name?</question> ');
     $question->setAutocompleterValues([
-      \AKlump\WebPackage\Model\GitFlow::DEVELOP,
+      GitFlow::DEVELOP,
       ConfigDefaults::DEVELOP_BRANCH,
       $fallback,
     ]);
