@@ -21,6 +21,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\ConfirmationQuestion;
 
 /**
  * @url https://nvie.com/posts/a-successful-git-branching-model/
@@ -95,6 +96,10 @@ class DoneCommand extends Command {
       return Command::FAILURE;
     }
 
+    if (!$this->handleUncommittedChanges($input, $output)) {
+      return Command::FAILURE;
+    }
+
     $merge_into_branches = $gitflow->getMustMergeBackInto();
     $merge_successful = FALSE;
     foreach ($merge_into_branches as $target_branch) {
@@ -139,6 +144,27 @@ class DoneCommand extends Command {
     }
 
     return Command::SUCCESS;
+  }
+
+  private function handleUncommittedChanges($input, $output): bool {
+    $unchanged_files = [];
+    $this->exec('git status --short', $unchanged_files);
+    if (count($unchanged_files) > 0) {
+      $helper = $this->getHelper('question');
+      $this->output->writeln($unchanged_files);
+      $question = new ConfirmationQuestion('<question>You have uncommitted changes; are you sure?</question> ', FALSE);
+      if (!$helper->ask($input, $output, $question)) {
+        $messages = [
+          '<error>Cancelled!</error>',
+          'Commit changes and try again.',
+        ];
+        $output->writeln($messages);
+
+        return FALSE;
+      }
+    }
+
+    return TRUE;
   }
 
 }
