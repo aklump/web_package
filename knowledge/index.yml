@@ -1,8 +1,18 @@
 page_order:
   - readme
-  - changelog
   - config
+  - source_control
+  - build_scripts
+  - php_scripts
+  - bash_scripts
+  - hooklib
+  - drupal
+  - faq
+  - releases
+  - templates
   - filter
   - hooks
-  - source_control
-  - templates
+  - converting_to_symfony_console
+  - functionality
+  - changelog
+  - readme_legacy
