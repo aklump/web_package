@@ -1,5 +1,18 @@
-# Page Title
+# Web Package
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+This project does the following for your web project.
 
-Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+* Manages version numbers.
+* Provides a framework for building assets before release.
+
+## New Release Workflow
+
+```bash
+bump release
+bump build
+git add .
+git commit -m 'Build assets.'
+bump done
+```
+
+@todo

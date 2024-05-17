@@ -5,7 +5,7 @@ tags: ''
 
 # Configuration
 
-* Located at _.web_package/config.yml_ && _.web_package/config.local.yml_
+* Located at _.web\_package/config.yml_ && _.web\_package/config.local.yml_
 
 ## version_file
 

@@ -1,0 +1,493 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="/Users/aklump/opt/web_package/docs/dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=3.2.7">
+      <link rel="stylesheet" href="/Users/aklump/opt/web_package/docs/dist/style.css?ver=3.2.7">
+      <link rel="stylesheet" href="/Users/aklump/opt/web_package/docs/dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=3.2.7">
+    <title>PHP Hooks | Web Package</title>
+</head>
+<body class="my-5">
+
+<header class="header bg-light fixed-top p-2 pt-1">
+  <div class="container-md">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="header__breadcrumbs flex-shrink-0 flex-grow-1 me-3">
+        <nav aria-label="breadcrumb">
+  <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+      <a class="fw-bold" href="/Users/aklump/opt/web_package/docs/index.html">Web Package</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a class="fw-bold" href="#" data-bs-toggle="offcanvas"
+         data-bs-target="#table-of-contents"
+         aria-controls="table-of-contents">TOC</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a href="/Users/aklump/opt/web_package/docs/pages/legacy/config.html">Legacy Docs (May Be Incorrect)</a></li>
+  </ol>
+</nav>
+
+      </div>
+      <div class="header__tags me-3">  </div>
+      <div class="header__page-numbers flex-shrink-1">9
+        / 17</div>
+    </div>
+  </div>
+</header>
+
+<main class="container-md flex-column">
+  <div class="row mb-5 pt-5">
+    <article class="col">
+      <h1 class="mb-4 text-primary">PHP Hooks</h1>
+      <p>Here is an example stub for PHP build script:</p>
+<pre><code>&lt;?php
+
+/**
+ * @file
+ * An example PHP hook file.
+ */
+
+namespace AKlump\WebPackage\User;
+
+if ($little_problem) {
+  throw new \AKlump\WebPackage\HookException("Hook failed, but the build must go on.");
+}
+elseif ($big_problem) {
+  throw new \AKlump\WebPackage\BuildFailException("Stop the build!");
+}
+
+echo "The hook worked as expected";
+
+
+</code></pre>
+<h2>Quick Start</h2>
+<ul>
+<li>The working directory is the directory containing _.web<em>package</em>.</li>
+<li>Files should be namespaced to <code>AKlump\WebPackage\User</code>.</li>
+<li>If you want to stop the build, throw an instance of <em>\AKlump\WebPackage\BuildFailException</em>.</li>
+<li>To indicate a hook failure, but continue the build, throw an instance of <em>\AKlump\WebPackage\HookException</em>.</li>
+<li>Use <code>echo</code> or <code>print</code> to write to the screen.</li>
+<li>Use <code>caution</code> and <code>danger</code> to write dramatic output while continuing the flow.</li>
+<li>The file <em>.web_package/hooks/bootstrap.php</em>, if it exists, will be included automatically.    You may use it for shared functions and configuration across scripts, for example.</li>
+<li>Web Package provides some PHP functions which are autoloaded as well; review the file _includes/wp<em>functions.php</em> for those functions.</li>
+</ul>
+<h2>Using the <code>$build</code> object</h2>
+<p>You may want to leverage the <code>$build</code> instance in your PHP hook files as it contains a growing amount of common use case functionality.  Refer to <em>\AKlump\WebPackage\HookService</em> for more info.</p>
+<ul>
+<li>You should always call <code>displayMessages()</code> as the last chained method (see example below). </li>
+<li>Relative paths are considered relative to the directory that contains _.web<em>package</em>.</li>
+</ul>
+<p>Add configuration to <code>$build</code> inside of <em>bootstrap.php</em>, which will apply to every PHP hook file thereafter, e.g.,</p>
+<pre><code>&lt;?php
+
+/**
+ * @file
+ * Loaded before running PHP hooks.
+ */
+ 
+$build-&gt;setDistributionDir('dist');
+</code></pre>
+<p>Then inside your hook file do something with it, e.g.,</p>
+<pre><code>&lt;?php
+
+/**
+ * @file
+ * Load a source file, replace tokens and save to dist folder.
+ */
+
+namespace AKlump\WebPackage\User;
+
+$build
+  -&gt;loadFile('src/smart-images.js')
+  -&gt;replaceTokens()
+  -&gt;saveToDist()
+  -&gt;displayMessages();
+</code></pre>
+<h2><code>$build</code> Methods</h2>
+<table class="table">
+<thead>
+<tr><th>HookService</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>addFilesToScm</strong> <em>(array $files)</em></td></tr>
+<tr><td><strong>addMessage</strong> <em>($message)</em></td></tr>
+<tr><td><strong>addToDemo</strong> <em>($path, $to_relative_path = NULL)</em></td></tr>
+<tr><td><strong>addTokens</strong> <em>(array $additional_token_map = Array)</em></td></tr>
+<tr><td><strong>boostrapPhpUnit</strong> <em>()</em></td></tr>
+<tr><td><strong>caution</strong> <em>($message)</em></td></tr>
+<tr><td><strong>danger</strong> <em>($message)</em></td></tr>
+<tr><td><strong>displayMessages</strong> <em>()</em></td></tr>
+<tr><td><strong>endMessageClause</strong> <em>()</em></td></tr>
+<tr><td><strong>generateDemoTo</strong> <em>($path_to_generated_demo = 'dist/demo')</em></td></tr>
+<tr><td><strong>generateDocumentation</strong> <em>($path_to_generated_docs = 'docs')</em></td></tr>
+<tr><td><strong>generateDocumentationTo</strong> <em>($path_to_generated_docs = 'docs')</em></td></tr>
+<tr><td><strong>getSourceCode</strong> <em>()</em></td></tr>
+<tr><td><strong>isUsingGit</strong> <em>()</em></td></tr>
+<tr><td><strong>loadFile</strong> <em>($filepath, callable or NULL $mutator = NULL)</em></td></tr>
+<tr><td><strong>minifyFile</strong> <em>($source)</em></td></tr>
+<tr><td><strong>prepareTokenMap</strong> <em>($prefix, array $additional_token_map = Array)</em></td></tr>
+<tr><td><strong>processWithTwig</strong> <em>(array $additional_token_map = Array)</em></td></tr>
+<tr><td><strong>publish</strong> <em>()</em></td></tr>
+<tr><td><strong>relativize</strong> <em>(string $path)</em></td></tr>
+<tr><td><strong>replaceTokens</strong> <em>(array $additional_token_map = Array)</em></td></tr>
+<tr><td><strong>resolve</strong> <em>($filepath)</em></td></tr>
+<tr><td><strong>runTests</strong> <em>(string $path_to_testrunner)</em></td></tr>
+<tr><td><strong>saveReplacingSourceFile</strong> <em>()</em></td></tr>
+<tr><td><strong>saveTo</strong> <em>(string $dir = 'dist', $force = false)</em></td></tr>
+<tr><td><strong>saveToDist</strong> <em>()</em></td></tr>
+<tr><td><strong>setBashExecutable</strong> <em>(string $program_name, string $path_to_executable)</em></td></tr>
+<tr><td><strong>setDemoSource</strong> <em>($source_dir)</em></td></tr>
+<tr><td><strong>setDistributionDir</strong> <em>(string $dist)</em></td></tr>
+<tr><td><strong>setDocumentationSource</strong> <em>($source_dir)</em></td></tr>
+<tr><td><strong>setPhp</strong> <em>(string $php)</em></td></tr>
+<tr><td><strong>setPhpUnit</strong> <em>(string $phpunit)</em></td></tr>
+<tr><td><strong>setSourceCode</strong> <em>(string $code)</em></td></tr>
+<tr><td><strong>startMessageClause</strong> <em>($message)</em></td></tr>
+</tbody>
+</table>
+<h2>Callback Arguments</h2>
+<p>These are deprecated, you should only use them as a last resort.</p>
+<table class="table">
+<thead>
+<tr><th align="left">data</th><th align="left">build.php</th></tr>
+</thead>
+<tbody>
+<tr><td align="left">prev version</td><td align="left">$argv[1]</td></tr>
+<tr><td align="left">new version</td><td align="left">$argv[2]</td></tr>
+<tr><td align="left">package name</td><td align="left">$argv[3]</td></tr>
+<tr><td align="left">description</td><td align="left">$argv[4]</td></tr>
+<tr><td align="left">homepage</td><td align="left">$argv[5]</td></tr>
+<tr><td align="left">author</td><td align="left">$argv[6]</td></tr>
+<tr><td align="left">path to root</td><td align="left">$argv[7]</td></tr>
+<tr><td align="left">date/time</td><td align="left">$argv[8]</td></tr>
+<tr><td align="left">path to info file</td><td align="left">$argv[9]</td></tr>
+<tr><td align="left">dir of the script</td><td align="left">$argv[10]</td></tr>
+<tr><td align="left">dir of functions.php/.sh</td><td align="left">$argv[11]</td></tr>
+<tr><td align="left">root dir of web_package</td><td align="left">$argv[12]</td></tr>
+<tr><td align="left">path to hooks dir</td><td align="left">$argv[13]</td></tr>
+</tbody>
+</table>
+    </article>
+  </div>
+</main>
+
+  <footer class="footer d-flex justify-content-center">
+    <div class="flex-column justify-content-center">
+                  Version:
+          <strong>3.2.7</strong>
+          &bull;
+                Last Update: <strong>5/17/2024</strong>
+    </div>
+  </footer>
+
+
+<nav class="nav d-flex justify-content-center align-items-center
+  fixed-bottom">
+  <div class="btn-group flex-fill">
+              <a href="/Users/aklump/opt/web_package/docs/pages/legacy/config.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
+      bi-caret-left-fill"></i> Configuration</a>
+  
+    
+              <a href="/Users/aklump/opt/web_package/docs/pages/legacy/build_scripts.html" class="btn nav__prev-page js-nav__prev-page
+    btn-primary"><i class="bi
+      bi-caret-left-fill"></i></a>
+  
+    
+    <a class="nav__toc btn btn-light" href="#"
+       data-bs-toggle="offcanvas"
+       data-bs-target="#table-of-contents"
+       aria-controls="table-of-contents"><i class="bi
+           bi-list-ol"></i></a>
+    
+              <a href="/Users/aklump/opt/web_package/docs/pages/legacy/bash_scripts.html" class="btn nav__next-page js-nav__next-page
+    btn-primary"><i class="bi bi-file-earmark"></i> BASH Hooks <i class="bi
+       bi-caret-right-fill"></i></a>
+  
+    
+              <span class="btn nav__next-chapter btn-secondary "></span>
+  
+  </div>
+</nav>
+
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="table-of-contents"
+     aria-labelledby="table-of-contents__title" data-bs-keyboard="true">
+  <div class="offcanvas-header">
+    <h1 class="h6 offcanvas-title js-chapter-list-title"
+        id="table-of-contents__title">All
+      Chapters
+      &amp; Pages</h1>
+    <h1 class="d-none h6 offcanvas-title js-search-results-title"
+        id="table-of-contents__title">Search Results</h1>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+          <input class="js-search form-control mb-4" type="search"
+             placeholder="Search docs..."
+             aria-label="Search">
+      <div class="js-search-results d-none">
+        <h2 class="h4 mt-4">Matched Pages</h2>
+        <ol class="list-unstyled">
+                                              <li data-page="readme" value="1">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/readme.html">Web Package<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="source_control" value="2">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/source_control.html">Should `.web_package` be added to source control?<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="templates" value="3">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/templates.html">Configuration Templates<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="filter" value="4">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/filter.html">Hook Filters<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="hooks" value="5">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/hooks.html">Hooks<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="changelog" value="6">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/changelog.html">Changelog<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                                          <li data-page="config" value="7">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/config.html">Configuration<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="build_scripts" value="8">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/build_scripts.html">Hooks: build, unbuild, dev<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="php_scripts" value="9">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/php_scripts.html">PHP Hooks<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="bash_scripts" value="10">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/bash_scripts.html">BASH Hooks<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="hooklib" value="11">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/hooklib.html">Hooks Library<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="drupal" value="12">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/drupal.html">Drupal Modules/Themes<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="faq" value="13">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/faq.html">Questions<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="releases" value="14">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/releases.html">Release Types<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="converting_to_symfony_console" value="15">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/converting_to_symfony_console.html">Converting To Symfony Console<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="functionality" value="16">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/functionality.html">semver<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                    <li data-page="readme_legacy" value="17">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/readme_legacy.html">Web Package<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                              </ol>
+      </div>
+        
+    <div class="js-chapter-list">
+              <h2 class="h4 mt-4">General</h2>
+        <ol>
+                                <li data-page="readme" value="1">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/readme.html">Web Package</a>
+    </li>
+  
+                                <li data-page="source_control" value="2">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/source_control.html">Should `.web_package` be added to source control?</a>
+    </li>
+  
+                                <li data-page="templates" value="3">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/templates.html">Configuration Templates</a>
+    </li>
+  
+                                <li data-page="filter" value="4">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/filter.html">Hook Filters</a>
+    </li>
+  
+                                <li data-page="hooks" value="5">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/hooks.html">Hooks</a>
+    </li>
+  
+                                <li data-page="changelog" value="6">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/general/changelog.html">Changelog</a>
+    </li>
+  
+                  </ol>
+              <h2 class="h4 mt-4">Legacy Docs (May Be Incorrect)</h2>
+        <ol>
+                                <li data-page="config" value="7">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/config.html">Configuration</a>
+    </li>
+  
+                                <li data-page="build_scripts" value="8">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/build_scripts.html">Hooks: build, unbuild, dev</a>
+    </li>
+  
+                                <li data-page="php_scripts" value="9">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/php_scripts.html">PHP Hooks</a>
+    </li>
+  
+                                <li data-page="bash_scripts" value="10">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/bash_scripts.html">BASH Hooks</a>
+    </li>
+  
+                                <li data-page="hooklib" value="11">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/hooklib.html">Hooks Library</a>
+    </li>
+  
+                                <li data-page="drupal" value="12">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/drupal.html">Drupal Modules/Themes</a>
+    </li>
+  
+                                <li data-page="faq" value="13">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/faq.html">Questions</a>
+    </li>
+  
+                                <li data-page="releases" value="14">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/releases.html">Release Types</a>
+    </li>
+  
+                                <li data-page="converting_to_symfony_console" value="15">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/converting_to_symfony_console.html">Converting To Symfony Console</a>
+    </li>
+  
+                                <li data-page="functionality" value="16">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/functionality.html">semver</a>
+    </li>
+  
+                                <li data-page="readme_legacy" value="17">
+      <a class="js-page-link" href="/Users/aklump/opt/web_package/docs/pages/legacy/readme_legacy.html">Web Package</a>
+    </li>
+  
+                  </ol>
+          </div>
+  </div>
+</div>
+<div class="modal fade" id="modal" tabindex="-1"
+     aria-labelledby="modal-title" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="js-modal-title modal-title" id="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mt-1 mb-4">
+                  </p>
+        
+                
+        <ul class="list-group list-group-flush">
+                                    <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/general/readme.html">Web Package</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/general/source_control.html">Should `.web_package` be added to source control?</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/general/templates.html">Configuration Templates</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/general/filter.html">Hook Filters</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/general/hooks.html">Hooks</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/general/changelog.html">Changelog</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/legacy/config.html">Configuration</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/legacy/build_scripts.html">Hooks: build, unbuild, dev</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/legacy/php_scripts.html">PHP Hooks</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/legacy/bash_scripts.html">BASH Hooks</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/legacy/hooklib.html">Hooks Library</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/legacy/drupal.html">Drupal Modules/Themes</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/legacy/faq.html">Questions</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/legacy/releases.html">Release Types</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/legacy/converting_to_symfony_console.html">Converting To Symfony Console</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/legacy/functionality.html">semver</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="/Users/aklump/opt/web_package/docs/pages/legacy/readme_legacy.html">Web Package</a>
+                              </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <script src="/Users/aklump/opt/web_package/docs/dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=3.2.7"></script>
+  <script src="/Users/aklump/opt/web_package/docs/dist/lunr.js?ver=3.2.7"></script>
+  <script src="/Users/aklump/opt/web_package/docs/dist/knowledge.min.js?ver=3.2.7"></script>
+
+</body>
+</html>
