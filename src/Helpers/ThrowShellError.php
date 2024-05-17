@@ -33,7 +33,7 @@ class ThrowShellError {
    * @return void
    */
   public function __invoke(string $exception_message, $exit_code, string $exception_class = \RuntimeException::class) {
-    $exception_message = sprintf('[Exit code %d] %s', $exit_code, $exception_message);
+    $exception_message = (new GetAugmentedFailureMessage())($exception_message, $exit_code, $this->scriptPath);
 
     // Create a proxy file that will throw on the same line as our script, named
     // for our script so that the exception class contains the proper basename

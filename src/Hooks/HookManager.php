@@ -3,6 +3,7 @@
 namespace AKlump\WebPackage\Hooks;
 
 use AKlump\LoftLib\Storage\FilePath;
+use AKlump\WebPackage\Helpers\GetAugmentedFailureMessage;
 use AKlump\WebPackage\Helpers\GetHooksDirectory;
 use AKlump\WebPackage\Helpers\GetRootPath;
 use AKlump\WebPackage\Helpers\ThrowShellError;
@@ -205,6 +206,11 @@ class HookManager {
         $this->output->writeln($exception->getMessage());
       }
       else {
+        $augmented_message = (new GetAugmentedFailureMessage())($exception->getMessage(), $exception->getCode(), $hook_path);
+        $reflectionObject = new \ReflectionObject($exception);
+        $message_prop = $reflectionObject->getProperty('message');
+        $message_prop->setAccessible(TRUE);
+        $message_prop->setValue($exception, $augmented_message);
         throw $exception;
       }
     }
