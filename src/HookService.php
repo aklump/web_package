@@ -657,7 +657,7 @@ class HookService {
     $docs_source_dir = $this->resolve($this->docsSource);
     $relative_config = preg_replace('/^' . preg_quote($this->pathToInstance, '/') . '/', '\$7', $docs_source_dir) . '/core-config.sh';
     $relative_docs = preg_replace('/^' . preg_quote($this->pathToInstance, '/') . '/', '\$7', $docs_source_dir);
-//    throw new BuildFailException(sprintf('Do not use the deprecated method %s(); use . "%s/core/compile" --config="%s" instead.', __METHOD__, $relative_docs, $relative_config));
+    //    throw new BuildFailException(sprintf('Do not use the deprecated method %s(); use . "%s/core/compile" --config="%s" instead.', __METHOD__, $relative_docs, $relative_config));
     if (!is_dir($docs_source_dir)) {
       throw new \RuntimeException("Missing source directory: " . $docs_source_dir);
     }
@@ -872,11 +872,15 @@ class HookService {
    * @return HookService
    *   Self for chaining.
    *
-   * @throws \AKlump\WebPackage\BuildFailException
+   * @throws \RuntimeException If the program is not executable.
+   * @throws \InvalidArgumentException If the program is not found.
    */
   protected function setBashExecutable(string $program_name, string $path_to_executable) {
-    if (!is_executable($path_to_executable)) {
-      throw new BuildFailException("Missing or non-executable $program_name: \"$path_to_executable\"");
+    if (!file_exists($path_to_executable)) {
+      throw new \InvalidArgumentException(sprintf("%s is missing from expected location: \"%s\"", $program_name, $path_to_executable));
+    }
+    elseif (!is_executable($path_to_executable)) {
+      throw new \RuntimeException(sprintf("%s does not have execute permissions; try this: chmod u+x \"%s\"", $program_name, $path_to_executable));
     }
     $this->{$program_name} = $path_to_executable;
 
