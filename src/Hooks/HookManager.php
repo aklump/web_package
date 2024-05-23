@@ -148,7 +148,7 @@ class HookManager {
     $args = $this->getHookArgs();
 
     $build = new HookService(
-      FilePath::create(__DIR__ . '/..'),
+      FilePath::create(WEB_PACKAGE_ROOT),
       FilePath::create($args[9]),
       FilePath::create($args[7]),
       $args[3],
