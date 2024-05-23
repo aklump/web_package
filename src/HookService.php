@@ -579,13 +579,15 @@ class HookService {
     if ($this->sourceFile->getExtension() !== 'js') {
       throw new BuildFailException("Minify does not yet support file types ending in: " . $this->sourceFile->getExtension());
     }
+    $output_path = $this->sourceFile->getPath();
+    $output_path = preg_replace('#\.js$#', '.min.js', $output_path);
     Bash::exec([
       $this->pathToWebPackage . "/node_modules/.bin/uglifyjs",
       "--compress --mangle --comments",
-      "--output=" . ($output = str_replace('.js', '.min.js', $this->sourceFile->getPath())),
+      "--output " . $output_path,
       "-- " . $this->sourceFile->getPath(),
     ]);
-    $this->addMessage("minified to {$this->relativize($output)}.");
+    $this->addMessage("minified to {$this->relativize($output_path)}.");
 
     $this->sourceFile = NULL;
 
