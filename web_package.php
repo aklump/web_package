@@ -12,6 +12,7 @@ use AKlump\WebPackage\Command\InitCommand;
 use AKlump\WebPackage\Command\MajorCommand;
 use AKlump\WebPackage\Command\MinorCommand;
 use AKlump\WebPackage\Command\PatchCommand;
+use AKlump\WebPackage\Command\PublishCommand;
 use AKlump\WebPackage\Command\ReleaseCommand;
 use AKlump\WebPackage\Command\UnBuildCommand;
 use AKlump\WebPackage\Command\UpgradeCommand;
@@ -78,6 +79,7 @@ $app->add(new InitCommand(
 
 // TODO Remove all create() methods for __construct().
 $app->add(new BuildCommand($container));
+$app->add(new PublishCommand($container));
 $app->add(new ConfigCommand($container));
 $app->add(new DevCommand($container));
 $app->add(DoneCommand::create($container));
