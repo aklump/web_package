@@ -1,18 +1,21 @@
 page_order:
-  - readme
-  - config
-  - source_control
-  - build_scripts
-  - php_scripts
-  - bash_scripts
-  - hooklib
-  - drupal
-  - faq
-  - releases
-  - templates
-  - filter
-  - hooks
-  - converting_to_symfony_console
-  - functionality
-  - changelog
-  - readme_legacy
+  general:
+    - readme
+    - config
+    - source_control
+    - templates
+    - filter
+    - hooks
+    - changelog
+  legacy:
+    - build_scripts
+    - php_scripts
+    - bash_scripts
+    - hooklib
+    - drupal
+    - faq
+    - releases
+    - converting_to_symfony_console
+    - functionality
+    - readme_legacy
+    - old_config

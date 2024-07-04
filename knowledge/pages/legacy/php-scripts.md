@@ -5,6 +5,12 @@ tags: ''
 
 # PHP Hooks
 
+**This document is outdated and should not be followed.**
+
+[See hooks instead.](@hooks)
+
+---
+
 Here is an example stub for PHP build script:
 
     <?php
@@ -24,8 +30,7 @@ Here is an example stub for PHP build script:
     }
     
     echo "The hook worked as expected";
-    
-    
+
 ## Quick Start
 
 * The working directory is the directory containing _.web_package_.
@@ -34,14 +39,14 @@ Here is an example stub for PHP build script:
 * To indicate a hook failure, but continue the build, throw an instance of _\AKlump\WebPackage\HookException_.
 * Use `echo` or `print` to write to the screen.
 * Use `caution` and `danger` to write dramatic output while continuing the flow.
-* The file _.web\_package/hooks/bootstrap.php_, if it exists, will be included automatically.    You may use it for shared functions and configuration across scripts, for example.
+* The file _.web\_package/hooks/bootstrap.php_, if it exists, will be included automatically. You may use it for shared functions and configuration across scripts, for example.
 * Web Package provides some PHP functions which are autoloaded as well; review the file _includes/wp_functions.php_ for those functions.
 
 ## Using the `$build` object
 
-You may want to leverage the `$build` instance in your PHP hook files as it contains a growing amount of common use case functionality.  Refer to _\AKlump\WebPackage\HookService_ for more info.
+You may want to leverage the `$build` instance in your PHP hook files as it contains a growing amount of common use case functionality. Refer to _\AKlump\WebPackage\HookService_ for more info.
 
-* You should always call `displayMessages()` as the last chained method (see example below). 
+* You should always call `displayMessages()` as the last chained method (see example below).
 * Relative paths are considered relative to the directory that contains _.web_package_.
 
 Add configuration to `$build` inside of _bootstrap.php_, which will apply to every PHP hook file thereafter, e.g.,
@@ -80,7 +85,7 @@ Then inside your hook file do something with it, e.g.,
 
 These are deprecated, you should only use them as a last resort.
 
-|           data           | build.php |
+| data                     | build.php |
 |:-------------------------|:----------|
 | prev version             | $argv[1]  |
 | new version              | $argv[2]  |
