@@ -23,6 +23,11 @@ abstract class BaseHooksCommand extends Command {
    */
   protected $hookType;
 
+  /**
+   * @var \Psr\Container\ContainerInterface
+   */
+  private $container;
+
   public function __construct(ContainerInterface $container) {
     $this->setHookType(static::$defaultName);
     $this->container = $container;

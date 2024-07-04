@@ -49,11 +49,11 @@ if (file_exists($user_autoload)) {
 // Autowire PSR-4 namespace.
 $user_src_directory = ROOT_PATH . '/' . INSTALL_DIR . '/src';
 if (file_exists($user_src_directory)) {
-  $loader->addPsr4('\AKlump\WebPackage\User\\', [
+  $loader->addPsr4('AKlump\WebPackage\User\\', [
     $user_src_directory,
   ]);
   // This is legacy support.
-  $loader->addPsr4('\AKlump\WebPackage\\', [
+  $loader->addPsr4('AKlump\WebPackage\\', [
     $user_src_directory,
   ]);
 }
