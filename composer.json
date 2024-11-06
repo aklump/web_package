@@ -12,7 +12,7 @@
     "php": "^7.3",
     "symfony/yaml": "^5.4",
     "aklump/loft-lib": "^2",
-    "twig/twig": "^2.6",
+    "twig/twig": "^3.11",
     "z4kn4fein/php-semver": "^2.0",
     "ext-json": "*",
     "symfony/config": "^5.4",
