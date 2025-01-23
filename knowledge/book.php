@@ -2,10 +2,12 @@
 
 /** @var string $command */
 /** @var string $book_path */
+
 /** @var \Symfony\Component\EventDispatcher\EventDispatcher $dispatcher */
 
 
 use AKlump\Knowledge\Events\GetVariables;
+use AKlump\Knowledge\User\GetGitIgnoreContents;
 use AKlump\LoftLib\Code\Markdown;
 use AKlump\LoftDocs\DynamicContent\PhpClassMethodReader;
 
@@ -34,5 +36,9 @@ $dispatcher->addListener(GetVariables::NAME, function (GetVariables $event) {
     $markdown = Markdown::table($methods) . PHP_EOL;
     $event->setVariable($group, $markdown);
   }
+
+  $app_root = realpath($event->getPathToSource() . '/../');
+  $content = (new GetGitIgnoreContents())($app_root);
+  $event->setVariable('web_package_gitignore', $content);
 
 });

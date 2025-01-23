@@ -1,2 +1,29 @@
 title: 'Web Package'
 uuid: 78637922-57de-4e14-bf6e-edf0b0e7c5f4
+chapters:
+  -
+    id: general
+    title: General
+    pages:
+      - readme
+      - config
+      - source_control
+      - templates
+      - filter
+      - hooks
+      - changelog
+  -
+    id: legacy
+    title: 'Legacy Docs (May Be Incorrect)'
+    pages:
+      - build_scripts
+      - php_scripts
+      - bash_scripts
+      - hooklib
+      - drupal
+      - faq
+      - releases
+      - converting_to_symfony_console
+      - functionality
+      - readme_legacy
+      - old_config
