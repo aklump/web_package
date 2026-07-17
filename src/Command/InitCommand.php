@@ -155,6 +155,7 @@ class InitCommand extends Command {
         $camel_case = explode('/', $derivate_name, 2)[1];
         $camel_case = (new CaseConverter())->convert($camel_case)->toPascal();
         $composer_json->autoload = [];
+        $composer_json->autoload['psr-4']['AKlump\\WebPackage\\User\\'] = 'src/';
         $composer_json->autoload['psr-4']['AKlump\\' . $camel_case . '\\'] = '../src/';
         file_put_contents($composer_json_path, json_encode($composer_json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
 

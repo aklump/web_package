@@ -48,6 +48,12 @@ if (file_exists($user_autoload)) {
 
 // Autowire PSR-4 namespace.
 $user_src_directory = ROOT_PATH . '/' . INSTALL_DIR . '/src';
+if (file_exists($user_src_directory)
+    && !file_exists(dirname($user_src_directory) . '/composer.json')) {
+  throw new \RuntimeException('The directory ' . $user_src_directory . ' does not contain a composer.json file, which is now required for autoloading of AKlump\WebPackage\User and AKlump\WebPackage.  Try running "composer init" in the temp directory than manually copy composer.json');
+}
+
+// TODO Remove this before version 4.0
 if (file_exists($user_src_directory)) {
   $loader->addPsr4('AKlump\WebPackage\User\\', [
       $user_src_directory,
