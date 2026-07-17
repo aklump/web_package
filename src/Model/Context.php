@@ -14,6 +14,8 @@ class Context implements ContextInterface {
    */
   private $configLoader;
 
+  private $config;
+
   public function __construct(LoadConfig $loader) {
     $this->configLoader = $loader;
   }

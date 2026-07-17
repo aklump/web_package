@@ -23,6 +23,11 @@ class HookEvent extends Event {
 
   private $author;
 
+  /**
+   * @var string
+   */
+  private $hookPath;
+
   public function setPackageName($packageName): self {
     $this->packageName = $packageName;
 

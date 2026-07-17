@@ -14,6 +14,11 @@ use Symfony\Component\Filesystem\Path;
 
 class ConfigManager {
 
+  /**
+   * @var \Symfony\Component\Filesystem\Filesystem
+   */
+  private $filesystem;
+
   public function __construct() {
     $this->filesystem = new Filesystem();
   }

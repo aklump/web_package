@@ -42,6 +42,16 @@ class InitCommand extends Command {
    */
   private $context;
 
+  /**
+   * @var \Psr\Container\ContainerInterface
+   */
+  private $container;
+
+  /**
+   * @var string
+   */
+  private $templateDir;
+
   protected function configure() {
     $this->setDescription('Initialize the current directory.')
       ->addOption('child', NULL, InputOption::VALUE_NONE, 'Use this flag to allow initializing a child of another project.')

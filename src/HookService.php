@@ -72,6 +72,11 @@ class HookService {
 
   protected $tokens = [];
 
+  /**
+   * @var array
+   */
+  private $data;
+
   public function __construct(
     FilePath $path_to_web_package,
     FilePath $info_file,
@@ -194,7 +199,7 @@ class HookService {
     $code = str_replace(array_keys($token_map), array_values($token_map), $this->getSourceCode());
 
     // Replace the year which will appear as '__year' or '2015__year'.
-    $code = preg_replace_callback('/(\s\d{2,4}?)\-?__year/', function ($matches) {
+    $code = preg_replace_callback('/(\s\d{2,4}?)-?__year/', function ($matches) {
       $years = array();
       isset($matches[1]) && $years[] = $matches[1];
       $years[] = date('Y');

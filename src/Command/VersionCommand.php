@@ -14,6 +14,11 @@ class VersionCommand extends Command {
 
   protected static $defaultName = 'version';
 
+  /**
+   * @var \Psr\Container\ContainerInterface
+   */
+  private $container;
+
   protected function configure() {
     $this
       ->setAliases(['v'])

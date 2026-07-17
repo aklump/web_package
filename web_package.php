@@ -50,11 +50,11 @@ if (file_exists($user_autoload)) {
 $user_src_directory = ROOT_PATH . '/' . INSTALL_DIR . '/src';
 if (file_exists($user_src_directory)) {
   $loader->addPsr4('AKlump\WebPackage\User\\', [
-    $user_src_directory,
+      $user_src_directory,
   ]);
   // This is legacy support.
   $loader->addPsr4('AKlump\WebPackage\\', [
-    $user_src_directory,
+      $user_src_directory,
   ]);
 }
 
@@ -65,16 +65,16 @@ $app->setVersion('0.0.1');
 $container = new Container();
 $container->add('config.loader', LoadConfig::class);
 $container->add('context', Context::class)
-  ->addArguments(['config.loader']);
+    ->addArguments(['config.loader']);
 $container->add('scribe.factory', VersionScribeFactory::class)
-  ->addArguments(['config.loader', 'context']);
+    ->addArguments(['config.loader', 'context']);
 $container->add('git', GitProxy::class);
 
 $app->add(new InitCommand(
-  $container,
-  INSTALL_DIR,
-  __DIR__ . '/install/template/',
-  $filesystem
+    $container,
+    INSTALL_DIR,
+    __DIR__ . '/install/template/',
+    $filesystem
 ));
 
 // TODO Remove all create() methods for __construct().

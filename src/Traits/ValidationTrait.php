@@ -17,6 +17,11 @@ trait ValidationTrait {
   protected $output;
 
   /**
+   * @var array
+   */
+  protected $violations;
+
+  /**
    * Check a value against one or more constraints.
    *
    * @param $value
