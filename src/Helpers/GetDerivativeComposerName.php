@@ -2,6 +2,7 @@
 
 namespace AKlump\WebPackage\Helpers;
 
+use Jawira\CaseConverter\CaseConverter;
 use Symfony\Component\Filesystem\Path;
 
 class GetDerivativeComposerName {
@@ -13,7 +14,9 @@ class GetDerivativeComposerName {
     if (!Path::isAbsolute($foo)) {
       $foo = getcwd() . "/$foo";
     }
-    $derivative_composer_name .= basename(realpath(dirname($foo)));
+    $project = basename(realpath(dirname($foo)));
+    $project = (new CaseConverter())->convert($project)->toKebab();
+    $derivative_composer_name .= $project;
 
     return $derivative_composer_name;
   }
