@@ -9,9 +9,9 @@ use AKlump\WebPackage\Config\ConfigManager;
 use AKlump\WebPackage\Helpers\GetAllBranches;
 use AKlump\WebPackage\Helpers\GetAllTemplates;
 use AKlump\WebPackage\Helpers\GetCurrentVersion;
-use AKlump\WebPackage\Helpers\GetDerivativeComposerName;
 use AKlump\WebPackage\Input\HumanInterface;
 use AKlump\WebPackage\Model\GitFlow;
+use AKlump\WebPackage\Upgrade\ComposerJson;
 use Jawira\CaseConverter\CaseConverter;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -143,27 +143,12 @@ class InitCommand extends Command {
       /**
        * Setup autoloading using Composer
        */
-      $derivate_name = (new GetDerivativeComposerName())();
-      $command = sprintf('cd "%s" && composer init -n --name="%s"', $this->dir, $derivate_name);
-      system($command, $status);
-      if ($status !== 0) {
-        $output->writeln(sprintf('<error>%s</error>', sprintf('Could not initialize composer: %s', $command)));
+      try {
+        $user_composer_json = $this->dir . '/composer.json';
+        (new ComposerJson())->execute($user_composer_json);
       }
-      else {
-        $composer_json_path = $this->dir . '/composer.json';
-        $composer_json = json_decode(file_get_contents($composer_json_path));
-        $camel_case = explode('/', $derivate_name, 2)[1];
-        $camel_case = (new CaseConverter())->convert($camel_case)->toPascal();
-        $composer_json->autoload = [];
-        $composer_json->autoload['psr-4']['AKlump\\WebPackage\\User\\'] = 'src/';
-        $composer_json->autoload['psr-4']['AKlump\\' . $camel_case . '\\'] = '../src/';
-        file_put_contents($composer_json_path, json_encode($composer_json, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . PHP_EOL);
-
-        $command = sprintf('cd "%s" && composer dump-autoload', $this->dir);
-        system($command, $status);
-        if ($status !== 0) {
-          $output->writeln(sprintf('<error>%s</error>', sprintf('Could not dump composer autoload: %s', $command)));
-        }
+      catch (\RuntimeException $exception) {
+        $output->writeln(sprintf('<error>%s</error>', $exception->getMessage()));
       }
 
       $output->writeln('<info>Created ./.web_package directory</info>');

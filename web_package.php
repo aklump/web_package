@@ -21,6 +21,7 @@ use AKlump\WebPackage\Config\LoadConfig;
 use AKlump\WebPackage\Git\GitProxy;
 use AKlump\WebPackage\Helpers\GetRootPath;
 use AKlump\WebPackage\Model\Context;
+use AKlump\WebPackage\Upgrade\ComposerJson;
 use AKlump\WebPackage\VersionScribeFactory;
 use League\Container\Container;
 use Symfony\Component\Console\Application;
@@ -48,9 +49,14 @@ if (file_exists($user_autoload)) {
 
 // Autowire PSR-4 namespace.
 $user_src_directory = ROOT_PATH . '/' . INSTALL_DIR . '/src';
-if (file_exists($user_src_directory)
-    && !file_exists(dirname($user_src_directory) . '/composer.json')) {
-  throw new \RuntimeException('The directory ' . $user_src_directory . ' does not contain a composer.json file, which is now required for autoloading of AKlump\WebPackage\User and AKlump\WebPackage.  Try running "composer init" in the temp directory than manually copy composer.json');
+$user_composer_json = ROOT_PATH . '/' . INSTALL_DIR . '/composer.json';
+try {
+  if (file_exists($user_src_directory) && !file_exists($user_composer_json)) {
+    (new ComposerJson())->execute($user_composer_json);
+  }
+}
+catch (\Exception $exception) {
+  die($exception->getMessage() . PHP_EOL);
 }
 
 // TODO Remove this before version 4.0
