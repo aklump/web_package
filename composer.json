@@ -8,21 +8,46 @@
     }
   ],
   "homepage": "http://www.intheloftstudios.com/packages/bash/web_package",
+  "config": {
+    "policy": {
+      "advisories": {
+        "ignore-id": [
+          "PKSA-8zx5-v2nz-58pb",
+          "PKSA-fbvq-z33h-r2np",
+          "PKSA-g9zw-qxh8-pq8w",
+          "PKSA-yd6k-t2gh-1m43",
+          "PKSA-1tmc-rt7x-12w6",
+          "PKSA-xx6c-6d96-db2w",
+          "PKSA-5k7f-wvjj-jrgw",
+          "PKSA-sjvz-tbbr-vwth",
+          "PKSA-h8hf-ytnd-5t9q",
+          "PKSA-wwb1-81rc-pd65",
+          "PKSA-kvv6-36cr-fkzb",
+          "PKSA-n14z-jjjg-g8vd",
+          "PKSA-3mcc-k66d-pydb",
+          "PKSA-gw7n-z4yx-7xjt",
+          "PKSA-dpx1-78wg-1kqs",
+          "PKSA-21g2-dzjv-sky5"
+        ]
+      }
+    }
+  },
+  "repositories": [],
   "require": {
-    "php": "^8.1",
+    "php": "^7.3 || ^8.0",
     "ext-json": "*",
     "aklump/local-timezone": "^0.0",
     "aklump/loft-lib": "^2.2",
-    "jawira/case-converter": "^3.5",
+    "jawira/case-converter": "^2.0 || ^3.5",
     "league/container": "^4.2",
-    "symfony/config": "^6.4 || ^7.4 || ^8.0",
-    "symfony/console": "^6.4 || ^7.4 || ^8.0",
-    "symfony/event-dispatcher": "^6.4 || ^7.4 || ^8.0",
-    "symfony/filesystem": "^6.4 || ^7.4 || ^8.0",
-    "symfony/serializer": "^6.4 || ^7.4 || ^8.0",
-    "symfony/validator": "^6.4 || ^7.4 || ^8.0",
-    "symfony/yaml": "^6.4 || ^7.4 || ^8.0",
-    "twig/twig": "^3.0",
+    "symfony/config": "^5.4 || ^6.4 || ^7.4 || ^8.0",
+    "symfony/console": "^5.4 || ^6.4 || ^7.4 || ^8.0",
+    "symfony/event-dispatcher": "^5.4 || ^6.4 || ^7.4 || ^8.0",
+    "symfony/filesystem": "^5.4 || ^6.4 || ^7.4 || ^8.0",
+    "symfony/serializer": "^5.4 || ^6.4 || ^7.4 || ^8.0",
+    "symfony/validator": "^5.4 || ^6.4 || ^7.4 || ^8.0",
+    "symfony/yaml": "^5.4 || ^6.4 || ^7.4 || ^8.0",
+    "twig/twig": "^2.0 || ^3.0",
     "webmozart/glob": "^4.6",
     "z4kn4fein/php-semver": "^2.0 || ^3.0"
   },

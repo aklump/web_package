@@ -7,7 +7,7 @@ x(){ echo "No script dir" >&2;return 1 2>/dev/null||exit 1;};if [ -n "${BASH_VER
 phpswap_directory=$(cd "$__DIR__/../vendor/aklump/phpswap/" 2>/dev/null && pwd)
 
 # The PHP versions to run the test suite against, in order.
-PHP_VERSIONS=(8.1 8.2 8.3 8.4)
+PHP_VERSIONS=(7.3 7.4 8.0 8.1 8.2 8.3 8.4)
 
 # The command to execute under each PHP version, relative to CWD.
 PHPUNIT='./vendor/bin/phpunit -c tests_phpunit/phpunit.xml'
