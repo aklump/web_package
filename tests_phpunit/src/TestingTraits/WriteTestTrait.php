@@ -1,6 +1,6 @@
 <?php
 
-namespace AKlump\WebPackage\Tests;
+namespace AKlump\WebPackage\Tests\TestingTraits;
 
 use AKlump\WebPackage\Helpers\GetPreviousVersion;
 use AKlump\WebPackage\Helpers\Stash;

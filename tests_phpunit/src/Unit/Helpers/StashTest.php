@@ -3,7 +3,7 @@
 namespace AKlump\WebPackage\Tests\Unit\Helpers;
 
 use AKlump\WebPackage\Model\Context;
-use AKlump\WebPackage\Tests\WriteTestTrait;
+use AKlump\WebPackage\Tests\TestingTraits\WriteTestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**

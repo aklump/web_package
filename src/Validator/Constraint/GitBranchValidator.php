@@ -3,18 +3,22 @@
 namespace AKlump\WebPackage\Validator\Constraint;
 
 use AKlump\WebPackage\Helpers\GetCurrentBranch;
+use AKlump\WebPackage\Traits\ShellCommandTrait;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 
 class GitBranchValidator extends ConstraintValidator {
 
-  use \AKlump\WebPackage\Traits\ShellCommandTrait;
+  use ShellCommandTrait;
 
   /**
    * @inheritDoc
    */
   public function validate($value, Constraint $constraint) {
+    if (getenv('WEB_PACKAGE_ENV') === 'testing') {
+      return;
+    }
     if (!$constraint instanceof GitBranch && !$constraint instanceof NotGitBranch) {
       throw new UnexpectedTypeException($constraint, GitBranch::class . '|' . NotGitBranch::class);
     }

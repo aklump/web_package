@@ -1,6 +1,6 @@
 <?php
 
-namespace AKlump\WebPackage\Tests\Unit\TestingTraits;
+namespace AKlump\WebPackage\Tests\TestingTraits;
 
 
 use AKlump\WebPackage\Config\LoadConfig;
