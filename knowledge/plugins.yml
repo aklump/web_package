@@ -1,1 +1,5 @@
-loft_docs: {}
+loft_docs: { }
+image:
+  max_width: 830
+  pixel_density: 2
+composer: { }
