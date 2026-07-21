@@ -13,18 +13,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- `push_tags` is now a boolean
-- Rebuilt using Symfony Console.
-- configuration key `info_file` is now `version_file`.
-- hooks, all failures will now stop the build. That is `hook_exception` and `build_fail_exception` now have the same result. They should not be used. Now simple use `exit 1`, etc. PHP hooks should not throw exceptions anymore, but just `exit(1)`, etc.
+- The minimum supported PHP version is now 8.1 (previously 7.3).
+- `push_tags` now accepts a boolean value.
+- Rebuilt the CLI with Symfony Console.
+- Renamed the `info_file` configuration key to `version_file`.
+- Hook failures now stop the build. `hook_exception` and `build_fail_exception` no longer have distinct behavior and should be replaced with a nonzero exit status, such as `exit 1`. PHP hooks should use `exit(1)` rather than throw exceptions.
 
 ### Removed
 
-- Project info other than version is no longer handled by this project.
-- The "update" route was removed.
-- The "info" route was removed.
-- The "test" route was removed.
-- Removed configuration options `major_step, minor_step, patch_step`
+- Support for project metadata other than the version number.
+- The `update`, `info`, and `test` routes.
+- The `web_package.sh` launcher; use `web-package` instead.
+- The `major_step`, `minor_step`, and `patch_step` configuration options.
 
 ## [3.2.0] - 2021-10-14
 

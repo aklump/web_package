@@ -4,9 +4,9 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=3.2.8">
-      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=3.2.8">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=3.2.8">
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=3.3.0">
+      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=3.3.0">
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=3.3.0">
         <title>Changelog | Web Package</title>
   </head>
 <body class="my-5">
@@ -26,13 +26,13 @@
          aria-controls="table-of-contents">TOC</a>
     </li>
     <li class="breadcrumb-item">
-      <a href="readme.html">General</a></li>
+      <a href="changelog.html">Appendix</a></li>
   </ol>
 </nav>
 
       </div>
       <div class="header__tags me-3">  </div>
-      <div class="header__page-numbers flex-shrink-1">7
+      <div class="header__page-numbers flex-shrink-1">18
         / 18</div>
     </div>
   </div>
@@ -44,37 +44,21 @@
       <h1 class="mb-4 text-primary">Changelog</h1>
       <p>All notable changes to this project will be documented in this file.</p>
 <p>The format is based on <a href="https://keepachangelog.com/en/1.0.0/">Keep a Changelog</a>, and this project adheres to <a href="https://semver.org/spec/v2.0.0.html">Semantic Versioning</a>.</p>
-<h2>[4.0.0] - tbd</h2>
-<h3>Added</h3>
-<ul>
-<li>lorem</li>
-</ul>
+<h2>[3.3.0] - 2026-07-21</h2>
 <h3>Changed</h3>
 <ul>
-<li><code>push_tags</code> is now a boolean</li>
-<li>Rebuilt using Symfony Console.</li>
-<li>configuration key <code>info_file</code> is now <code>version_file</code>.</li>
-<li>hooks, all failures will now stop the build. That is <code>hook_exception</code> and <code>build_fail_exception</code> now have the same result. They should not be used. Now simple use <code>exit 1</code>, etc. PHP hooks should not throw exceptions anymore, but just <code>exit(1)</code>, etc.</li>
-</ul>
-<h3>Deprecated</h3>
-<ul>
-<li>lorem</li>
+<li>The minimum supported PHP version is now 8.1 (previously 7.3).</li>
+<li><code>push_tags</code> now accepts a boolean value.</li>
+<li>Rebuilt the CLI with Symfony Console.</li>
+<li>Renamed the <code>info_file</code> configuration key to <code>version_file</code>.</li>
+<li>Hook failures now stop the build. <code>hook_exception</code> and <code>build_fail_exception</code> no longer have distinct behavior and should be replaced with a nonzero exit status, such as <code>exit 1</code>. PHP hooks should use <code>exit(1)</code> rather than throw exceptions.</li>
 </ul>
 <h3>Removed</h3>
 <ul>
-<li>Project info other than version is no longer handled by this project.</li>
-<li>The "update" route was removed.</li>
-<li>The "info" route was removed.</li>
-<li>The "test" route was removed.</li>
-<li>Removed configuration options <code>major_step, minor_step, patch_step</code></li>
-</ul>
-<h3>Fixed</h3>
-<ul>
-<li>lorem</li>
-</ul>
-<h3>Security</h3>
-<ul>
-<li>lorem</li>
+<li>Support for project metadata other than the version number.</li>
+<li>The <code>update</code>, <code>info</code>, and <code>test</code> routes.</li>
+<li>The <code>web_package.sh</code> launcher; use <code>web-package</code> instead.</li>
+<li>The <code>major_step</code>, <code>minor_step</code>, and <code>patch_step</code> configuration options.</li>
 </ul>
 <h2>[3.2.0] - 2021-10-14</h2>
 <h3>Added</h3>
@@ -110,9 +94,9 @@
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
               Version:
-        <strong>3.2.8</strong>
+        <strong>3.3.0</strong>
         &bull;
-                    Last Update: <strong>7/17/2026</strong>
+                    Last Update: <strong>7/21/2026</strong>
           </div>
   </footer>
 
@@ -120,11 +104,11 @@
 <nav class="nav d-flex justify-content-center align-items-center
   fixed-bottom">
   <div class="btn-group flex-fill">
-              <a href="readme.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
-      bi-caret-left-fill"></i> Web Package</a>
+              <a href="changelog.html" class="btn nav__prev-chapter btn-secondary"><i class="bi
+      bi-caret-left-fill"></i> Changelog</a>
   
     
-              <a href="hooks.html" class="btn nav__prev-page js-nav__prev-page
+              <a href="../legacy/old_config.html" class="btn nav__prev-page js-nav__prev-page
     btn-primary"><i class="bi
       bi-caret-left-fill"></i></a>
   
@@ -135,9 +119,8 @@
        aria-controls="table-of-contents"><i class="bi
            bi-list-ol"></i></a>
     
-              <a href="../legacy/build_scripts.html" class="btn nav__next-page js-nav__next-page
-    btn-primary"><i class="bi bi-file-earmark"></i> Hooks: build, unbuild, dev <i class="bi
-       bi-caret-right-fill"></i></a>
+              <span class="btn nav__next-page js-nav__next-page
+    btn-primary"></span>
   
     
               <span class="btn nav__next-chapter btn-secondary "></span>
@@ -165,126 +148,126 @@
         <h2 class="h4 mt-4">Matched Pages</h2>
         <ol class="list-unstyled">
                                               <li data-page="readme" value="1">
-      <a class="js-page-link" href="readme.html">Web Package<span
+      <a class="js-page-link" href="../general/readme.html">Web Package<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="config" value="2">
-      <a class="js-page-link" href="config.html">Configuration<span
+      <a class="js-page-link" href="../general/config.html">Configuration<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="source_control" value="3">
-      <a class="js-page-link" href="source_control.html">Should `.web_package` be added to source control?<span
+      <a class="js-page-link" href="../general/source_control.html">Should `.web_package` be added to source control?<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="templates" value="4">
-      <a class="js-page-link" href="templates.html">Configuration Templates<span
+      <a class="js-page-link" href="../general/templates.html">Configuration Templates<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="filter" value="5">
-      <a class="js-page-link" href="filter.html">Hook Filters<span
+      <a class="js-page-link" href="../general/filter.html">Hook Filters<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
                                     <li data-page="hooks" value="6">
-      <a class="js-page-link" href="hooks.html">Hooks<span
+      <a class="js-page-link" href="../general/hooks.html">Hooks<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="changelog" value="7">
-      <a class="js-page-link" href="changelog.html">Changelog<span
-              class="js-search-score
-              badge
-              bg-info rounded-pill badge-sm"></span></a>
-    </li>
-  
-                                                          <li data-page="build_scripts" value="8">
+                                                          <li data-page="build_scripts" value="7">
       <a class="js-page-link" href="../legacy/build_scripts.html">Hooks: build, unbuild, dev<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="php_scripts" value="9">
+                                    <li data-page="php_scripts" value="8">
       <a class="js-page-link" href="../legacy/php_scripts.html">PHP Hooks<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="bash_scripts" value="10">
+                                    <li data-page="bash_scripts" value="9">
       <a class="js-page-link" href="../legacy/bash_scripts.html">BASH Hooks<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="hooklib" value="11">
+                                    <li data-page="hooklib" value="10">
       <a class="js-page-link" href="../legacy/hooklib.html">Hooks Library<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="drupal" value="12">
+                                    <li data-page="drupal" value="11">
       <a class="js-page-link" href="../legacy/drupal.html">Drupal Modules/Themes<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="faq" value="13">
+                                    <li data-page="faq" value="12">
       <a class="js-page-link" href="../legacy/faq.html">Questions<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="releases" value="14">
+                                    <li data-page="releases" value="13">
       <a class="js-page-link" href="../legacy/releases.html">Release Types<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="converting_to_symfony_console" value="15">
+                                    <li data-page="converting_to_symfony_console" value="14">
       <a class="js-page-link" href="../legacy/converting_to_symfony_console.html">Converting To Symfony Console<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="functionality" value="16">
+                                    <li data-page="functionality" value="15">
       <a class="js-page-link" href="../legacy/functionality.html">semver<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="readme_legacy" value="17">
+                                    <li data-page="readme_legacy" value="16">
       <a class="js-page-link" href="../legacy/readme_legacy.html">Web Package<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
     </li>
   
-                                    <li data-page="old_config" value="18">
+                                    <li data-page="old_config" value="17">
       <a class="js-page-link" href="../legacy/old_config.html">Configuration<span
+              class="js-search-score
+              badge
+              bg-info rounded-pill badge-sm"></span></a>
+    </li>
+  
+                                                          <li data-page="changelog" value="18">
+      <a class="js-page-link" href="changelog.html">Changelog<span
               class="js-search-score
               badge
               bg-info rounded-pill badge-sm"></span></a>
@@ -297,78 +280,81 @@
               <h2 class="h4 mt-4">General</h2>
         <ol>
                                 <li data-page="readme" value="1">
-      <a class="js-page-link" href="readme.html">Web Package</a>
+      <a class="js-page-link" href="../general/readme.html">Web Package</a>
     </li>
   
                                 <li data-page="config" value="2">
-      <a class="js-page-link" href="config.html">Configuration</a>
+      <a class="js-page-link" href="../general/config.html">Configuration</a>
     </li>
   
                                 <li data-page="source_control" value="3">
-      <a class="js-page-link" href="source_control.html">Should `.web_package` be added to source control?</a>
+      <a class="js-page-link" href="../general/source_control.html">Should `.web_package` be added to source control?</a>
     </li>
   
                                 <li data-page="templates" value="4">
-      <a class="js-page-link" href="templates.html">Configuration Templates</a>
+      <a class="js-page-link" href="../general/templates.html">Configuration Templates</a>
     </li>
   
                                 <li data-page="filter" value="5">
-      <a class="js-page-link" href="filter.html">Hook Filters</a>
+      <a class="js-page-link" href="../general/filter.html">Hook Filters</a>
     </li>
   
                                 <li data-page="hooks" value="6">
-      <a class="js-page-link" href="hooks.html">Hooks</a>
-    </li>
-  
-                                <li data-page="changelog" value="7">
-      <a class="js-page-link" href="changelog.html">Changelog</a>
+      <a class="js-page-link" href="../general/hooks.html">Hooks</a>
     </li>
   
                   </ol>
               <h2 class="h4 mt-4">Legacy Docs (May Be Incorrect)</h2>
         <ol>
-                                <li data-page="build_scripts" value="8">
+                                <li data-page="build_scripts" value="7">
       <a class="js-page-link" href="../legacy/build_scripts.html">Hooks: build, unbuild, dev</a>
     </li>
   
-                                <li data-page="php_scripts" value="9">
+                                <li data-page="php_scripts" value="8">
       <a class="js-page-link" href="../legacy/php_scripts.html">PHP Hooks</a>
     </li>
   
-                                <li data-page="bash_scripts" value="10">
+                                <li data-page="bash_scripts" value="9">
       <a class="js-page-link" href="../legacy/bash_scripts.html">BASH Hooks</a>
     </li>
   
-                                <li data-page="hooklib" value="11">
+                                <li data-page="hooklib" value="10">
       <a class="js-page-link" href="../legacy/hooklib.html">Hooks Library</a>
     </li>
   
-                                <li data-page="drupal" value="12">
+                                <li data-page="drupal" value="11">
       <a class="js-page-link" href="../legacy/drupal.html">Drupal Modules/Themes</a>
     </li>
   
-                                <li data-page="faq" value="13">
+                                <li data-page="faq" value="12">
       <a class="js-page-link" href="../legacy/faq.html">Questions</a>
     </li>
   
-                                <li data-page="releases" value="14">
+                                <li data-page="releases" value="13">
       <a class="js-page-link" href="../legacy/releases.html">Release Types</a>
     </li>
   
-                                <li data-page="converting_to_symfony_console" value="15">
+                                <li data-page="converting_to_symfony_console" value="14">
       <a class="js-page-link" href="../legacy/converting_to_symfony_console.html">Converting To Symfony Console</a>
     </li>
   
-                                <li data-page="functionality" value="16">
+                                <li data-page="functionality" value="15">
       <a class="js-page-link" href="../legacy/functionality.html">semver</a>
     </li>
   
-                                <li data-page="readme_legacy" value="17">
+                                <li data-page="readme_legacy" value="16">
       <a class="js-page-link" href="../legacy/readme_legacy.html">Web Package</a>
     </li>
   
-                                <li data-page="old_config" value="18">
+                                <li data-page="old_config" value="17">
       <a class="js-page-link" href="../legacy/old_config.html">Configuration</a>
+    </li>
+  
+                  </ol>
+              <h2 class="h4 mt-4">Appendix</h2>
+        <ol>
+                                <li data-page="changelog" value="18">
+      <a class="js-page-link" href="changelog.html">Changelog</a>
     </li>
   
                   </ol>
@@ -390,19 +376,17 @@
                 
         <ul class="list-group list-group-flush">
                                     <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="readme.html">Web Package</a>
+                 data-tags="[]" href="../general/readme.html">Web Package</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="config.html">Configuration</a>
+                 data-tags="[]" href="../general/config.html">Configuration</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="source_control.html">Should `.web_package` be added to source control?</a>
+                 data-tags="[]" href="../general/source_control.html">Should `.web_package` be added to source control?</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="templates.html">Configuration Templates</a>
+                 data-tags="[]" href="../general/templates.html">Configuration Templates</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="filter.html">Hook Filters</a>
+                 data-tags="[]" href="../general/filter.html">Hook Filters</a>
                                                 <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="hooks.html">Hooks</a>
-                                                <a class="list-group-item list-group-item-action"
-                 data-tags="[]" href="changelog.html">Changelog</a>
+                 data-tags="[]" href="../general/hooks.html">Hooks</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../legacy/build_scripts.html">Hooks: build, unbuild, dev</a>
                                                 <a class="list-group-item list-group-item-action"
@@ -425,15 +409,17 @@
                  data-tags="[]" href="../legacy/readme_legacy.html">Web Package</a>
                                                 <a class="list-group-item list-group-item-action"
                  data-tags="[]" href="../legacy/old_config.html">Configuration</a>
+                                                <a class="list-group-item list-group-item-action"
+                 data-tags="[]" href="changelog.html">Changelog</a>
                               </ul>
       </div>
     </div>
   </div>
 </div>
 
-  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=3.2.8"></script>
-  <script src="../../dist/lunr.js?ver=3.2.8"></script>
-  <script src="../../dist/knowledge.min.js?ver=3.2.8"></script>
+  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=3.3.0"></script>
+  <script src="../../dist/lunr.js?ver=3.3.0"></script>
+  <script src="../../dist/knowledge.min.js?ver=3.3.0"></script>
 
 </body>
 </html>
