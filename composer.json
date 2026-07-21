@@ -45,7 +45,7 @@
     "symfony/event-dispatcher": "^5.4 || ^6.4 || ^7.4 || ^8.0",
     "symfony/filesystem": "^5.4 || ^6.4 || ^7.4 || ^8.0",
     "symfony/serializer": "^5.4 || ^6.4 || ^7.4 || ^8.0",
-    "symfony/validator": "^5.4 || ^6.4 || ^7.4 || ^8.0",
+    "symfony/validator": "^5.4.43 || ^6.4 || ^7.4 || ^8.0",
     "symfony/yaml": "^5.4 || ^6.4 || ^7.4 || ^8.0",
     "twig/twig": "^2.0 || ^3.0",
     "webmozart/glob": "^4.6",
