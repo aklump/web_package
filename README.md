@@ -18,7 +18,7 @@ This project does the following for your web project.
 2. Require the latest stable version:
    
    ```shell
-   composer require aklump/web-package:^3.3
+   composer require aklump/web-package:^3.2
    ```
 3. ... or require the dev channel:
    
