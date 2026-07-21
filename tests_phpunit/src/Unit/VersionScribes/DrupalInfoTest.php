@@ -2,7 +2,7 @@
 
 namespace AKlump\WebPackage\Tests\Unit\VersionScribes;
 
-use AKlump\WebPackage\Tests\WriteTestTrait;
+use AKlump\WebPackage\Tests\TestingTraits\WriteTestTrait;
 use AKlump\WebPackage\VersionScribes\DrupalInfo;
 use PHPUnit\Framework\TestCase;
 use z4kn4fein\SemVer\Inc;

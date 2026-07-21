@@ -48,7 +48,7 @@ class DoneCommand extends Command {
    */
   private $scribe;
 
-  protected function configure() {
+  protected function configure(): void {
     $this
       ->setDescription('Finish a feature, release or hotfix.');
   }
@@ -148,8 +148,17 @@ class DoneCommand extends Command {
 
   private function handleUncommittedChanges($input, $output): bool {
     $unchanged_files = [];
-    $this->exec('git status --short', $unchanged_files);
+    try {
+      $this->exec('git status --short', $unchanged_files);
+    }
+    catch (\RuntimeException $exception) {
+      // If we are not in a git repo, we don't care about uncommitted changes.
+      return TRUE;
+    }
     if (count($unchanged_files) > 0) {
+      if (empty($input) || empty($output)) {
+        return TRUE;
+      }
       $helper = $this->getHelper('question');
       $this->output->writeln($unchanged_files);
       $question = new ConfirmationQuestion('<question>You have uncommitted changes; are you sure?</question> ', FALSE);

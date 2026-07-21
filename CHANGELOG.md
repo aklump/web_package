@@ -8,7 +8,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- The minimum supported PHP version is now 8.1 (previously 7.3).
 - `push_tags` now accepts a boolean value.
 - Rebuilt the CLI with Symfony Console.
 - Renamed the `info_file` configuration key to `version_file`.

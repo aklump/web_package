@@ -5,7 +5,7 @@ namespace AKlump\WebPackage\Tests\Unit\Helpers;
 use AKlump\WebPackage\Helpers\GetPreviousVersion;
 use AKlump\WebPackage\Helpers\Stash;
 use AKlump\WebPackage\Model\Context;
-use AKlump\WebPackage\Tests\WriteTestTrait;
+use AKlump\WebPackage\Tests\TestingTraits\WriteTestTrait;
 use PHPUnit\Framework\TestCase;
 
 /**

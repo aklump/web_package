@@ -49,6 +49,9 @@ trait ValidationTrait {
    *   The total violations handled.
    */
   protected function handleViolations(): int {
+    if (empty($this->violations)) {
+      return 0;
+    }
     $total_violations = count($this->violations);
     if (0 !== $total_violations) {
       foreach ($this->violations as $violation) {

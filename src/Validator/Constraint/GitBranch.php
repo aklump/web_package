@@ -14,6 +14,7 @@ class GitBranch extends Constraint {
   public $options = [];
 
   public $messageNotInitialized = "Git is not initialized; (git init) and try again.";
+
   public $messageNoCommits = 'The (Git) repository is empty, make at least one commit and try again.';
 
   public $messageInvalidOption;
@@ -29,7 +30,7 @@ class GitBranch extends Constraint {
   public function __construct(
     array $options,
     string $message_invalid_option,
-    array $groups = NULL,
+    ?array $groups = NULL,
     $payload = NULL
   ) {
     $this->options = array_unique(array_filter($options));

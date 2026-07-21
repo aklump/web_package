@@ -86,7 +86,7 @@ if (file_exists($user_src_directory)) {
 
 $app = new Application();
 $app->setName('web_package');
-$app->setVersion('3.3.0');
+$app->setVersion('3.3.1');
 
 $container = new Container();
 $container->add('config.loader', LoadConfig::class);

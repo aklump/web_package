@@ -9,7 +9,7 @@ use AKlump\WebPackage\Helpers\VersionDegree;
 use AKlump\WebPackage\Model\Context;
 use AKlump\WebPackage\Model\GitFlow;
 use AKlump\WebPackage\Tests\TestingTraits\TestWithConfigTrait;
-use AKlump\WebPackage\Tests\WriteTestTrait;
+use AKlump\WebPackage\Tests\TestingTraits\WriteTestTrait;
 use AKlump\WebPackage\VersionScribeInterface;
 use League\Container\Container;
 use PHPUnit\Framework\TestCase;
@@ -265,6 +265,12 @@ class DoneCommandTest extends TestCase {
     $scribe->method('read')->willReturn($runtime['new_version']);
 
     $command = new Testable($config_loader(), $context, $git, $scribe);
+    $helper = $this->createMock(\Symfony\Component\Console\Helper\QuestionHelper::class);
+    $helper->method('ask')->willReturn(TRUE);
+    $helperSet = new \Symfony\Component\Console\Helper\HelperSet([
+      'question' => $helper,
+    ]);
+    $command->setHelperSet($helperSet);
     $this->assertSame(Command::SUCCESS, $command->doExecute($input, $output));
   }
 

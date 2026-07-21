@@ -15,7 +15,7 @@ class LoadConfig {
     Config::DEVELOP_BRANCH => ConfigDefaults::DEVELOP_BRANCH,
   ];
 
-  public function __invoke(string $template = NULL): array {
+  public function __invoke(?string $template = NULL): array {
     $root_path = ROOT_PATH;
     $manager = new ConfigManager();
 
