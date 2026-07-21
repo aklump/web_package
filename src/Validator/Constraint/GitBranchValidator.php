@@ -15,7 +15,7 @@ class GitBranchValidator extends ConstraintValidator {
   /**
    * @inheritDoc
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     if (getenv('WEB_PACKAGE_ENV') === 'testing') {
       return;
     }

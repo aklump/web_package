@@ -48,7 +48,7 @@ class DoneCommand extends Command {
    */
   private $scribe;
 
-  protected function configure() {
+  protected function configure(): void {
     $this
       ->setDescription('Finish a feature, release or hotfix.');
   }

@@ -13,7 +13,7 @@ class IsInitializedValidator extends ConstraintValidator {
   /**
    * @inheritDoc
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     if (!$constraint instanceof IsInitialized) {
       throw new UnexpectedValueException($constraint, IsInitialized::class);
     }
