@@ -1,0 +1,10 @@
+*.log
+.env
+.env*
+.idea
+/CHANGELOG.md
+/README.md
+/docs
+/todo.md
+node_modules
+vendor

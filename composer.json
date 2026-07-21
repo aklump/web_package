@@ -9,32 +9,32 @@
   ],
   "homepage": "http://www.intheloftstudios.com/packages/bash/web_package",
   "require": {
-    "php": "^7.3",
-    "symfony/yaml": "^5.4",
-    "aklump/loft-lib": "^2",
-    "twig/twig": "^2.6",
-    "z4kn4fein/php-semver": "^2.0",
+    "php": "^8.1",
     "ext-json": "*",
-    "symfony/config": "^5.4",
-    "symfony/filesystem": "^5.4",
-    "symfony/console": "^5.4",
-    "symfony/serializer": "^5.4",
-    "symfony/event-dispatcher": "^5.4",
-    "webmozart/glob": "^4.6",
+    "aklump/local-timezone": "^0.0",
+    "aklump/loft-lib": "^2.2",
     "jawira/case-converter": "^3.5",
-    "aklump/local-timezone": "^0.0.1",
-    "symfony/validator": "^5.4",
-    "league/container": "^4.2"
+    "league/container": "^4.2",
+    "symfony/config": "^6.4 || ^7.4 || ^8.0",
+    "symfony/console": "^6.4 || ^7.4 || ^8.0",
+    "symfony/event-dispatcher": "^6.4 || ^7.4 || ^8.0",
+    "symfony/filesystem": "^6.4 || ^7.4 || ^8.0",
+    "symfony/serializer": "^6.4 || ^7.4 || ^8.0",
+    "symfony/validator": "^6.4 || ^7.4 || ^8.0",
+    "symfony/yaml": "^6.4 || ^7.4 || ^8.0",
+    "twig/twig": "^3.0",
+    "webmozart/glob": "^4.6",
+    "z4kn4fein/php-semver": "^2.0"
   },
   "autoload": {
     "psr-4": {
-      "AKlump\\WebPackage\\": "src",
+      "AKlump\\WebPackage\\": "src/",
       "AKlump\\LoftLib\\Component\\Config\\": "lib/loft_php_lib/dist/src/AKlump/LoftLib/Component/Config/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "AKlump\\WebPackage\\Tests\\": "tests_unit"
+      "AKlump\\WebPackage\\Tests\\": "tests_phpunit/src/"
     }
   },
   "require-dev": {

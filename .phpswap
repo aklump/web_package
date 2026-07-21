@@ -1,0 +1,27 @@
+#!/bin/bash
+#[Config(php: 8.1.34)]
+_phpswap_new_path=""
+_phpswap_old_ifs="$IFS"
+_phpswap_others=":/usr/local/opt/php@8.4/bin:/Applications/MAMP/bin/php/php8.4.11/bin:/Applications/MAMP/bin/php/php8.4.1/bin:/usr/local/opt/php@8.3/bin:/Applications/MAMP/bin/php/php8.3.14/bin:/usr/local/opt/php@8.2/bin:/Applications/MAMP/bin/php/php8.2.26/bin:/usr/local/opt/php@8.1/bin:/Applications/MAMP/bin/php/php8.1.31/bin:/Applications/MAMP/bin/php/php8.0.30/bin:/Applications/MAMP/bin/php/php7.4.33/bin:/Applications/MAMP/bin/php/php7.3.33/bin:/usr/local/opt/php@7.2/bin:/usr/local/opt/php@7.1/bin:/usr/local/opt/php@5.6-debug/bin:"
+IFS=":"
+for _phpswap_entry in $PATH; do
+  if [[ "$_phpswap_entry" != "$PHPSWAP_ACTIVE_PATH" && "$_phpswap_entry" != "/usr/local/opt/php@8.1/bin" && ( -z "$_phpswap_others" || "$_phpswap_others" != *":$_phpswap_entry:"* ) ]]; then
+    if [[ -z "$_phpswap_new_path" ]]; then
+      _phpswap_new_path="$_phpswap_entry"
+    else
+      _phpswap_new_path="$_phpswap_new_path:$_phpswap_entry"
+    fi
+  fi
+done
+IFS="$_phpswap_old_ifs"
+export PATH="$_phpswap_new_path"
+
+if [[ -z "$PHPSWAP_ORIGINAL_PATH" ]]; then
+  export PHPSWAP_ORIGINAL_PATH="$PATH"
+fi
+
+export PHPSWAP_ACTIVE_PATH="/usr/local/opt/php@8.1/bin"
+export PATH="$PHPSWAP_ACTIVE_PATH:$PATH"
+unset _phpswap_new_path _phpswap_old_ifs _phpswap_entry _phpswap_others
+echo "😎 PhpSwap(ped)!"
+echo "👉 $(php -v | grep -e 'PHP [0-9]\.[0-9]\.[0-9]' | head -n 1 | head -n 1)"

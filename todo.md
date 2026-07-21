@@ -1,0 +1,28 @@
+;## Blockers
+
+## Critical
+
+- handle preserve_patch_zero
+- handle patch_prefix
+- handle git_root
+
+## Normal
+
+- In other scribes than YAML, add support for existing files without versions. Use yaml as example.
+- add dynamic vars to knowledge output for hooks.
+- continue with unit tests on the done class
+- get rid of the ROOT_PATH usage, it thwarts unit testing.
+- remove all create () command methods
+- unit tests for GitProxy
+- remove all access classes.
+- handle push_* processes
+- convert the info route or delete?
+
+## Backlog
+
+- convert build,unbuild,dev to dynamic routes that check against a folder name in hooks.
+- split classes in /flax/src?
+- study up on https://docs.github.com/en/get-started/quickstart/github-flow, can it be incorporated, should it?
+- make composer install
+
+## Notes

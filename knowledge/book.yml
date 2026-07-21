@@ -11,7 +11,6 @@ chapters:
       - templates
       - filter
       - hooks
-      - changelog
   -
     id: legacy
     title: 'Legacy Docs (May Be Incorrect)'
@@ -27,3 +26,8 @@ chapters:
       - functionality
       - readme_legacy
       - old_config
+  -
+    id: appendix
+    title: Appendix
+    pages:
+      - changelog
