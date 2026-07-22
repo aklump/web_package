@@ -75,11 +75,11 @@ catch (\Exception $exception) {
 
 // TODO Remove this before version 4.0
 if (file_exists($user_src_directory)) {
-  $loader->addPsr4('AKlump\WebPackage\User\\', [
+  $class_loader->addPsr4('AKlump\WebPackage\User\\', [
       $user_src_directory,
   ]);
   // This is legacy support.
-  $loader->addPsr4('AKlump\WebPackage\\', [
+  $class_loader->addPsr4('AKlump\WebPackage\\', [
       $user_src_directory,
   ]);
 }
