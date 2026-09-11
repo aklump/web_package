@@ -12,8 +12,6 @@ use Jawira\CaseConverter\Convert;
  */
 class NormalizeFeatureBranch {
 
-  const GLUE = '_';
-
   use ShellCommandTrait;
 
   public function __invoke(string $name, string $author): string {
@@ -22,7 +20,7 @@ class NormalizeFeatureBranch {
       return (new Convert($part))->toKebab();
     }, $parts);
 
-    return implode(self::GLUE, $parts);
+    return (new CombineBranchNameParts())($parts);
   }
 
 }

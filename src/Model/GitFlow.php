@@ -2,6 +2,7 @@
 
 namespace AKlump\WebPackage\Model;
 
+use AKlump\WebPackage\Helpers\CombineBranchNameParts;
 use AKlump\WebPackage\Helpers\NormalizeFeatureBranch;
 use AKlump\WebPackage\Traits\ShellCommandTrait;
 
@@ -99,11 +100,8 @@ class GitFlow {
 
       return (new NormalizeFeatureBranch())($base, $author);
     }
-    elseif (self::RELEASE === $this->type) {
-      return 'release-' . $base;
-    }
-    elseif (self::HOTFIX === $this->type) {
-      return 'hotfix-' . $base;
+    elseif (in_array($this->type, [self::HOTFIX, self::RELEASE])) {
+      return (new CombineBranchNameParts())([$this->type, $base]);
     }
 
     return $base;

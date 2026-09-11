@@ -14,14 +14,14 @@ class NormalizeFeatureBranchTest extends TestCase {
     $tests = [];
     $tests[] = [
       ['foo_bar', ''],
-      'feature_foo-bar',
+      'feature--foo-bar',
     ];
     $tests[] = [
       [
         'foo_bar',
         'Aaron Klump',
       ],
-      'aaron-klump_feature_foo-bar',
+      'aaron-klump--feature--foo-bar',
     ];
 
     return $tests;
