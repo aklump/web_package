@@ -149,7 +149,7 @@ class HookService {
    * @return $this
    * @throws \AKlump\WebPackage\BuildFailException
    */
-  public function loadFile($filepath, callable $mutator = NULL) {
+  public function loadFile($filepath, ?callable $mutator = NULL) {
     $this->sourceFile = FilePath::create($this->resolve($filepath));
     if (!$this->sourceFile->exists()) {
       throw new BuildFailException("$filepath does not exist.");

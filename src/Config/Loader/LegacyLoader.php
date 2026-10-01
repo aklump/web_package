@@ -9,7 +9,7 @@ class LegacyLoader extends FileLoader {
   /**
    * @inheritDoc
    */
-  public function load($resource, string $type = NULL) {
+  public function load($resource, ?string $type = NULL) {
     if (!file_exists($resource)) {
       return [];
     }
@@ -25,7 +25,7 @@ class LegacyLoader extends FileLoader {
   /**
    * @inheritDoc
    */
-  public function supports($resource, string $type = NULL) {
+  public function supports($resource, ?string $type = NULL) {
     return is_string($resource) && !pathinfo($resource, PATHINFO_EXTENSION);
   }
 
