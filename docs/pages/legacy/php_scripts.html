@@ -4,9 +4,9 @@
   <!-- Required meta tags -->
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=3.3.1">
-      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=3.3.1">
-      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=3.3.1">
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap/dist/css/bootstrap.css?ver=3.3.2">
+      <link rel="stylesheet" href="../../dist/dist/bootstrap_theme.css?ver=3.3.2">
+      <link rel="stylesheet" href="../../dist/node_modules/bootstrap-icons/font/bootstrap-icons.min.css?ver=3.3.2">
         <title>PHP Hooks | Web Package</title>
   </head>
 <body class="my-5">
@@ -116,7 +116,7 @@ $build
 <tr><td><strong>addFilesToScm</strong> <em>(array $files)</em></td></tr>
 <tr><td><strong>addMessage</strong> <em>($message)</em></td></tr>
 <tr><td><strong>addToDemo</strong> <em>($path, $to_relative_path = NULL)</em></td></tr>
-<tr><td><strong>addTokens</strong> <em>(array $additional_token_map = Array)</em></td></tr>
+<tr><td><strong>addTokens</strong> <em>(array $additional_token_map = [])</em></td></tr>
 <tr><td><strong>boostrapPhpUnit</strong> <em>()</em></td></tr>
 <tr><td><strong>caution</strong> <em>($message)</em></td></tr>
 <tr><td><strong>danger</strong> <em>($message)</em></td></tr>
@@ -127,13 +127,13 @@ $build
 <tr><td><strong>generateDocumentationTo</strong> <em>($path_to_generated_docs = 'docs')</em></td></tr>
 <tr><td><strong>getSourceCode</strong> <em>()</em></td></tr>
 <tr><td><strong>isUsingGit</strong> <em>()</em></td></tr>
-<tr><td><strong>loadFile</strong> <em>($filepath, callable or NULL $mutator = NULL)</em></td></tr>
+<tr><td><strong>loadFile</strong> <em>($filepath, ?callable $mutator = NULL)</em></td></tr>
 <tr><td><strong>minifyFile</strong> <em>($source)</em></td></tr>
-<tr><td><strong>prepareTokenMap</strong> <em>($prefix, array $additional_token_map = Array)</em></td></tr>
-<tr><td><strong>processWithTwig</strong> <em>(array $additional_token_map = Array)</em></td></tr>
+<tr><td><strong>prepareTokenMap</strong> <em>($prefix, array $additional_token_map = [])</em></td></tr>
+<tr><td><strong>processWithTwig</strong> <em>(array $additional_token_map = [])</em></td></tr>
 <tr><td><strong>publish</strong> <em>()</em></td></tr>
 <tr><td><strong>relativize</strong> <em>(string $path)</em></td></tr>
-<tr><td><strong>replaceTokens</strong> <em>(array $additional_token_map = Array)</em></td></tr>
+<tr><td><strong>replaceTokens</strong> <em>(array $additional_token_map = [])</em></td></tr>
 <tr><td><strong>resolve</strong> <em>($filepath)</em></td></tr>
 <tr><td><strong>runTests</strong> <em>(string $path_to_testrunner)</em></td></tr>
 <tr><td><strong>saveReplacingSourceFile</strong> <em>()</em></td></tr>
@@ -178,9 +178,9 @@ $build
   <footer class="footer d-flex justify-content-center">
     <div class="flex-column justify-content-center">
               Version:
-        <strong>3.3.1</strong>
+        <strong>3.3.2</strong>
         &bull;
-                    Last Update: <strong>9/11/2026</strong>
+                    Last Update: <strong>10/1/2026</strong>
           </div>
   </footer>
 
@@ -502,9 +502,9 @@ $build
   </div>
 </div>
 
-  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=3.3.1"></script>
-  <script src="../../dist/lunr.js?ver=3.3.1"></script>
-  <script src="../../dist/knowledge.min.js?ver=3.3.1"></script>
+  <script src="../../dist/node_modules/bootstrap/dist/js/bootstrap.min.js?ver=3.3.2"></script>
+  <script src="../../dist/lunr.js?ver=3.3.2"></script>
+  <script src="../../dist/knowledge.min.js?ver=3.3.2"></script>
 
 </body>
 </html>

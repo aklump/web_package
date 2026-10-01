@@ -7,7 +7,7 @@ This project does the following for your web project.
 * Manages version numbers.
 * Provides a framework for building assets before release.
 
-##        Install with Composer
+## Install with Composer
 
 1. Installation requires explicit repositories:
    
