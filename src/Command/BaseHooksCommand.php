@@ -32,7 +32,7 @@ abstract class BaseHooksCommand extends Command {
     $this->setHookType(static::$defaultName);
     $this->container = $container;
     // This must come last!
-    parent::__construct();
+    parent::__construct(static::$defaultName);
   }
 
   public function getHookType(): string {
@@ -45,7 +45,7 @@ abstract class BaseHooksCommand extends Command {
     return $this;
   }
 
-  protected function configure() {
+  protected function configure(): void {
     $hook_type = $this->getHookType();
     $this
       ->setDescription("Run $hook_type-type hooks without affecting versioning.")
@@ -56,7 +56,8 @@ abstract class BaseHooksCommand extends Command {
   protected function execute(InputInterface $input, OutputInterface $output): int {
     $this->setConfig($this->container->get('config.loader')());
     $config = $this->getConfig();
-    $event = (new GetHookEvent($config))();
+    $root_path = $this->container->get('context')->getRootPath();
+    $event = (new GetHookEvent($config, $root_path))();
     $version = (new GetCurrentVersion($config, $this->container->get('scribe.factory')()))();
     $event->setPreviousVersion($version);
     $event->setVersion($version);

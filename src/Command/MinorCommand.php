@@ -8,7 +8,7 @@ class MinorCommand extends BaseVersionCommand {
 
   protected static $defaultName = 'minor';
 
-  protected function configure() {
+  protected function configure(): void {
     $this
       ->setDescription("Increment version one minor step without hooks.");
   }

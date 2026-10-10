@@ -15,8 +15,22 @@ class LoadConfig {
     Config::DEVELOP_BRANCH => ConfigDefaults::DEVELOP_BRANCH,
   ];
 
+  /**
+   * @var string
+   */
+  private $rootPath;
+
+  /**
+   * @param string $root_path
+   *   The absolute path of the project, i.e., the directory containing
+   *   .web_package.
+   */
+  public function __construct(string $root_path) {
+    $this->rootPath = $root_path;
+  }
+
   public function __invoke(?string $template = NULL): array {
-    $root_path = ROOT_PATH;
+    $root_path = $this->rootPath;
     $manager = new ConfigManager();
 
     // The first thing to load is going to be in the home directory, and if we can find a template either in a passed argument on in the project's configuration then we'll use that.  If not we'll use the default config from the home directory.

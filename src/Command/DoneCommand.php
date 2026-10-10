@@ -54,7 +54,7 @@ class DoneCommand extends Command {
   }
 
   public function __construct(array $config, Context $context, GitProxy $git, ?VersionScribeInterface $scribe) {
-    parent::__construct();
+    parent::__construct(static::$defaultName);
     $this->config = $config + [
         Config::MAIN_BRANCH => ConfigDefaults::MAIN_BRANCH,
         Config::DEVELOP_BRANCH => ConfigDefaults::DEVELOP_BRANCH,

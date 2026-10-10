@@ -20,12 +20,13 @@ abstract class BaseVersionCommand extends Command {
   protected $container;
 
   public function __construct(ContainerInterface $container) {
-    parent::__construct();
+    parent::__construct(static::$defaultName);
     $this->container = $container;
     $this->setConfig($container->get('config.loader')());
   }
 
   protected function execute(InputInterface $input, OutputInterface $output): int {
+    $this->output = $output;
     $this->validate(getcwd(), [new IsInitialized()]);
     if ($this->handleViolations() > 0) {
       return Command::FAILURE;

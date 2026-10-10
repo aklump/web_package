@@ -2,14 +2,21 @@
 
 namespace AKlump\WebPackage\Config\Loader;
 
-use Symfony\Component\Config\Loader\FileLoader;
 use Symfony\Component\Yaml\Yaml;
 
-class YamlLoader extends FileLoader {
-
+/**
+ * Loads a YAML configuration file.
+ *
+ * @see \AKlump\WebPackage\Config\Loader\LegacyLoader for why this does not
+ * extend a symfony/config loader class.
+ */
+class YamlLoader {
 
   /**
-   * @inheritDoc
+   * @param string $resource
+   *   The absolute path to the file.
+   *
+   * @return array
    */
   public function load($resource, ?string $type = NULL) {
     if (!file_exists($resource)) {
@@ -22,7 +29,10 @@ class YamlLoader extends FileLoader {
   }
 
   /**
-   * @inheritDoc
+   * @param string $resource
+   *   The absolute path to the file.
+   *
+   * @return bool
    */
   public function supports($resource, ?string $type = NULL) {
     return is_string($resource) && in_array(pathinfo($resource, PATHINFO_EXTENSION), [

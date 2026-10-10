@@ -26,7 +26,12 @@ class ConfigCommand extends Command {
    */
   protected $context;
 
-  protected function configure() {
+  /**
+   * @var \Symfony\Component\Console\Output\OutputInterface
+   */
+  private $output;
+
+  protected function configure(): void {
     $this
       ->setDescription("Display (or update) app configuration.")
       ->addOption('edit', 'e', InputOption::VALUE_NONE, 'Open the configuration file in $EDITOR.');
@@ -35,7 +40,7 @@ class ConfigCommand extends Command {
   public function __construct(ContainerInterface $container) {
     $this->setConfig($container->get('config.loader')());
     $this->context = $container->get('context');
-    parent::__construct();
+    parent::__construct(static::$defaultName);
   }
 
   protected function execute(InputInterface $input, OutputInterface $output): int {

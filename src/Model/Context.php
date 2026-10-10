@@ -16,12 +16,24 @@ class Context implements ContextInterface {
 
   private $config;
 
-  public function __construct(LoadConfig $loader) {
+  /**
+   * @var string
+   */
+  private $rootPath;
+
+  /**
+   * @param \AKlump\WebPackage\Config\LoadConfig $loader
+   * @param string $root_path
+   *   The absolute path of the project, i.e., the directory containing
+   *   .web_package.
+   */
+  public function __construct(LoadConfig $loader, string $root_path) {
     $this->configLoader = $loader;
+    $this->rootPath = $root_path;
   }
 
   public function getRootPath(): string {
-    return ROOT_PATH;
+    return $this->rootPath;
   }
 
   public function getServerHome(): string {
@@ -42,7 +54,7 @@ class Context implements ContextInterface {
 
   public function getConfig() {
     if (empty($this->config)) {
-      $this->config = ($this->configLoader)($this->getRootPath());
+      $this->config = ($this->configLoader)();
     }
 
     return $this->config;

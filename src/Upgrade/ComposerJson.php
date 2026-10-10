@@ -3,7 +3,7 @@
 namespace AKlump\WebPackage\Upgrade;
 
 use AKlump\WebPackage\Helpers\GetDerivativeComposerName;
-use Jawira\CaseConverter\CaseConverter;
+use Jawira\CaseConverter\Convert;
 
 class ComposerJson {
 
@@ -24,7 +24,7 @@ class ComposerJson {
     }
     $composer_json = json_decode(file_get_contents($composer_json_path));
     $camel_case = explode('/', $derivate_name, 2)[1];
-    $camel_case = (new CaseConverter())->convert($camel_case)->toPascal();
+    $camel_case = (new Convert($camel_case))->toPascal();
     $composer_json->autoload = [];
     $composer_json->autoload['psr-4']['AKlump\\WebPackage\\User\\'] = 'src/';
     $composer_json->autoload['psr-4']['AKlump\\' . $camel_case . '\\'] = '../src/';

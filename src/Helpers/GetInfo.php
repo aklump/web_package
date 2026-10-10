@@ -3,6 +3,7 @@
 namespace AKlump\WebPackage\Helpers;
 
 use AKlump\WebPackage\Config\Config;
+use AKlump\WebPackage\Config\ConfigDefaults;
 use AKlump\WebPackage\Traits\HasConfigTrait;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -11,15 +12,27 @@ class GetInfo {
 
   use HasConfigTrait;
 
-  public function __construct($config) {
+  /**
+   * @var string
+   */
+  private $rootPath;
+
+  /**
+   * @param array $config
+   * @param string $root_path
+   *   The absolute path of the project, used to resolve a relative
+   *   version_file.
+   */
+  public function __construct($config, string $root_path) {
     $this->setConfig($config);
+    $this->rootPath = $root_path;
   }
 
   public function __invoke(): array {
     $config = $this->getConfig();
-    $path_to_info = $config[Config::VERSION_FILE];
+    $path_to_info = $config[Config::VERSION_FILE] ?? ConfigDefaults::VERSION_FILE;
     if (!Path::isAbsolute($path_to_info)) {
-      $path_to_info = Path::makeAbsolute($path_to_info, ROOT_PATH);
+      $path_to_info = Path::makeAbsolute($path_to_info, $this->rootPath);
     }
     if (!file_exists($path_to_info)) {
       return [];

@@ -19,19 +19,20 @@ class VersionCommand extends Command {
    */
   private $container;
 
-  protected function configure() {
+  protected function configure(): void {
     $this
       ->setAliases(['v'])
       ->setDescription("Display your app's version.");
   }
 
   public function __construct(ContainerInterface $container) {
-    parent::__construct();
+    parent::__construct(static::$defaultName);
     $this->container = $container;
   }
 
   protected function execute(InputInterface $input, OutputInterface $output): int {
-    if (!(new IsInitialized())->access()) {
+    $root_path = $this->container->get('context')->getRootPath();
+    if (!(new IsInitialized($root_path))->access()) {
       throw new \RuntimeException("It seems you are outside your app.");
     }
 

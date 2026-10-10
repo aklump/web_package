@@ -25,12 +25,17 @@ class UpgradeCommand extends Command {
    */
   private $status;
 
-  protected function configure() {
+  /**
+   * @var \Symfony\Component\Console\Output\OutputInterface
+   */
+  private $output;
+
+  protected function configure(): void {
     $this->setDescription("Display helpful upgrade information.");
   }
 
   public function __construct(ContainerInterface $container) {
-    parent::__construct();
+    parent::__construct(static::$defaultName);
     $this->setConfig($container->get('config.loader')());
   }
 

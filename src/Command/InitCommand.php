@@ -12,7 +12,7 @@ use AKlump\WebPackage\Helpers\GetCurrentVersion;
 use AKlump\WebPackage\Input\HumanInterface;
 use AKlump\WebPackage\Model\GitFlow;
 use AKlump\WebPackage\Upgrade\ComposerJson;
-use Jawira\CaseConverter\CaseConverter;
+use Jawira\CaseConverter\Convert;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,14 +52,29 @@ class InitCommand extends Command {
    */
   private $templateDir;
 
-  protected function configure() {
+  /**
+   * @var \Symfony\Component\Console\Input\InputInterface
+   */
+  private $input;
+
+  /**
+   * @var \Symfony\Component\Console\Output\OutputInterface
+   */
+  private $output;
+
+  /**
+   * @var string
+   */
+  private $savePath;
+
+  protected function configure(): void {
     $this->setDescription('Initialize the current directory.')
       ->addOption('child', NULL, InputOption::VALUE_NONE, 'Use this flag to allow initializing a child of another project.')
       ->setHelp('This command allows you to see all available versions to be swapped');
   }
 
   public function __construct(ContainerInterface $container, string $installation_dir, string $template_dir, $filesystem) {
-    parent::__construct();
+    parent::__construct(static::$defaultName);
     if (!Path::isAbsolute($installation_dir)) {
       $installation_dir = getcwd() . "/$installation_dir";
     }
@@ -75,8 +90,8 @@ class InitCommand extends Command {
     $this->output = $output;
 
     try {
-      if ((new IsInitialized())->access()) {
-        $root = $this->context->getRootPath();
+      $root = $this->context->getRootPath();
+      if ((new IsInitialized($root))->access()) {
         if (getcwd() !== $root) {
           if (!$input->getOption('child')) {
             throw new \RuntimeException(sprintf("Inside an initialized directory; use --child if you are sure. %s", $root));
@@ -165,7 +180,7 @@ class InitCommand extends Command {
   private function prepareValuesForWrite(array $config): array {
     if (strpos($config[Config::VERSION_FILE], '__DIR__') !== FALSE) {
       $basename = basename(dirname($this->dir));
-      $basename = (new CaseConverter())->convert($basename)->toSnake();
+      $basename = (new Convert($basename))->toSnake();
       $config[Config::VERSION_FILE] = str_replace('__DIR__', $basename, $config[Config::VERSION_FILE]);
     }
 

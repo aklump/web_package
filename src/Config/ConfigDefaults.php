@@ -35,4 +35,9 @@ class ConfigDefaults {
    */
   const VERSION_FILE = '.web_package/config.yml';
 
+  /**
+   * @var string The name of the directory that holds a project's bump files.
+   */
+  const INSTALL_DIR = '.web_package';
+
 }

@@ -13,7 +13,7 @@ class VersionDegreeValidator extends ConstraintValidator {
   /**
    * @inheritDoc
    */
-  public function validate($value, Constraint $constraint) {
+  public function validate($value, Constraint $constraint): void {
     if (!$constraint instanceof VersionDegree) {
       throw new UnexpectedTypeException($constraint, VersionDegree::class);
     }

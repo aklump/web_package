@@ -8,7 +8,7 @@ class MajorCommand extends BaseVersionCommand {
 
   protected static $defaultName = 'major';
 
-  protected function configure() {
+  protected function configure(): void {
     $this
       ->setDescription("Increment version one major step without hooks.");
   }

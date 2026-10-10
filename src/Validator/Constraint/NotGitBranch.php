@@ -12,7 +12,7 @@ class NotGitBranch extends GitBranch {
    */
   public $options = [];
 
-  public function validatedBy() {
+  public function validatedBy(): string {
     return GitBranchValidator::class;
   }
 

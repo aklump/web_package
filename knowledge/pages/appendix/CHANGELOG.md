@@ -9,6 +9,21 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **Breaking:** The `ROOT_PATH`, `WEB_PACKAGE_ROOT` and `INSTALL_DIR` PHP constants no longer exist. PHP hooks, and any code in `.web_package/src`, that read them will fail. Use the hook arguments instead: `$argv[7]` for the project root and `$argv[12]` for the web_package root. Shell hooks can use the `$ROOT` and `$WEB_PACKAGE_ROOT` environment variables.
+
+### Fixed
+
+- The global config at `~/.web_package/config` was never loaded. It now serves as the base, and the project config overrides it. If you have a global config you forgot about, its values will now apply.
+- `bump patch`, `minor` and `major` crashed with "$this->output has not been set" outside an initialized project; they now print the "not initialized" message.
+- Support for Symfony Console 7.4 and 8, and Symfony Config 8, which were allowed by `composer.json` but did not work.
+- `bump init` on PHP 7.3 with `jawira/case-converter` 2.3.
+- A PHP 8.1+ deprecation when running outside a git repository.
+- A PHP 8.4 deprecation for an implicitly nullable parameter.
+
 ## [3.3.0] - 2026-07-21
 
 ### Changed
