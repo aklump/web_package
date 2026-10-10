@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \AKlump\WebPackage\Helpers\NormalizeFeatureBranch
+ * @uses \AKlump\WebPackage\Helpers\CombineBranchNameParts
  */
 class NormalizeFeatureBranchTest extends TestCase {
 

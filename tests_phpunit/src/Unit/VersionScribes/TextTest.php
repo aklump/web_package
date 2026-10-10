@@ -9,7 +9,7 @@ use z4kn4fein\SemVer\Inc;
 use z4kn4fein\SemVer\Version;
 
 /**
- * @covers \AKlump\WebPackage\VersionScribes\Text;
+ * @covers \AKlump\WebPackage\VersionScribes\Text
  */
 class TextTest extends TestCase {
 

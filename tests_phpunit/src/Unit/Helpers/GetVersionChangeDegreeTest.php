@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \AKlump\WebPackage\Helpers\GetVersionChangeDegree
+ * @uses \AKlump\WebPackage\Model\Version
  */
 class GetVersionChangeDegreeTest extends TestCase {
 

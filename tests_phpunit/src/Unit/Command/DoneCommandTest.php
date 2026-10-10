@@ -19,6 +19,16 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @covers \AKlump\WebPackage\Command\DoneCommand
+ * @uses \AKlump\WebPackage\Helpers\GetCurrentVersion
+ * @uses \AKlump\WebPackage\Helpers\GetPreviousVersion
+ * @uses \AKlump\WebPackage\Helpers\GetVersionChangeDegree
+ * @uses \AKlump\WebPackage\Helpers\ShouldCreateTag
+ * @uses \AKlump\WebPackage\Helpers\Stash
+ * @uses \AKlump\WebPackage\Model\GitFlow
+ * @uses \AKlump\WebPackage\Model\Version
+ * @uses \AKlump\WebPackage\Validator\Constraint\GitBranch
+ * @uses \AKlump\WebPackage\Validator\Constraint\GitBranchValidator
+ * @uses \AKlump\WebPackage\Validator\Constraint\IsInitializedValidator
  */
 class DoneCommandTest extends TestCase {
 

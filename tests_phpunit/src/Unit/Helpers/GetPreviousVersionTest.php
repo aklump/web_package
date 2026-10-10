@@ -10,6 +10,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \AKlump\WebPackage\Helpers\GetPreviousVersion
+ * @uses \AKlump\WebPackage\Helpers\Stash
  */
 class GetPreviousVersionTest extends TestCase {
 
