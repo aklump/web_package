@@ -58,6 +58,15 @@ class Version {
     return new static($version);
   }
 
+  /**
+   * @return string
+   *   The characters that precede the semantic version, e.g. "8.x-" for
+   *   "8.x-1.2.3".  Empty when there are none.
+   */
+  public function getPrefix(): string {
+    return $this->prefix;
+  }
+
   public function __toString(): string {
     return $this->prefix . (string) $this->semver . $this->suffix;
   }

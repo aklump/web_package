@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Build numbers. Set `build_number: true` in your configuration and `bump build` will stamp the version with the number of commits since the newest release tag, as SemVer build metadata, e.g. `3.4.0+12`, before any hook runs. Commits at the tip that changed only the version file are not counted. `bump done` still tags the bare version. See the configuration page for details.
+
 ### Changed
 
 - **Breaking:** The `ROOT_PATH`, `WEB_PACKAGE_ROOT` and `INSTALL_DIR` PHP constants no longer exist. PHP hooks, and any code in `.web_package/src`, that read them will fail. Use the hook arguments instead: `$argv[7]` for the project root and `$argv[12]` for the web_package root. Shell hooks can use the `$ROOT` and `$WEB_PACKAGE_ROOT` environment variables.

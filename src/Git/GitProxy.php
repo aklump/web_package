@@ -76,4 +76,78 @@ class GitProxy {
     return $lines;
   }
 
+  /**
+   * Get all tag names, newest first.
+   *
+   * @return string[]
+   *   Every tag, sorted by the date it was created, newest first.  Which of
+   *   these count as release tags is not decided here.
+   *
+   * @throws \RuntimeException If git fails, e.g. this is not a git repository.
+   */
+  public function getTagsByCreationDate(): array {
+    $lines = [];
+    $this->exec('git tag --list --sort=-creatordate', $lines);
+
+    return $this->filterEmpty($lines);
+  }
+
+  /**
+   * Get the files changed by a single commit.
+   *
+   * @param string $ref
+   *   A commit-ish.
+   *
+   * @return string[]
+   *   Paths relative to the git root.  Empty for a root commit or a merge
+   *   commit, as git reports no changes for these.
+   */
+  public function getFilesInCommit(string $ref): array {
+    $lines = [];
+    $this->exec(sprintf('git diff-tree --no-commit-id --name-only -r %s', escapeshellarg($ref)), $lines);
+
+    return $this->filterEmpty($lines);
+  }
+
+  /**
+   * Get the first parent of a commit.
+   *
+   * @param string $ref
+   *   A commit-ish.
+   *
+   * @return string
+   *   The parent's commit hash, or an empty string if $ref has no parent.
+   */
+  public function getParent(string $ref): string {
+    try {
+      return trim($this->exec(sprintf('git rev-parse %s', escapeshellarg($ref . '^'))));
+    }
+    catch (\RuntimeException $exception) {
+      // A root commit has no parent, which git reports as a failure.
+      return '';
+    }
+  }
+
+  /**
+   * Count the commits in a revision range.
+   *
+   * @param string $range
+   *   A commit-ish for all commits reachable from it, or a range such as
+   *   "1.2.0..HEAD".
+   */
+  public function countCommits(string $range): int {
+    return (int) trim($this->exec(sprintf('git rev-list --count %s', escapeshellarg($range))));
+  }
+
+  /**
+   * @param string[] $lines
+   *
+   * @return string[]
+   */
+  private function filterEmpty(array $lines): array {
+    return array_values(array_filter(array_map('trim', $lines), function ($line) {
+      return '' !== $line;
+    }));
+  }
+
 }

@@ -119,10 +119,12 @@ class DoneCommand extends Command {
       && in_array($this->config[Config::MAIN_BRANCH], $merge_into_branches)
       && (new ShouldCreateTag($this->config))($old_version, $new_version)
     ) {
-      $this->git->tag($new_version);
+      // The tag is the bare version; a build number never becomes part of it.
+      $tag = explode('+', $new_version, 2)[0];
+      $this->git->tag($tag);
 
       if ($this->config[Config::PUSH_TAGS] ?? ConfigDefaults::PUSH_TAGS) {
-        $this->git->push($new_version);
+        $this->git->push($tag);
       }
     }
 

@@ -116,4 +116,76 @@ class GitProxyTest extends TestCase {
     $this->assertSame([], $git->getUncommittedFiles());
   }
 
+  /**
+   * @param string[] $lines
+   *   What the replaced exec() hands back through its output argument.
+   */
+  private function createExecReturning(array $lines): \PHPUnit\Framework\MockObject\Stub\ReturnCallback {
+    return $this->returnCallback(function (string $command, array &$output = []) use ($lines) {
+      $output = $lines;
+
+      return end($lines) ?: '';
+    });
+  }
+
+  public function testGetTagsByCreationDateIsNewestFirstAsGitReportsIt() {
+    $git = $this->createProxy(['exec']);
+    $git->expects($this->once())
+      ->method('exec')
+      ->with('git tag --list --sort=-creatordate')
+      ->will($this->createExecReturning(['3.3.3', 'v3.3.2', '', ' 3.3.1 ']));
+    $this->assertSame(['3.3.3', 'v3.3.2', '3.3.1'], $git->getTagsByCreationDate());
+  }
+
+  public function testGetTagsByCreationDateIsEmptyWithoutTags() {
+    $git = $this->createProxy(['exec']);
+    $git->method('exec')->will($this->createExecReturning([]));
+    $this->assertSame([], $git->getTagsByCreationDate());
+  }
+
+  public function testGetFilesInCommit() {
+    $git = $this->createProxy(['exec']);
+    $git->expects($this->once())
+      ->method('exec')
+      ->with("git diff-tree --no-commit-id --name-only -r 'HEAD'")
+      ->will($this->createExecReturning(['.web_package/config.yml', 'src/a.php']));
+    $this->assertSame(['.web_package/config.yml', 'src/a.php'], $git->getFilesInCommit('HEAD'));
+  }
+
+  public function testGetFilesInCommitEscapesTheRef() {
+    $git = $this->createProxy(['exec']);
+    $git->expects($this->once())
+      ->method('exec')
+      ->with("git diff-tree --no-commit-id --name-only -r 'a b'\\''c'")
+      ->will($this->createExecReturning([]));
+    $this->assertSame([], $git->getFilesInCommit("a b'c"));
+  }
+
+  public function testGetParent() {
+    $git = $this->createProxy(['exec']);
+    $git->expects($this->once())
+      ->method('exec')
+      ->with("git rev-parse 'HEAD^'")
+      ->willReturn("0123abc\n");
+    $this->assertSame('0123abc', $git->getParent('HEAD'));
+  }
+
+  public function testGetParentIsEmptyForTheRootCommit() {
+    $git = $this->createProxy(['exec']);
+    $git->expects($this->once())
+      ->method('exec')
+      ->with("git rev-parse 'abc123^'")
+      ->willThrowException(new \RuntimeException("Failed: git rev-parse 'abc123^'"));
+    $this->assertSame('', $git->getParent('abc123'));
+  }
+
+  public function testCountCommits() {
+    $git = $this->createProxy(['exec']);
+    $git->expects($this->once())
+      ->method('exec')
+      ->with("git rev-list --count '3.3.3..HEAD'")
+      ->willReturn('17');
+    $this->assertSame(17, $git->countCommits('3.3.3..HEAD'));
+  }
+
 }

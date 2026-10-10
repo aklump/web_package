@@ -32,5 +32,9 @@ class Config {
 
   const VERSION_FILE = 'version_file';
 
+  /**
+   * @var string The config key that opts in to stamping a build number.
+   */
+  const BUILD_NUMBER = 'build_number';
 
 }

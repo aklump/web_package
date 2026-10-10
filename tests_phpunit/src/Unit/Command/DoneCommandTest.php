@@ -442,6 +442,33 @@ class DoneCommandTest extends TestCase {
     $git->expects($this->once())->method('deleteBranch');
     $tests['push master only'] = [$config, $runtime, $git];
 
+    //
+    // Begin the version carries a build number: the tag is the bare core.
+    //
+    $config = [
+      Config::MAIN_BRANCH => 'main',
+      Config::CREATE_TAGS => VersionDegree::MINOR,
+    ];
+    $runtime = [
+      'master_version' => '0.1.5',
+      'new_version' => '0.2.0+7',
+      'current_branch' => 'release-0.2.0',
+      'branch_type' => GitFlow::RELEASE,
+    ];
+    $git = $this->createMock(GitProxy::class);
+    $git->expects($this->once())->method('tag')->with('0.2.0');
+    $git->expects($this->once())
+      ->method('mergeBranch')
+      ->with('main', $runtime['current_branch']);
+    $git->expects($this->exactly(2))->method('push')->withConsecutive(
+      ['0.2.0'],
+      ['main'],
+    );
+    $git->expects($this->once())
+      ->method('deleteBranch')
+      ->with($runtime['current_branch']);
+    $tests['build number is stripped from the tag'] = [$config, $runtime, $git];
+
     return $tests;
   }
 
