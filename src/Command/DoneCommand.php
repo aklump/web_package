@@ -12,7 +12,6 @@ use AKlump\WebPackage\Model\Context;
 use AKlump\WebPackage\Model\GitFlow;
 use AKlump\WebPackage\Traits\HasContextTrait;
 use AKlump\WebPackage\Traits\ImplodeTrait;
-use AKlump\WebPackage\Traits\ShellCommandTrait;
 use AKlump\WebPackage\Traits\ValidationTrait;
 use AKlump\WebPackage\Validator\Constraint\GitBranch;
 use AKlump\WebPackage\Validator\Constraint\IsInitialized;
@@ -29,7 +28,6 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 class DoneCommand extends Command {
 
   use ValidationTrait;
-  use ShellCommandTrait;
   use ImplodeTrait;
   use HasContextTrait;
 
@@ -146,19 +144,9 @@ class DoneCommand extends Command {
     return Command::SUCCESS;
   }
 
-  private function handleUncommittedChanges($input, $output): bool {
-    $unchanged_files = [];
-    try {
-      $this->exec('git status --short', $unchanged_files);
-    }
-    catch (\RuntimeException $exception) {
-      // If we are not in a git repo, we don't care about uncommitted changes.
-      return TRUE;
-    }
+  private function handleUncommittedChanges(InputInterface $input, OutputInterface $output): bool {
+    $unchanged_files = $this->git->getUncommittedFiles();
     if (count($unchanged_files) > 0) {
-      if (empty($input) || empty($output)) {
-        return TRUE;
-      }
       $helper = $this->getHelper('question');
       $this->output->writeln($unchanged_files);
       $question = new ConfirmationQuestion('<question>You have uncommitted changes; are you sure?</question> ', FALSE);
