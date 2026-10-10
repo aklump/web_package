@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - `bump init` on PHP 7.3 with `jawira/case-converter` 2.3.
 - A PHP 8.1+ deprecation when running outside a git repository.
 - A PHP 8.4 deprecation for an implicitly nullable parameter.
+- Version files with SemVer build metadata (e.g. `1.2.3+4`) now work with every version file type. A Drupal `.info` file was corrupted on write (`1.2.4+5+4`), and a Symfony Console entry script was not recognized as one.
 
 ## [3.3.0] - 2026-07-21
 

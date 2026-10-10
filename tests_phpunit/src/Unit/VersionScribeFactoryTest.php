@@ -42,6 +42,14 @@ class VersionScribeFactoryTest extends TestCase {
       'symfonyapp.php',
     ];
     $tests[] = [
+      SymfonyConsoleApplication::class,
+      'symfonyapp_build.php',
+    ];
+    $tests[] = [
+      DrupalInfo::class,
+      'build.info',
+    ];
+    $tests[] = [
       Json::class,
       'composer.json',
     ];

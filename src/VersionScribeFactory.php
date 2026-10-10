@@ -64,7 +64,7 @@ class VersionScribeFactory {
       // TODO This is only available in version >=6
       //      $contents = $this->filesystem->read($filepath);
       $contents = file_get_contents($filepath);
-      if (preg_match("/\->setVersion\(['\"\d\.]+?\)/", $contents)) {
+      if (preg_match("/\->setVersion\(['\"\d\.]+?(?:\+[0-9A-Za-z.-]+)?['\"]?\)/", $contents)) {
         return new SymfonyConsoleApplication($filepath);
       }
     }

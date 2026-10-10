@@ -51,4 +51,15 @@ class JsonTest extends TestCase {
     $this->assertSame('', $version);
   }
 
+  public function testReadWriteBuildMetadata() {
+    $path = $this->getPath('json');
+    copy(__DIR__ . '/../files/build.json', $path);
+    $scribe = new Json($path);
+    $this->assertSame('1.2.3+4', $scribe->read());
+    $this->assertTrue($scribe->write('1.2.4+5'));
+    $this->assertSame('1.2.4+5', $scribe->read());
+    $this->assertStringNotContainsString('+4', file_get_contents($path));
+    $this->unlink('json');
+  }
+
 }

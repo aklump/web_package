@@ -10,7 +10,7 @@ class DrupalInfo implements VersionScribeInterface {
 
   use WriterTrait;
 
-  const REGEX = '/^(version\s*=.*?)([\d\.\-xrc]+)(.*?\n)/m';
+  const REGEX = '/^(version\s*=.*?)([\d\.\-xrc]+(?:\+[0-9A-Za-z.-]+)?)(.*?\n)/m';
 
   private $source;
 
