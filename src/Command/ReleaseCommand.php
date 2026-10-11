@@ -25,7 +25,7 @@ class ReleaseCommand extends BaseBranchCommand {
 
   protected static $defaultName = 'release';
 
-  protected function configure() {
+  protected function configure(): void {
     $this
       ->setAliases(['r'])
       ->setDescription('Create a new release branch per Gitflow.')
@@ -62,7 +62,7 @@ class ReleaseCommand extends BaseBranchCommand {
       return Command::FAILURE;
     }
 
-    $event = (new GetHookEvent($this->config))();
+    $event = (new GetHookEvent($this->config, $this->context->getRootPath()))();
     $version = (new GetCurrentVersion($this->config, $this->scribe))();
     $event->setPreviousVersion($version);
 

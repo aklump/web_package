@@ -1,0 +1,9 @@
+name = Block
+description = A module with build metadata.
+package = Core
+core = 7.x
+
+; Information added by Drupal.org packaging script on 2023-06-07
+version = "1.2.3+4"
+project = "drupal"
+datestamp = "1686154435"

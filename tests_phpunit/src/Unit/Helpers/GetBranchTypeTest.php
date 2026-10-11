@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use AKlump\WebPackage\Config\Config;
 
 /**
- * @covers GetBranchType
+ * @covers \AKlump\WebPackage\Helpers\GetBranchType
  */
 class GetBranchTypeTest extends TestCase {
 

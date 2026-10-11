@@ -23,7 +23,7 @@ class HotfixCommand extends BaseBranchCommand {
 
   protected static $defaultName = 'hotfix';
 
-  protected function configure() {
+  protected function configure(): void {
     $this->setDescription('Create a new hotfix branch per Gitflow.')
       ->setAliases(['hf']);
   }
@@ -47,7 +47,7 @@ class HotfixCommand extends BaseBranchCommand {
     $version = (new GetCurrentVersion($this->config, $this->scribe))();
     (new Stash($this->context))->write(GetPreviousVersion::STASH_KEY, $version);
 
-    $event = (new GetHookEvent($this->config))();
+    $event = (new GetHookEvent($this->config, $this->context->getRootPath()))();
     $event->setPreviousVersion($version);
 
     $semver = Version::parse($version);

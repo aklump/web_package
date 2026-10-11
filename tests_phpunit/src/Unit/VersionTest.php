@@ -16,6 +16,29 @@ class VersionTest extends TestCase {
     $this->assertNotSame($first, $second);
   }
 
+  public function dataFortestGetPrefixProvider() {
+    $tests = [];
+    $tests['no prefix'] = ['1.2.3', ''];
+    $tests['a v is not kept'] = ['v1.2.3', ''];
+    $tests['drupal prefix'] = ['8.x-1.1', '8.x-'];
+    $tests['drupal prefix, full version'] = ['8.x-1.7.5', '8.x-'];
+    $tests['build metadata'] = ['1.2.3+4', ''];
+    $tests['prefix and build metadata'] = ['8.x-1.2+4', '8.x-'];
+
+    return $tests;
+  }
+
+  /**
+   * @dataProvider dataFortestGetPrefixProvider
+   */
+  public function testGetPrefix(string $subject, string $expected) {
+    $this->assertSame($expected, Version::parse($subject)->getPrefix());
+  }
+
+  public function testGetPrefixSurvivesIncrementing() {
+    $this->assertSame('8.x-', Version::parse('8.x-1.7.5')->getNextPatchVersion()->getPrefix());
+  }
+
   public function dataFortestParseProvider() {
     $tests = [];
 

@@ -2,8 +2,11 @@
 
 namespace AKlump\WebPackage\Command;
 
+use AKlump\WebPackage\Config\Config;
+use AKlump\WebPackage\Config\ConfigDefaults;
 use AKlump\WebPackage\Helpers\GetCurrentVersion;
 use AKlump\WebPackage\Helpers\GetHookEvent;
+use AKlump\WebPackage\Helpers\StampVersion;
 use AKlump\WebPackage\Hooks\HookManager;
 use AKlump\WebPackage\Traits\HasConfigTrait;
 use Psr\Container\ContainerInterface;
@@ -32,7 +35,7 @@ abstract class BaseHooksCommand extends Command {
     $this->setHookType(static::$defaultName);
     $this->container = $container;
     // This must come last!
-    parent::__construct();
+    parent::__construct(static::$defaultName);
   }
 
   public function getHookType(): string {
@@ -45,7 +48,7 @@ abstract class BaseHooksCommand extends Command {
     return $this;
   }
 
-  protected function configure() {
+  protected function configure(): void {
     $hook_type = $this->getHookType();
     $this
       ->setDescription("Run $hook_type-type hooks without affecting versioning.")
@@ -56,8 +59,18 @@ abstract class BaseHooksCommand extends Command {
   protected function execute(InputInterface $input, OutputInterface $output): int {
     $this->setConfig($this->container->get('config.loader')());
     $config = $this->getConfig();
-    $event = (new GetHookEvent($config))();
-    $version = (new GetCurrentVersion($config, $this->container->get('scribe.factory')()))();
+    $root_path = $this->container->get('context')->getRootPath();
+    $scribe = $this->container->get('scribe.factory')();
+
+    // The build number is stamped before the version is read, so that the event
+    // and every hook see it.  It only applies to builds, and only on request.
+    if ('build' === $this->getHookType() && ($config[Config::BUILD_NUMBER] ?? ConfigDefaults::BUILD_NUMBER)) {
+      $stamped = (new StampVersion($config, $scribe, $this->container->get('git'), $root_path))();
+      $output->writeln(sprintf('Build number: %s', $stamped));
+    }
+
+    $event = (new GetHookEvent($config, $root_path))();
+    $version = (new GetCurrentVersion($config, $scribe))();
     $event->setPreviousVersion($version);
     $event->setVersion($version);
     $filter = $input->getArgument('filter') ?? '';

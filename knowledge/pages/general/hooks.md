@@ -33,6 +33,12 @@ tags: ''
 
 ``
 
+### Build numbers
+
+When [`build_number`](@config) is enabled, `bump build` stamps the version with a build number before any hook runs. During `build` hooks the _current version_ (`$2` / `$argv[2]`, and the `$VERSION` environment variable in BASH hooks) then carries the build number as build metadata, e.g. `3.4.0+12`. The _prev version_ (`$1` / `$argv[1]`) is the same value during a build. `dev`, `publish` and `unbuild` hooks never receive a stamped version.
+
+If a hook needs the bare version, strip everything from the `+` onward, e.g. `${VERSION%%+*}` in BASH or `explode('+', $argv[2], 2)[0]` in PHP.
+
 ## BASH Hooks
 
 > For BASH hooks that fail exit with N < 255. To indicate the hook was skipped exit with 255.

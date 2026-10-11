@@ -2,7 +2,23 @@
 
 namespace AKlump\WebPackage\Helpers;
 
+use AKlump\WebPackage\Config\ConfigDefaults;
+
 class GetHooksDirectory {
+
+  /**
+   * @var string
+   */
+  private $rootPath;
+
+  /**
+   * @param string $root_path
+   *   The absolute path of the project, i.e., the directory containing
+   *   .web_package.
+   */
+  public function __construct(string $root_path) {
+    $this->rootPath = $root_path;
+  }
 
   /**
    * @param string $hook_type
@@ -13,9 +29,8 @@ class GetHooksDirectory {
     if (empty($hook_type)) {
       throw new \InvalidArgumentException('$hook_type may not be empty');
     }
-    $root_path = ROOT_PATH;
 
-    return $root_path . "/.web_package/hooks/$hook_type/";
+    return $this->rootPath . '/' . ConfigDefaults::INSTALL_DIR . "/hooks/$hook_type/";
   }
 
 }

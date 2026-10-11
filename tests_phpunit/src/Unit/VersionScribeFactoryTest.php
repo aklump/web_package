@@ -14,6 +14,14 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \AKlump\WebPackage\VersionScribeFactory
+ * @uses \AKlump\WebPackage\Model\Version
+ * @uses \AKlump\WebPackage\VersionScribes\DrupalInfo
+ * @uses \AKlump\WebPackage\VersionScribes\IniFile
+ * @uses \AKlump\WebPackage\VersionScribes\Json
+ * @uses \AKlump\WebPackage\VersionScribes\MissingFileScribe
+ * @uses \AKlump\WebPackage\VersionScribes\SymfonyConsoleApplication
+ * @uses \AKlump\WebPackage\VersionScribes\Text
+ * @uses \AKlump\WebPackage\VersionScribes\Yaml
  */
 class VersionScribeFactoryTest extends TestCase {
 
@@ -32,6 +40,14 @@ class VersionScribeFactoryTest extends TestCase {
     $tests[] = [
       SymfonyConsoleApplication::class,
       'symfonyapp.php',
+    ];
+    $tests[] = [
+      SymfonyConsoleApplication::class,
+      'symfonyapp_build.php',
+    ];
+    $tests[] = [
+      DrupalInfo::class,
+      'build.info',
     ];
     $tests[] = [
       Json::class,

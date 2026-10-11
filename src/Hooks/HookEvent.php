@@ -3,10 +3,7 @@
 namespace AKlump\WebPackage\Hooks;
 
 use AKlump\LocalTimezone\LocalTimezone;
-use AKlump\WebPackage\Config\Config;
-use AKlump\WebPackage\Config\LoadConfig;
-use AKlump\WebPackage\Helpers\GetRootPath;
-use Symfony\Component\Filesystem\Path;
+use AKlump\WebPackage\Helpers\GetWebPackageRoot;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class HookEvent extends Event {
@@ -27,6 +24,16 @@ class HookEvent extends Event {
    * @var string
    */
   private $hookPath;
+
+  /**
+   * @var string
+   */
+  private $root;
+
+  /**
+   * @var string
+   */
+  private $infoFile;
 
   public function setPackageName($packageName): self {
     $this->packageName = $packageName;
@@ -85,7 +92,7 @@ class HookEvent extends Event {
   }
 
   public function getWebPackageRoot(): string {
-    return WEB_PACKAGE_ROOT;
+    return (new GetWebPackageRoot())();
   }
 
   public function getHook(): string {
@@ -100,20 +107,37 @@ class HookEvent extends Event {
     return $this->author ?? '';
   }
 
+  /**
+   * @param string $root
+   *   The absolute path of the project, i.e., the directory containing
+   *   .web_package.
+   */
+  public function setRoot(string $root): self {
+    $this->root = $root;
+
+    return $this;
+  }
+
   public function getRoot(): string {
-    return ROOT_PATH;
+    return $this->root ?? '';
   }
 
   public function getDateTime(): string {
     return date_create('now', LocalTimezone::get())->format('D M m H:i:s T Y');
   }
 
-  public function getInfoFile(): string {
-    $info_file = (new LoadConfig())()[Config::VERSION_FILE];
-    if (!Path::isAbsolute($info_file)) {
-      $info_file = Path::makeAbsolute($info_file, ROOT_PATH);
-    }
+  /**
+   * @param string $info_file
+   *   The absolute path to the file that holds the package info, which is also
+   *   the version file.
+   */
+  public function setInfoFile(string $info_file): self {
+    $this->infoFile = $info_file;
 
-    return $info_file;
+    return $this;
+  }
+
+  public function getInfoFile(): string {
+    return $this->infoFile ?? '';
   }
 }

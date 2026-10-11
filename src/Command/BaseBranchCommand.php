@@ -58,7 +58,7 @@ abstract class BaseBranchCommand extends Command {
   protected $output;
 
   public function __construct($config, Context $context, VersionScribeInterface $scribe, GitProxy $git) {
-    parent::__construct();
+    parent::__construct(static::$defaultName);
     $this->config = $config;
     $this->context = $context;
     $this->scribe = $scribe;

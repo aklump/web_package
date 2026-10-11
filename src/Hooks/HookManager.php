@@ -5,7 +5,7 @@ namespace AKlump\WebPackage\Hooks;
 use AKlump\LoftLib\Storage\FilePath;
 use AKlump\WebPackage\Helpers\GetAugmentedFailureMessage;
 use AKlump\WebPackage\Helpers\GetHooksDirectory;
-use AKlump\WebPackage\Helpers\GetRootPath;
+use AKlump\WebPackage\Helpers\GetWebPackageRoot;
 use AKlump\WebPackage\Helpers\ThrowShellError;
 use AKlump\WebPackage\HookException;
 use AKlump\WebPackage\HookService;
@@ -58,7 +58,7 @@ class HookManager {
         $this->output->writeln(sprintf('<error>There are no %s-type hooks to run matching "%s".</error>', $type, $filter));
       }
       else {
-        $hooks_dir = (new GetHooksDirectory())($type);
+        $hooks_dir = (new GetHooksDirectory($this->event->getRoot()))($type);
         $hooks_dir = Path::makeRelative($hooks_dir, getcwd()) . '/';
         $this->output->writeln(sprintf('<error>%s is empty; nothing to run.</error>', $hooks_dir));
       }
@@ -118,7 +118,7 @@ class HookManager {
       $filter = '*';
     }
 
-    $hooks_dir = (new GetHooksDirectory())($type);
+    $hooks_dir = (new GetHooksDirectory($this->event->getRoot()))($type);
     if ($has_extension) {
       $hooks = Glob::glob("$hooks_dir/$filter");
     }
@@ -144,11 +144,12 @@ class HookManager {
    * @throws \Exception If the build should stop.
    */
   private function executePhp() {
-    require_once WEB_PACKAGE_ROOT . '/includes/wp_functions.php';
+    $web_package_root = (new GetWebPackageRoot())();
+    require_once $web_package_root . '/includes/wp_functions.php';
     $args = $this->getHookArgs();
 
     $build = new HookService(
-      FilePath::create(WEB_PACKAGE_ROOT),
+      FilePath::create($web_package_root),
       FilePath::create($args[9]),
       FilePath::create($args[7]),
       $args[3],
@@ -167,7 +168,7 @@ class HookManager {
     }
 
     $stash_wd = getcwd();
-    $root = (new GetRootPath())(getcwd());
+    $root = $this->event->getRoot();
     $hook_path = $this->event->getHook();
     if (!chdir($root)) {
       throw new \RuntimeException(sprintf('Failed to chdir; cannot execute hook: %s', $hook_path));
@@ -249,7 +250,7 @@ class HookManager {
       $shell_code .= ";export $key=$value";
     }
 
-    $shell_code .= ';' . WEB_PACKAGE_ROOT . '/includes/hook_runner.sh';
+    $shell_code .= ';' . (new GetWebPackageRoot())() . '/includes/hook_runner.sh';
 
     $args = $this->getHookArgs();
     foreach ($args as $arg) {
@@ -300,7 +301,7 @@ class HookManager {
       10 => dirname($this->event->getHook()),
       11 => $this->event->getRoot() . '/.web_package',
       12 => $this->event->getWebPackageRoot(),
-      13 => dirname((new GetHooksDirectory())('*')),
+      13 => dirname((new GetHooksDirectory($this->event->getRoot()))('*')),
     ];
   }
 

@@ -8,7 +8,7 @@ class PatchCommand extends BaseVersionCommand {
 
   protected static $defaultName = 'patch';
 
-  protected function configure() {
+  protected function configure(): void {
     $this
       ->setDescription("Increment version one patch step without hooks.");
   }

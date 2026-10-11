@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \AKlump\WebPackage\Model\GitFlow
+ * @uses \AKlump\WebPackage\Helpers\CombineBranchNameParts
+ * @uses \AKlump\WebPackage\Helpers\NormalizeFeatureBranch
  */
 class GitFlowTest extends TestCase {
 

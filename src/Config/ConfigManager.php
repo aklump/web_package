@@ -6,8 +6,6 @@ use AKlump\WebPackage\Config\Loader\LegacyLoader;
 use AKlump\WebPackage\Config\Loader\YamlLoader;
 use AKlump\WebPackage\VersionScribeInterface;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\Config\Loader\DelegatingLoader;
-use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Filesystem\Filesystem;
 use Exception;
 use Symfony\Component\Filesystem\Path;
@@ -38,16 +36,13 @@ class ConfigManager {
       return [];
     }
 
-    $locator = new FileLocator([dirname($path_to_load)]);
-    $loader_resolver = new LoaderResolver(
-      [
-        new LegacyLoader($locator),
-        new YamlLoader($locator),
-      ]
-    );
-    $loader = new DelegatingLoader($loader_resolver);
+    foreach ([new LegacyLoader(), new YamlLoader()] as $loader) {
+      if ($loader->supports($located_file)) {
+        return $loader->load($located_file);
+      }
+    }
 
-    return $loader->load($located_file);
+    throw new \RuntimeException(sprintf('There is no loader that supports "%s".', $located_file));
   }
 
   /**

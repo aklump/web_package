@@ -20,7 +20,7 @@ class FeatureCommand extends BaseBranchCommand {
 
   protected static $defaultName = 'feature';
 
-  protected function configure() {
+  protected function configure(): void {
     $this
       ->setAliases(['f'])
       ->setDescription('Create a new feature branch per Gitflow.')
@@ -45,7 +45,7 @@ class FeatureCommand extends BaseBranchCommand {
       return Command::FAILURE;
     }
 
-    $event = (new GetHookEvent($this->config))();
+    $event = (new GetHookEvent($this->config, $this->context->getRootPath()))();
     $version = (new GetCurrentVersion($this->config, $this->scribe))();
     $event->setPreviousVersion($version);
     $event->setVersion($version);

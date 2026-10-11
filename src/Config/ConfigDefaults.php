@@ -35,4 +35,14 @@ class ConfigDefaults {
    */
   const VERSION_FILE = '.web_package/config.yml';
 
+  /**
+   * @var bool Stamp "+N" onto the version during "bump build"; off by default.
+   */
+  const BUILD_NUMBER = FALSE;
+
+  /**
+   * @var string The name of the directory that holds a project's bump files.
+   */
+  const INSTALL_DIR = '.web_package';
+
 }

@@ -9,7 +9,7 @@ use z4kn4fein\SemVer\Inc;
 use z4kn4fein\SemVer\Version;
 
 /**
- * @covers \AKlump\WebPackage\VersionScribes\Text;
+ * @covers \AKlump\WebPackage\VersionScribes\Text
  */
 class TextTest extends TestCase {
 
@@ -42,6 +42,17 @@ class TextTest extends TestCase {
     $scribe = new Text(__DIR__ . '/../files/version.txt');
     $version = $scribe->read();
     $this->assertSame('4.3.5', $version);
+  }
+
+  public function testReadWriteBuildMetadata() {
+    $path = $this->getPath('txt');
+    copy(__DIR__ . '/../files/build_version.txt', $path);
+    $scribe = new Text($path);
+    $this->assertSame('1.2.3+4', $scribe->read());
+    $this->assertTrue($scribe->write('1.2.4+5'));
+    $this->assertSame('1.2.4+5', $scribe->read());
+    $this->assertStringNotContainsString('+4', file_get_contents($path));
+    $this->unlink('txt');
   }
 
 }
